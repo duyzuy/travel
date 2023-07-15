@@ -6,20 +6,35 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "compile": "graphql-codegen",
+    "watch": "graphql-codegen -w"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.0-alpha.15",
+    "@apollo/experimental-nextjs-app-support": "^0.0.0-commit-473354a",
     "@types/node": "20.4.1",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "autoprefixer": "10.4.14",
+    "classnames": "^2.3.2",
+    "date-fns": "^2.30.0",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
+    "graphql": "^16.7.1",
     "next": "13.4.9",
     "postcss": "8.4.25",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-tailwindcss-datepicker": "^1.6.3",
+    "sass": "^1.63.6",
     "tailwindcss": "3.3.2",
-    "typescript": "5.1.6"
+    "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^4.0.1",
+    "@graphql-codegen/client-preset": "^4.0.1",
+    "@tailwindcss/forms": "^0.5.3",
+    "prettier": "3.0.0"
   }
 }

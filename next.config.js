@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  images: {},
+  env: {
+    GRAPHQL_ENDPOINT: "https://cqy2y.sse.codesandbox.io",
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

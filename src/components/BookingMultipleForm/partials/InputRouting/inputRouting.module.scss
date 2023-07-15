@@ -1,0 +1,18 @@
+.wrapper {
+  width: 100%;
+  :global {
+    .routing-input {
+      width: 100%;
+      > div {
+        width: 50%;
+      }
+    }
+  }
+}
+
+.airportList {
+  height: 280px;
+  width: 100%;
+  min-width: 320px;
+  overflow-y: auto;
+}

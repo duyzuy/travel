@@ -1,0 +1,8 @@
+.wrapper {
+  :global {
+    .minus,
+    .plus {
+      cursor: pointer;
+    }
+  }
+}

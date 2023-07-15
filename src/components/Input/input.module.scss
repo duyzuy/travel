@@ -1,0 +1,23 @@
+.controller {
+  :global {
+    display: block;
+    .floating-label {
+      input {
+        &::placeholder {
+          color: transparent;
+          font-size: 0;
+        }
+        &:focus ~ label,
+        &:not(:placeholder-shown) ~ label {
+          transform: translateY(-10px);
+          font-size: 12px;
+          line-height: 1.2;
+          color: #7e7e7e;
+        }
+        &:focus {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}

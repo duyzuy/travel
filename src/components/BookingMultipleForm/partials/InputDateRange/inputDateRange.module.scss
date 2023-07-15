@@ -1,0 +1,7 @@
+.wrapper {
+  :global {
+    label {
+      pointer-events: none;
+    }
+  }
+}
