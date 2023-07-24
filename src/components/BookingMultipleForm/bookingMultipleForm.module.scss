@@ -13,25 +13,23 @@
       border-bottom: 1px solid #f1f1f1;
       background-color: #fff;
     }
-    .switcher {
-      left: calc(50% - 12px);
-      top: calc(50% - 12px);
-      background: #fff;
-      border-radius: 50%;
-    }
+
     .booking-destination-inputs,
     .booking-destination-dates {
       margin-bottom: 20px;
     }
 
-    .booking-input-date-container {
-      .input-date > div {
-        width: 50%;
-      }
-      .date-range {
-        right: 0;
-      }
-    }
+    // .booking-input-date-container {
+    //   .roundTrip {
+    //     .input-date > div {
+    //       width: 50%;
+    //     }
+    //   }
+
+    //   .date-range {
+    //     right: 0;
+    //   }
+    // }
 
     .booking-form-wrapper {
       background-color: #fff;

@@ -1,3 +1,5 @@
+@use "../../../../app/styles/variable" as *;
+
 .wrapper {
   width: 100%;
   :global {
@@ -6,6 +8,18 @@
       > div {
         width: 50%;
       }
+    }
+    .tripFrom,
+    .tripTo {
+      &.isSelecting > div {
+        border-color: $secondary-color;
+      }
+    }
+    .switcher {
+      left: calc(50% - 12px);
+      top: calc(50% - 12px);
+      background: #fff;
+      border-radius: 50%;
     }
   }
 }

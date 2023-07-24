@@ -1,0 +1,11 @@
+@use "../../../../styles/variable" as *;
+
+.wrapper {
+  :global {
+    position: relative;
+
+    .article-content {
+      background: linear-gradient(to top, rgb(0 0 0 / 76%), transparent);
+    }
+  }
+}

@@ -2,56 +2,82 @@ export enum TripType {
   ONEWAY = "oneWay",
   ROUND_TRIP = "roundTrip",
 }
+export enum TripDestination {
+  TRIP_FROM = "tripFrom",
+  TRIP_TO = "tripTo",
+}
+export enum TripDate {
+  DATE_FROM = "dateFrom",
+  DATE_TO = "dateTo",
+}
+export enum PaxType {
+  ADULT = "adult",
+  CHILDREN = "children",
+  INFANT = "infant",
+}
+import { IAirPort } from "./airport";
+import { FlightDetailItemType } from "./ticket";
+export type BookingDateType = {
+  value: string | null;
+  date: Date | null;
+};
 export interface IBookingType {
   tripType: TripType;
-  returnDate: {
-    value: string | null;
-    date: Date | null;
-    format: string;
+  returnDate: BookingDateType;
+  departDate: BookingDateType;
+  tripFrom: IAirPort | null;
+  tripTo: IAirPort | null;
+  passengers: {
+    [PaxType.ADULT]: {
+      amount: number;
+      paxType: PaxType.ADULT;
+    };
+    [PaxType.CHILDREN]: {
+      amount: number;
+      paxType: PaxType.CHILDREN;
+    };
+    [PaxType.INFANT]: {
+      amount: number;
+      paxType: PaxType.INFANT;
+    };
   };
-  departDate: {
-    value: string | null;
-    date: Date | null;
-    format: string;
+  flightItems: {
+    outbound: { tid: number; detail: FlightDetailItemType } | null;
+    inbound: { tid: number; detail: FlightDetailItemType } | null;
   };
-  tripFrom: {
-    cityName: string;
-    airportName: string;
-    airportCode: string;
-  };
-  tripTo: {
-    cityName: string;
-    airportName: string;
-    airportCode: string;
-  };
-  passengers: { paxType: "adult" | "children" | "infant"; amount: number }[];
+  passengersInfo: {};
 }
 
 export const bookingInitialState: IBookingType = {
-  tripType: TripType.ONEWAY,
+  tripType: TripType.ROUND_TRIP,
   returnDate: {
     value: null,
     date: null,
-    format: "",
   },
   departDate: {
     value: null,
     date: null,
-    format: "",
   },
-  tripFrom: {
-    cityName: "",
-    airportName: "",
-    airportCode: "",
+  tripFrom: null,
+  tripTo: null,
+  passengers: {
+    [PaxType.ADULT]: {
+      amount: 1,
+      paxType: PaxType.ADULT,
+    },
+    [PaxType.CHILDREN]: {
+      amount: 0,
+      paxType: PaxType.CHILDREN,
+    },
+    [PaxType.INFANT]: {
+      amount: 0,
+      paxType: PaxType.INFANT,
+    },
   },
-  tripTo: {
-    cityName: "",
-    airportName: "",
-    airportCode: "",
+  flightItems: {
+    outbound: null,
+    inbound: null,
   },
-  passengers: [
-    { paxType: "adult", amount: 1 },
-    { paxType: "children", amount: 0 },
-    { paxType: "infant", amount: 0 },
-  ],
+  passengersInfo: {},
 };
+export type PassengersType = typeof bookingInitialState.passengers;

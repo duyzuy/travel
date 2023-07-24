@@ -1,0 +1,11 @@
+.wrapper {
+  :global {
+    position: relative;
+    .select-flight-left {
+      width: 18rem;
+    }
+    .select-flight-right {
+      width: calc(100% - 18rem);
+    }
+  }
+}

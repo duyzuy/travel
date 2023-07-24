@@ -1,9 +1,15 @@
 "use client";
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import styles from "./quantity.module.scss";
 type PropsType = {
   className?: string;
-  onChange?: (data: number) => void;
+  onChange?: ({
+    action,
+    value,
+  }: {
+    action: "minus" | "plus";
+    value: number;
+  }) => void;
   value?: number;
   minValue?: number;
   maxValue?: number;
@@ -11,12 +17,12 @@ type PropsType = {
 const Quantity: React.FC<PropsType> = ({
   className,
   onChange,
-  value = 1,
-  minValue = 1,
-  maxValue = 9,
+  value = 0,
+  minValue = 0,
+  maxValue = 999,
 }) => {
   const [quantity, setQuantity] = useState(value);
-
+  console.log("render quantity");
   const clx = useMemo(() => {
     let cls = "";
     if (className) {
@@ -25,37 +31,37 @@ const Quantity: React.FC<PropsType> = ({
     return cls;
   }, [className]);
 
-  const onChaneQuantity = (action: "minus" | "plus") => {
-    let newQuantity = quantity;
+  const onChangeQuantity = useCallback((action: "minus" | "plus") => {
+    if (onChange) {
+      onChange({ action, value: value });
+    } else {
+      let newQuantity = quantity;
 
-    switch (action) {
-      case "minus": {
-        if (quantity > minValue) {
-          newQuantity = quantity - 1;
-        }
+      switch (action) {
+        case "minus": {
+          if (quantity > minValue) {
+            newQuantity = quantity - 1;
+          }
 
-        break;
-      }
-      case "plus": {
-        if (quantity < maxValue) {
-          newQuantity = quantity + 1;
+          break;
         }
-        break;
+        case "plus": {
+          if (quantity < maxValue) {
+            newQuantity = quantity + 1;
+          }
+          break;
+        }
       }
-      default:
-        newQuantity = quantity;
+      setQuantity(newQuantity);
     }
-
-    setQuantity(newQuantity);
-    onChange && onChange(quantity);
-  };
+  }, []);
 
   return (
     <>
       <div className={`${styles.wrapper} ${clx} quantity flex items-center`}>
         <span
-          onClick={() => onChaneQuantity("minus")}
-          className="minus inline-flex w-8 h-8 items-center justify-center rounded-sm border shadow-sm border-solid border-gray-300 hover:border-primary-default hover:shadow-md"
+          onClick={() => onChangeQuantity("minus")}
+          className="minus inline-flex w-8 h-8 items-center justify-center rounded-sm border shadow-sm border-solid border-gray-300 hover:border-emerald-600 hover:shadow-md"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -69,11 +75,11 @@ const Quantity: React.FC<PropsType> = ({
           </svg>
         </span>
         <span className="amount px-3 inline-flex items-center justify-center w-12 h-8">
-          {quantity}
+          {(onChange && value) || quantity}
         </span>
         <span
-          onClick={() => onChaneQuantity("plus")}
-          className="plus inline-flex w-8 h-8 items-center justify-center rounded-sm border border-solid border-gray-300 shadow-sm hover:border-primary-default hover:shadow-md"
+          onClick={() => onChangeQuantity("plus")}
+          className="plus inline-flex w-8 h-8 items-center justify-center rounded-sm border border-solid border-gray-300 shadow-sm hover:border-emerald-600 hover:shadow-md"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

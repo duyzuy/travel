@@ -1,6 +1,5 @@
 "use client";
 import React, { ChangeEvent, useId, useMemo, memo } from "react";
-import Image from "next/image";
 import styles from "./input.module.scss";
 type PropsType = {
   className?: string;
@@ -13,11 +12,14 @@ type PropsType = {
   errorMessage?: string;
   showLabel?: boolean;
   iconPath?: string;
+  icon?: React.ElementType;
   floating?: boolean;
   onChange?: (e?: ChangeEvent) => void;
   readOnly?: boolean;
-  onClick?: () => void;
-  value?: string | null;
+
+  value?: string;
+  onFocus?: () => void;
+  [key: string]: any;
 };
 const Input: React.FC<PropsType> = ({
   className,
@@ -33,8 +35,10 @@ const Input: React.FC<PropsType> = ({
   floating = true,
   readOnly = false,
   onChange,
-  onClick,
-  value,
+
+  onFocus,
+  value = "",
+  icon,
   ...rest
 }) => {
   const idEl = useId();
@@ -49,19 +53,7 @@ const Input: React.FC<PropsType> = ({
     return cls;
   }, [className]);
 
-  let propsComp = useMemo(() => {
-    let props = {};
-    if (readOnly) {
-      props = {
-        defaultValue: value,
-      };
-    } else {
-      props = {
-        value: value,
-      };
-    }
-    return props;
-  }, [readOnly, value]);
+  const Icon = icon;
   return (
     <div className={styles.controller}>
       <div className={clx}>
@@ -74,32 +66,25 @@ const Input: React.FC<PropsType> = ({
           </label>
         )) || <></>}
 
-        <div
-          className="flex border border-gray-300 items-center rounded-sm shadow-sm overflow-hidden focus-within:border-sky-600"
-          onClick={onClick}
-        >
-          {iconPath && (
-            <span className="block pl-4">
-              <Image
-                src={iconPath}
-                width={24}
-                height={24}
-                alt={label}
-                className="max-w-none"
-              />
+        <div className="flex border border-gray-300 items-center rounded-sm shadow-sm overflow-hidden focus-within:border-emerald-600">
+          {Icon && (
+            <span className="block pl-3">
+              <Icon />
             </span>
           )}
           <div className="flex-1 flex items-center relative">
             <input
               type="text"
               readOnly={readOnly}
+              onFocus={onFocus}
               name={name}
               id={`${idEl}-${name}`}
               autoComplete={name}
               className="w-full border-0 bg-transparent pt-5 pb-1 px-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:shadow-none"
               placeholder={placeholder}
               onChange={onChange}
-              {...propsComp}
+              value={value}
+              {...rest}
             />
             {(floating && (
               <label

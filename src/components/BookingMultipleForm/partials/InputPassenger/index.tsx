@@ -1,18 +1,58 @@
 "use client";
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 import PassengerDropdown from "../PassengerDropdown";
 import Input from "@/components/Input";
 import { UserIcon, PeoplesIcon } from "@/assets/icons";
 import Image from "next/image";
 import classNames from "classnames";
 import { useClickOutSide } from "@/hooks/useClickOutSide";
-const InputPassenger: React.FC<{ variant?: "field" | "text" }> = ({
-  variant = "field",
-}) => {
+import { useBookingInformation } from "@/hooks/useBooking";
+import { bookingInformationVar } from "@/cache/vars";
+import { PaxType, PassengersType } from "@/Models/booking";
+import { useReactiveVar } from "@apollo/client";
+import { IconUserGroup } from "@/components/Icons";
+const InputPassenger: React.FC<{
+  variant?: "field" | "text";
+}> = ({ variant = "field" }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
   useClickOutSide(dropdownRef, () => setShowDropdown(false));
+  const {
+    operations: { onUpdateAmountPassengers },
+  } = useBookingInformation(bookingInformationVar);
+
+  const { passengers } = useReactiveVar(bookingInformationVar);
+
+  const passengerValue = useMemo(() => {
+    let output = `${passengers[PaxType.ADULT].amount} người lớn`;
+
+    if (passengers[PaxType.CHILDREN].amount > 0) {
+      output = output.concat(
+        ", ",
+        `${passengers[PaxType.CHILDREN].amount} trẻ em`
+      );
+    }
+
+    if (passengers[PaxType.INFANT].amount > 0) {
+      output = output.concat(
+        ", ",
+        `${passengers[PaxType.INFANT].amount} em bé`
+      );
+    }
+    return output;
+  }, [passengers]);
+
+  const onUpdatePassengersAmount = useCallback(
+    (
+      paxType: PaxType,
+      { action, value }: { action: "minus" | "plus"; value: number }
+    ) => {
+      onUpdateAmountPassengers(paxType, { action, value });
+    },
+    []
+  );
+
   return (
     <>
       <div
@@ -21,22 +61,22 @@ const InputPassenger: React.FC<{ variant?: "field" | "text" }> = ({
       >
         {(variant === "field" && (
           <Input
-            iconPath={UserIcon}
+            icon={IconUserGroup}
             name="passengers"
             placeholder="Hành khách"
-            value="1 người lớn, 1 trẻ em, 1 em bé"
+            value={passengerValue}
             label="Hành khách"
             readOnly
           />
         )) || (
           <>
-            <div className="passengers relative flex items-center pr-8 pl-3 py-2">
-              <div className="flex items-center cursor-pointer">
+            <div className="passengers relative cursor-pointer flex items-center pr-6 pl-3 py-2">
+              <div className="flex items-center">
                 <span className="icon mr-3 w-5 h-5">
-                  <Image src={UserIcon} alt="user icon" />
+                  <IconUserGroup />
                 </span>
                 <div className="text">
-                  <p>1 người lớn, 1 trẻ em, 1 em bé</p>
+                  <p>{passengerValue}</p>
                 </div>
               </div>
               <span
@@ -65,7 +105,12 @@ const InputPassenger: React.FC<{ variant?: "field" | "text" }> = ({
         )}
         {(showDropdown && (
           <div ref={dropdownRef} className="booking-passengers-dropdown">
-            <PassengerDropdown />
+            <PassengerDropdown
+              onChangeQuantity={onUpdatePassengersAmount}
+              adultAmount={passengers[PaxType.ADULT].amount}
+              childrenAmount={passengers[PaxType.CHILDREN].amount}
+              infantAmount={passengers[PaxType.INFANT].amount}
+            />
           </div>
         )) || <></>}
       </div>

@@ -1,10 +1,19 @@
 "use client";
 import React, { memo } from "react";
-import Image from "next/image";
-import { ChildrenIcon, AdultIcon, BabyIcon } from "@/assets/icons";
 import styles from "./PassengerDropdown.module.scss";
-import Quantity from "@/components/Quantity";
-const PassengerDropdown = () => {
+import { PaxType } from "@/Models/booking";
+import AdultQuantity from "./AdultQuantity";
+import InfantQuantity from "./InfantQuantity";
+import ChildrenQuantity from "./ChildrenQuantity";
+const PassengerDropdown: React.FC<{
+  onChangeQuantity: (
+    type: PaxType,
+    data: { action: "minus" | "plus"; value: number }
+  ) => void;
+  adultAmount: number;
+  childrenAmount: number;
+  infantAmount: number;
+}> = ({ onChangeQuantity, adultAmount, childrenAmount, infantAmount }) => {
   return (
     <div
       className={
@@ -15,49 +24,29 @@ const PassengerDropdown = () => {
       <div className="box-head"></div>
       <div className="box-body">
         <ul className={styles.passengers}>
-          <li className="passenger px-3 py-2 flex justify-between">
-            <div className="passenger-type flex items-center">
-              <span className="passenger-icon inline-block mr-1">
-                <Image src={AdultIcon} alt="Adult icon" className="w-8 h-8" />
-              </span>
-              <p className="passenger-text">
-                <span className="title block">Người lớn</span>
-                <span className="sub-title block text-gray-400 text-sm">
-                  12 tuổi trở lên
-                </span>
-              </p>
-            </div>
-            <Quantity />
+          <li className="passenger pr-2 py-2 flex justify-between">
+            <AdultQuantity
+              title="Người lớn"
+              subTitle="12 tuổi trở lên"
+              value={adultAmount}
+              onChange={onChangeQuantity}
+            />
           </li>
-          <li className="passenger px-3 py-2 flex justify-between">
-            <div className="passenger-type flex items-center">
-              <span className="passenger-icon inline-block mr-1">
-                <Image
-                  src={ChildrenIcon}
-                  alt="Adult icon"
-                  className="w-8 h-8"
-                />
-              </span>
-              <p className="passenger-text">
-                <span className="title block">Trẻ em</span>
-                <span className="sub-title text-gray-400 text-sm block ">
-                  2 - 11 tuổi
-                </span>
-              </p>
-            </div>
-            <Quantity />
+          <li className="passenger pr-2 py-2 flex justify-between">
+            <ChildrenQuantity
+              title="Trẻ em"
+              subTitle="2 - 11 tuổi"
+              value={childrenAmount}
+              onChange={onChangeQuantity}
+            />
           </li>
-          <li className="passenger px-3 py-2 flex justify-between">
-            <div className="passenger-type flex items-center">
-              <span className="passenger-icon inline-block mr-1">
-                <Image src={BabyIcon} alt="Adult icon" className="w-8 h-8" />
-              </span>
-              <p className="passenger-text">
-                <span className="title block">Em bé</span>
-                <span className="sub-title text-gray-400 block text-sm">{`< 2 tuổi`}</span>
-              </p>
-            </div>
-            <Quantity />
+          <li className="passenger pr-2 py-2 flex justify-between">
+            <InfantQuantity
+              title="Em bé"
+              subTitle="< 2 tuổi"
+              value={infantAmount}
+              onChange={onChangeQuantity}
+            />
           </li>
         </ul>
       </div>

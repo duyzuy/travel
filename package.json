@@ -21,6 +21,7 @@
     "date-fns": "^2.30.0",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
+    "framer-motion": "^10.13.0",
     "graphql": "^16.7.1",
     "next": "13.4.9",
     "postcss": "8.4.25",
@@ -28,6 +29,7 @@
     "react-dom": "18.2.0",
     "react-tailwindcss-datepicker": "^1.6.3",
     "sass": "^1.63.6",
+    "swiper": "^10.0.4",
     "tailwindcss": "3.3.2",
     "typescript": "^5.1.6"
   },

@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {},
+  images: {
+    domains: ["res.klook.com", "localhost"],
+  },
   env: {
     GRAPHQL_ENDPOINT: "https://cqy2y.sse.codesandbox.io",
   },
