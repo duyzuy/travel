@@ -66,7 +66,7 @@ const Button: React.FC<PropsType> = ({
       }
       onClick={() => {
         if (isDisable) return;
-        return onClick && onClick;
+        return onClick && onClick();
       }}
     >
       {(isLoading && (

@@ -2,6 +2,10 @@ export enum TripType {
   ONEWAY = "oneWay",
   ROUND_TRIP = "roundTrip",
 }
+export enum Direction {
+  OUT_BOUND = "outbound",
+  IN_BOUND = "inbound",
+}
 export enum TripDestination {
   TRIP_FROM = "tripFrom",
   TRIP_TO = "tripTo",
@@ -42,8 +46,8 @@ export interface IBookingType {
     };
   };
   flightItems: {
-    outbound: { tid: number; detail: FlightDetailItemType } | null;
-    inbound: { tid: number; detail: FlightDetailItemType } | null;
+    outbound: { tid: string; outbound: FlightDetailItemType } | null;
+    inbound: { tid: string; outbound: FlightDetailItemType } | null;
   };
   passengersInfo: {};
 }

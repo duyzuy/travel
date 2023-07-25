@@ -217,7 +217,7 @@ const SingleDatePiker: React.FC<PropsType> = ({
       selectedDate: date,
     }));
   }, []);
-  console.log("render");
+
   useEffect(() => {
     let dateView = DATE_VIEWS;
 

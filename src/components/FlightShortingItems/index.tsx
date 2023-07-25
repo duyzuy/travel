@@ -1,8 +1,25 @@
 "use client";
 
-import React, { memo } from "react";
-
+import { FILTER_KEYS, SHORTINGS } from "@/cache/vars";
+import React, { memo, useCallback } from "react";
+import FlightSortingItem from "./FlightSortingItem";
+import { useReactiveVar } from "@apollo/client";
+import { flightsFilterVar } from "@/cache/vars";
+import { useFlightFilter } from "@/hooks/useFlightFilter";
 const FlightShortingItems: React.FC = () => {
+  const FILTERS = [
+    { id: "early", name: "Cất cánh sớm nhất", code: SHORTINGS.EARLY },
+    { id: "lowest", name: "Giá thấp nhất", code: SHORTINGS.LOWEST },
+    { id: "fastest", name: "Bay nhanh nhất", code: SHORTINGS.FASTEST },
+  ];
+
+  const filters = useReactiveVar(flightsFilterVar);
+
+  const onShortting = useFlightFilter(flightsFilterVar);
+  const handleSortting = useCallback((sort: SHORTINGS) => {
+    onShortting({ key: FILTER_KEYS.SORTING, value: sort });
+  }, []);
+
   return (
     <div className="flights-sorting shadow-sm rounded-sm bg-white px-3 py-2 mb-4">
       <div className="inner flex items-center">
@@ -27,15 +44,15 @@ const FlightShortingItems: React.FC = () => {
         </div>
         <div className="sorting-body pl-4 flex-1">
           <ul className="sort-list flex items-center justify-items-end justify-end flex-1 gap-x-3">
-            <li className="item px-3 py-1 bg-emerald-500 text-white rounded-md text-sm">
-              <span>Giá thấp nhất</span>
-            </li>
-            <li className="item px-3 py-1 rounded-sm hover:bg-slate-100 transition-colors cursor-pointer text-sm">
-              <span>Cất cánh sớm nhất</span>
-            </li>
-            <li className="item px-3 py-1 rounded-sm hover:bg-slate-100 transition-colors cursor-pointer text-sm">
-              <span>Bay nhanh nhất</span>
-            </li>
+            {FILTERS.map((filterItem) => (
+              <FlightSortingItem
+                key={filterItem.id}
+                name={filterItem.name}
+                isActive={filters.sorting === filterItem.code}
+                code={filterItem.code}
+                onClick={handleSortting}
+              />
+            ))}
           </ul>
         </div>
       </div>

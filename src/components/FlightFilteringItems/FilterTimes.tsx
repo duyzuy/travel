@@ -13,7 +13,7 @@ import { DEPARTURE_TIMES, flightsFilterVar, FILTER_KEYS } from "@/cache/vars";
 import { useFlightFilter } from "@/hooks/useFlightFilter";
 
 const FilterTimes: React.FC = () => {
-  const filters = useReactiveVar(flightsFilterVar);
+  const { departTimes } = useReactiveVar(flightsFilterVar);
 
   const onFilter = useFlightFilter(flightsFilterVar);
   const FILTER_TIMES = [
@@ -54,9 +54,7 @@ const FilterTimes: React.FC = () => {
           name={item.name}
           icon={item.icon}
           timeStr={item.timeStr}
-          isActive={filters.departTimes.includes(
-            item.nameCode as DEPARTURE_TIMES
-          )}
+          isActive={departTimes.includes(item.nameCode as DEPARTURE_TIMES)}
           code={item.nameCode}
           onClick={handleFinterTimes}
         />

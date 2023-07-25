@@ -3,5 +3,8 @@
     position: relative;
     .flight-item-detail {
     }
+    .panel-active {
+      left: calc(50% - 1.5rem);
+    }
   }
 }

@@ -7,7 +7,7 @@ import { VNABrandIcon, BBBrandIcon, VJBrandOneIcon } from "@/assets/icons";
 import FilterBrandItem from "./FilterBrandItem";
 import { useFlightFilter } from "@/hooks/useFlightFilter";
 const FilterBrands = () => {
-  const filters = useReactiveVar(flightsFilterVar);
+  const { brands } = useReactiveVar(flightsFilterVar);
 
   const onFilter = useFlightFilter(flightsFilterVar);
 
@@ -28,7 +28,7 @@ const FilterBrands = () => {
             onClick={handleFilter}
             name={item.name}
             iconPath={item.icon}
-            isActive={filters.brands.includes(item.code)}
+            isActive={brands.includes(item.code)}
             code={item.code as BRANDS}
           />
         ))}

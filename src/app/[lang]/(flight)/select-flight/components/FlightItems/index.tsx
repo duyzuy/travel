@@ -1,11 +1,13 @@
 "use client";
 
 import React, { memo } from "react";
-import FlightItem from "../FlightItem";
 import { useQuery } from "@apollo/client";
 import { GET_FLIGHT_OPTIONS } from "@/operations/queries/flightOptions";
-import { Airline } from "@/Models/airline";
 import { FlightOptionsType } from "@/Models/ticket";
+
+import BookingFlightItems from "./BookingFlightItems";
+import { Direction } from "@/Models/booking";
+
 const FlightItems: React.FC = () => {
   const { data, loading, networkStatus } = useQuery<{
     flightOptions: FlightOptionsType;
@@ -16,13 +18,14 @@ const FlightItems: React.FC = () => {
   }
 
   const { flightOptions } = data;
+
   return (
     <>
-      <div className="flight-items">
-        {flightOptions.outbound.tickets.map((ticket) => (
-          <FlightItem flightItemData={ticket.outbound} key={ticket.tid} />
-        ))}
-      </div>
+      <BookingFlightItems
+        flightItems={flightOptions.outbound.tickets}
+        airlines={flightOptions.airlines}
+        direction={Direction.OUT_BOUND}
+      />
     </>
   );
 };
