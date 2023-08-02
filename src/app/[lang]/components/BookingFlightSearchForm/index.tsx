@@ -15,10 +15,11 @@ import { useRouter, usePathname } from "next/navigation";
 
 import styles from "./search-flight.module.scss";
 import { getLangeCode } from "@/utils/helper";
-import { bookingInformationVar } from "@/cache/vars";
 import { useReactiveVar } from "@apollo/client";
 import { TripType } from "@/constants/enum";
+import { bookingFormFlightVar, bookingInformationVar } from "@/cache/vars";
 
+import { useBookingInformation } from "@/hooks/useBooking";
 const BookingFlightSearchForm: React.FC<{ showRecent?: boolean }> = ({
   showRecent = true,
 }) => {
@@ -33,8 +34,11 @@ const BookingFlightSearchForm: React.FC<{ showRecent?: boolean }> = ({
   const router = useRouter();
   const pathName = usePathname();
   const langCode = getLangeCode(pathName);
-  console.log({ pathName });
-  const bookingInfor = useReactiveVar(bookingInformationVar);
+
+  const searchInfor = useReactiveVar(bookingFormFlightVar);
+  const { onSubmitFlightSearchForm } = useBookingInformation(
+    bookingInformationVar
+  );
   const [error, setError] = useState<{
     tripFrom?: string;
     tripTo?: string;
@@ -44,24 +48,28 @@ const BookingFlightSearchForm: React.FC<{ showRecent?: boolean }> = ({
   const handleSubmitFlightBookingForm = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (bookingInfor.tripFrom === null) {
+    if (searchInfor.tripFrom === null) {
       setError((prev) => ({
         ...prev,
         tripFrom: "Vui lòng nhập tên thành phố",
       }));
       return;
     }
-    if (bookingInfor.tripTo === null) {
+    if (searchInfor.tripTo === null) {
       return;
     }
-    if (bookingInfor.departDate.value === null) {
+    if (searchInfor.departDate.value === null) {
       return;
     }
-    if (bookingInfor.tripType === TripType.ROUND_TRIP) {
-      if (bookingInfor.returnDate.value === null) {
+    if (searchInfor.tripType === TripType.ROUND_TRIP) {
+      if (searchInfor.returnDate.value === null) {
         return;
       }
     }
+
+    onSubmitFlightSearchForm({
+      ...searchInfor,
+    });
 
     router.push(`/${langCode}/select-flight`);
   };

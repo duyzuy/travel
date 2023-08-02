@@ -3,8 +3,9 @@ import React, { memo, useState, useRef, useCallback } from "react";
 import Input from "@/components/Input";
 import format from "date-fns/format";
 import { useClickOutSide } from "@/hooks/useClickOutSide";
-import { useBookingInformation } from "@/hooks/useBooking";
-import { bookingInformationVar } from "@/cache/vars";
+
+import { useBookingFormFlight } from "@/hooks/useBookingFormFlight";
+import { bookingFormFlightVar } from "@/cache/vars";
 import { TripDate, TripType } from "@/constants/enum";
 import { useReactiveVar } from "@apollo/client";
 import { FORMAT_DATE } from "@/constants/config";
@@ -31,11 +32,10 @@ const InputDateRange: React.FC<{
 
   const {
     operations: { onUpdateBookingTripDate },
-  } = useBookingInformation(bookingInformationVar);
+  } = useBookingFormFlight(bookingFormFlightVar);
 
-  const { departDate, returnDate, tripType } = useReactiveVar(
-    bookingInformationVar
-  );
+  const { departDate, returnDate, tripType } =
+    useReactiveVar(bookingFormFlightVar);
 
   const onResetDateRangge = () => {
     onUpdateBookingTripDate("reset");

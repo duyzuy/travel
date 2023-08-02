@@ -4,8 +4,8 @@ import PassengerDropdown from "../PassengerDropdown";
 import Input from "@/components/Input";
 import classNames from "classnames";
 import { useClickOutSide } from "@/hooks/useClickOutSide";
-import { useBookingInformation } from "@/hooks/useBooking";
-import { bookingInformationVar } from "@/cache/vars";
+import { useBookingFormFlight } from "@/hooks/useBookingFormFlight";
+import { bookingFormFlightVar } from "@/cache/vars";
 import { PaxType } from "@/constants/enum";
 import { useReactiveVar } from "@apollo/client";
 import { IconUserGroup } from "@/components/Icons";
@@ -18,9 +18,9 @@ const InputPassenger: React.FC<{
   useClickOutSide(dropdownRef, () => setShowDropdown(false));
   const {
     operations: { onUpdateAmountPassengers },
-  } = useBookingInformation(bookingInformationVar);
+  } = useBookingFormFlight(bookingFormFlightVar);
 
-  const { passengers } = useReactiveVar(bookingInformationVar);
+  const { passengers } = useReactiveVar(bookingFormFlightVar);
 
   const passengerValue = useMemo(() => {
     let output = `${passengers[PaxType.ADULT].amount} người lớn`;

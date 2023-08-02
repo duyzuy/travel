@@ -1,20 +1,17 @@
 "use client";
 
-import { AnimatedComponentMount } from "@/HOCs/AnimatedMount";
 import React, { useCallback, useEffect, useRef, useState, memo } from "react";
 import FlightType from "@/components/FlightType";
-
-import styles from "./flight-item.module.scss";
-
 import { FlightDetailItemType } from "@/Models/ticket";
 import { formatCurrencyVND } from "@/utils/helper";
-
 import classNames from "classnames";
 import FlightItemPanelAndSubmit from "./FlightItemPanelAndSubmit";
 import { OnSelectFlightType } from "./FlightItems/BookingFlightItems";
 import { Direction } from "@/constants/enum";
 import { Airline } from "@/Models/airline";
 import BrandNameAirline from "@/app/[lang]/components/BrandNameAirline";
+import { AnimatedComponentMount } from "@/HOCs/AnimatedMount";
+import styles from "./flight-item.module.scss";
 type PropsType = {
   oneStop?: boolean;
   flightItemData: FlightDetailItemType;

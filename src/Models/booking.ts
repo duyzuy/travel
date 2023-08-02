@@ -7,23 +7,25 @@ export type BookingDateType = {
 };
 
 export interface IBookingType {
-  tripType: TripType;
-  returnDate: BookingDateType;
-  departDate: BookingDateType;
-  tripFrom: IAirPort | null;
-  tripTo: IAirPort | null;
-  passengers: {
-    [PaxType.ADULT]: {
-      amount: number;
-      paxType: PaxType.ADULT;
-    };
-    [PaxType.CHILDREN]: {
-      amount: number;
-      paxType: PaxType.CHILDREN;
-    };
-    [PaxType.INFANT]: {
-      amount: number;
-      paxType: PaxType.INFANT;
+  bookingInfor: {
+    tripType: TripType;
+    returnDate: BookingDateType;
+    departDate: BookingDateType;
+    tripFrom: IAirPort | null;
+    tripTo: IAirPort | null;
+    passengers: {
+      [PaxType.ADULT]: {
+        amount: number;
+        paxType: PaxType.ADULT;
+      };
+      [PaxType.CHILDREN]: {
+        amount: number;
+        paxType: PaxType.CHILDREN;
+      };
+      [PaxType.INFANT]: {
+        amount: number;
+        paxType: PaxType.INFANT;
+      };
     };
   };
   flightItems: {
@@ -34,6 +36,41 @@ export interface IBookingType {
 }
 
 export const bookingInitialState: IBookingType = {
+  bookingInfor: {
+    tripType: TripType.ROUND_TRIP,
+    returnDate: {
+      value: null,
+      date: null,
+    },
+    departDate: {
+      value: null,
+      date: null,
+    },
+    tripFrom: null,
+    tripTo: null,
+    passengers: {
+      [PaxType.ADULT]: {
+        amount: 1,
+        paxType: PaxType.ADULT,
+      },
+      [PaxType.CHILDREN]: {
+        amount: 0,
+        paxType: PaxType.CHILDREN,
+      },
+      [PaxType.INFANT]: {
+        amount: 0,
+        paxType: PaxType.INFANT,
+      },
+    },
+  },
+  flightItems: {
+    outbound: null,
+    inbound: null,
+  },
+  passengersInfo: {},
+};
+export type BookingFormType = typeof bookingInitialState.bookingInfor;
+export const bookingFormInitialState: BookingFormType = {
   tripType: TripType.ROUND_TRIP,
   returnDate: {
     value: null,
@@ -59,10 +96,6 @@ export const bookingInitialState: IBookingType = {
       paxType: PaxType.INFANT,
     },
   },
-  flightItems: {
-    outbound: null,
-    inbound: null,
-  },
-  passengersInfo: {},
 };
-export type PassengersType = typeof bookingInitialState.passengers;
+
+export type PassengersType = typeof bookingInitialState.bookingInfor.passengers;

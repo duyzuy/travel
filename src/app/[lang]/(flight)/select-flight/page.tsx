@@ -3,13 +3,11 @@ import SingleDatePiker from "@/components/SingleDatePiker";
 import styles from "./selectFlight.module.scss";
 import FlightShortingItems from "@/components/FlightShortingItems";
 import FlightFilteringItems from "@/components/FlightFilteringItems";
-import BookingFlightSearchForm from "../../components/BookingFlightSearchForm";
 import FlightSector from "./components/FlightSector";
 import { useApolloClient } from "@apollo/client";
 import { WRITE_FLIGHT_OPTIONS } from "@/cache/wtire/flightOptions";
 import { FLIGHT_OPTIONS } from "../../flightOptionsData";
 import FlightItems from "./components/FlightItems";
-import BookingInformationHeaderBar from "@/components/BookingInformationHeaderBar";
 const SearchFlightPage = () => {
   const client = useApolloClient();
 
@@ -23,9 +21,6 @@ const SearchFlightPage = () => {
   return (
     <div className={styles.wrapper}>
       <div className="container mx-auto">
-        <div className="select-flight-form bg-white py-6 px-4 shadow-sm rounded-sm mt-4">
-          <BookingFlightSearchForm showRecent={false} />
-        </div>
         <div className="select-flight-trip py-6 flex items-center gap-x-3">
           <FlightSector />
         </div>

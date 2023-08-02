@@ -11,6 +11,14 @@ import IconMorning from "./IconMorning";
 import IconEarlyMorning from "./IconEarlyMorning";
 import IconAfternoon from "./IconAfternoon";
 import IconSwitcher from "./IconSwitcher";
+import IconRoundTrip from "./IconRoundTrip";
+import IconOneWay from "./IconOneWay";
+import IconInsurance from "./IconInsurance";
+import IconLuggage from "./IconLuggage";
+import IconGoogle from "./IconGoogle";
+import IconFacebook from "./IconFacebook";
+import IconFlightLeft from "./IconFlightLeft";
+import IconFlightRight from "./IconFlightRight";
 export {
   CalendarIcon,
   IconUserGroup,
@@ -25,4 +33,12 @@ export {
   IconEarlyMorning,
   IconAfternoon,
   IconSwitcher,
+  IconRoundTrip,
+  IconOneWay,
+  IconFacebook,
+  IconGoogle,
+  IconLuggage,
+  IconInsurance,
+  IconFlightLeft,
+  IconFlightRight,
 };

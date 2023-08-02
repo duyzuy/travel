@@ -4,16 +4,17 @@ import React, { memo, useState, useRef, useCallback } from "react";
 
 import { useClickOutSide } from "@/hooks/useClickOutSide";
 import { AirPortList, IAirPort } from "@/Models/airport";
-import { useBookingInformation } from "@/hooks/useBooking";
 import { useQuery } from "@apollo/client";
 import { QUERY_AIRPORT_LIST } from "@/operations/queries/airtPort";
-import { bookingInformationVar } from "@/cache/vars";
 import Input from "@/components/Input";
 import { TripDestination } from "@/constants/enum";
 import { useReactiveVar } from "@apollo/client";
 import classNames from "classnames";
-import styles from "./inputRouting.module.scss";
+
 import { IconSwitcher } from "@/components/Icons";
+import { useBookingFormFlight } from "@/hooks/useBookingFormFlight";
+import { bookingFormFlightVar } from "@/cache/vars";
+import styles from "./inputRouting.module.scss";
 type PropsType = {
   onSelectAirport?: () => void;
 };
@@ -30,10 +31,10 @@ const InputRouting: React.FC<PropsType> = () => {
   });
   const [showDropdown, setShowdropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { tripFrom, tripTo } = useReactiveVar(bookingInformationVar);
+  const { tripFrom, tripTo } = useReactiveVar(bookingFormFlightVar);
   const {
     operations: { selectTripDestination, onSwapDestination },
-  } = useBookingInformation(bookingInformationVar);
+  } = useBookingFormFlight(bookingFormFlightVar);
 
   useClickOutSide(dropdownRef, () => {
     setDestination({ selecting: null });
@@ -61,7 +62,12 @@ const InputRouting: React.FC<PropsType> = () => {
   );
 
   return (
-    <div className={styles.wrapper + " relative"}>
+    <div
+      className={classNames({
+        [styles.wrapper]: styles.wrapper,
+        relative: true,
+      })}
+    >
       <div className="flex w-full relative flex-wrap routing-input">
         <Input
           showLabel={false}

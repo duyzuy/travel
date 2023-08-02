@@ -3,14 +3,14 @@
 import Checkbox from "@/components/Checkbox";
 import React, { memo } from "react";
 import { useReactiveVar } from "@apollo/client";
-import { bookingInformationVar } from "@/cache/vars";
 import { TripType } from "@/constants/enum";
-import { useBookingInformation } from "@/hooks/useBooking";
+import { useBookingFormFlight } from "@/hooks/useBookingFormFlight";
+import { bookingFormFlightVar } from "@/cache/vars";
 const SelectTripType: React.FC = () => {
-  const { tripType } = useReactiveVar(bookingInformationVar);
+  const { tripType } = useReactiveVar(bookingFormFlightVar);
   const {
     operations: { changeTripType },
-  } = useBookingInformation(bookingInformationVar);
+  } = useBookingFormFlight(bookingFormFlightVar);
 
   return (
     <>

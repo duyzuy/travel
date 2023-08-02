@@ -9,11 +9,12 @@ type PropsType = {
   type?: "button" | "submit";
   fullWidth?: boolean;
   variant?: "outline" | "contained";
-  color?: "primary" | "secondary" | "orange" | "custom";
+  color?: "primary" | "secondary" | "orange" | "custom" | "danger";
   isLoading?: boolean;
   isDisable?: boolean;
   rounded?: "sm" | "md" | "lg" | "xl" | "full";
-  size?: "xs" | "md" | "lg";
+  size?: "sm" | "md" | "lg";
+  shadow?: "sm" | "md" | "lg";
 };
 
 const Button: React.FC<PropsType> = ({
@@ -28,6 +29,7 @@ const Button: React.FC<PropsType> = ({
   size = "md",
   rounded = "md",
   className = "",
+  shadow = "sm",
 }) => {
   return (
     <button
@@ -41,8 +43,10 @@ const Button: React.FC<PropsType> = ({
           variant === "contained" && color === "secondary" && !isLoading,
         "border-sky-500 border text-sky-600":
           variant === "outline" && color === "primary",
-        "border-emerald-500 border text-emerald-600":
+        "border-emerald-400 border text-emerald-500 hover:bg-emerald-400 hover:text-white":
           variant === "outline" && color === "secondary",
+        "border-red-400 border text-red-500 hover:bg-red-500 hover:text-white":
+          variant === "outline" && color === "danger",
         "rounded-sm": rounded === "sm",
         "rounded-md": rounded === "md",
         "rounded-lg": rounded === "lg",
@@ -51,8 +55,11 @@ const Button: React.FC<PropsType> = ({
         "w-full": fullWidth,
         "px-4 py-3": size === "lg",
         "px-3 py-2": size === "md",
-        "px-2 py-1": size === "xs",
+        "px-2 py-1": size === "sm",
         "bg-gray-200": isLoading,
+        "shadow-sm": shadow === "sm",
+        "shadow-md": shadow === "md",
+        "shadow-lg": shadow === "lg",
         [className]: className,
       })}
       onClick={() => {

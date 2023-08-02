@@ -7,7 +7,7 @@ import Button from "@/components/Button";
 import { FlightDetailItemType } from "@/Models/ticket";
 import CollapseContent from "@/components/CollapseContent";
 import { OnSelectFlightType } from "./FlightItems/BookingFlightItems";
-import { Direction } from "@/Models/booking";
+import { Direction } from "@/constants/enum";
 const FlightItemPanelAndSubmit: React.FC<{
   data: FlightDetailItemType;
   onSelectFlight: OnSelectFlightType;
@@ -56,7 +56,7 @@ const FlightItemPanelAndSubmit: React.FC<{
             <div className="flight-actions text-right">
               <Button
                 color="secondary"
-                size="xs"
+                size="sm"
                 className="w-24 lg:text-sm"
                 rounded="sm"
                 onClick={() =>

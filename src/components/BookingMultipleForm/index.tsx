@@ -4,7 +4,6 @@ import styles from "./bookingMultipleForm.module.scss";
 
 import BookingTabs from "./partials/BookingTabs";
 
-// import BookingFlightSearchForm from "../BookingFlightSearchForm";
 import BookingFlightSearchForm from "@/app/[lang]/components/BookingFlightSearchForm";
 const BookingMultipleForm: React.FC<{
   children?: React.ReactNode;
