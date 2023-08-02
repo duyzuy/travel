@@ -1,7 +1,8 @@
-import { Direction, IBookingType } from "@/Models/booking";
+import { IBookingType } from "@/Models/booking";
 import { FlightDetailItemType } from "@/Models/ticket";
 import { bookingInformationVar } from "@/cache/vars";
 import { ReactiveVar } from "@apollo/client";
+import { Direction } from "@/constants/enum";
 
 const useSelectFlight = (booingInformationVar: ReactiveVar<IBookingType>) => {
   const onSelectFlight = ({

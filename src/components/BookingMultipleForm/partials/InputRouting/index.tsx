@@ -2,20 +2,18 @@
 
 import React, { memo, useState, useRef, useCallback } from "react";
 
-import { AirCraftRightIcon, SwitcherIcon } from "@/assets/icons";
-import Image from "next/image";
 import { useClickOutSide } from "@/hooks/useClickOutSide";
 import { AirPortList, IAirPort } from "@/Models/airport";
-import { LocationIcon } from "@/assets/icons";
 import { useBookingInformation } from "@/hooks/useBooking";
 import { useQuery } from "@apollo/client";
 import { QUERY_AIRPORT_LIST } from "@/operations/queries/airtPort";
 import { bookingInformationVar } from "@/cache/vars";
 import Input from "@/components/Input";
-import { TripDestination } from "@/Models/booking";
+import { TripDestination } from "@/constants/enum";
 import { useReactiveVar } from "@apollo/client";
 import classNames from "classnames";
 import styles from "./inputRouting.module.scss";
+import { IconSwitcher } from "@/components/Icons";
 type PropsType = {
   onSelectAirport?: () => void;
 };
@@ -66,7 +64,6 @@ const InputRouting: React.FC<PropsType> = () => {
     <div className={styles.wrapper + " relative"}>
       <div className="flex w-full relative flex-wrap routing-input">
         <Input
-          iconPath={AirCraftRightIcon}
           showLabel={false}
           placeholder="Điểm đi"
           label="Điểm đi"
@@ -85,13 +82,12 @@ const InputRouting: React.FC<PropsType> = () => {
         />
         <button
           type="button"
-          className="absolute rotate-90 switcher z-10"
+          className="absolute rotate-90 switcher z-10 bg-white"
           onClick={onSwapDestination}
         >
-          <Image src={SwitcherIcon} alt="switcher" width={24} height={24} />
+          <IconSwitcher width={24} height={24} stroke="#12b981" />
         </button>
         <Input
-          iconPath={LocationIcon}
           showLabel={false}
           placeholder="Điểm đến"
           label="Điểm đến"
@@ -110,7 +106,8 @@ const InputRouting: React.FC<PropsType> = () => {
       {(showDropdown && (
         <div
           className={
-            styles.airportList + " shadow-md border border-gray-300 absolute"
+            styles.airportList +
+            " shadow-md border border-gray-300 absolute airport-list"
           }
           ref={dropdownRef}
         >

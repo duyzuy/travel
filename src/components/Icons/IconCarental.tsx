@@ -7,8 +7,8 @@ const IconTicketFlight: React.FC<{
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      clip-rule="evenodd"
-      fill-rule="evenodd"
+      clipRule="evenodd"
+      fillRule="evenodd"
       height={height}
       imageRendering="optimizeQuality"
       shapeRendering="geometricPrecision"

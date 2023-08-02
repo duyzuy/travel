@@ -1,20 +1,14 @@
-export type TypeAirportItem = {
+export type AirportItemType = {
   airportName: string;
   cityName: string;
   code: string;
 };
 
-export type TypeAirLine = {
-  id: number;
-  code: string;
-  name: string;
-  logo: string;
-};
-export type TypeHotTicketItinerary = {
+export type ItineraryType = {
   fromAirport: string;
   toAirport: string;
 };
-export type TypeHotTicketPriceOption = {
+export type FlightTicketOption = {
   airlineId: number;
   flightCode: string;
   departureDate: string;
@@ -30,9 +24,9 @@ export type TypeHotTicketPriceOption = {
   freeHandBaggage: number;
   freeCheckedBaggage: number;
 };
-export type TypeHotTicket = {
-  itinerary: TypeHotTicketItinerary;
-  priceOptions: TypeHotTicketPriceOption[];
+export type FlightTicketType = {
+  itinerary: ItineraryType;
+  priceOptions: FlightTicketOption[];
 };
 
-export type TypeHotTickets = TypeHotTicket[];
+export type FlightTickets = FlightTicketType[];

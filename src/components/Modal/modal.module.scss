@@ -1,3 +1,9 @@
 .wrapper {
-  position: relative;
+  :global {
+    position: relative;
+    z-index: 999;
+    .modal-wrap {
+      background-color: rgb(0 0 0 / 60%);
+    }
+  }
 }

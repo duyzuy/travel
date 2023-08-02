@@ -7,7 +7,6 @@ const IconHotel: React.FC<{
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      enable-background="new 0 0 474.999 474.999"
       height={height}
       viewBox="0 0 474.999 474.999"
       width={width}

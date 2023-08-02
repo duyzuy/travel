@@ -2,13 +2,11 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 import PassengerDropdown from "../PassengerDropdown";
 import Input from "@/components/Input";
-import { UserIcon, PeoplesIcon } from "@/assets/icons";
-import Image from "next/image";
 import classNames from "classnames";
 import { useClickOutSide } from "@/hooks/useClickOutSide";
 import { useBookingInformation } from "@/hooks/useBooking";
 import { bookingInformationVar } from "@/cache/vars";
-import { PaxType, PassengersType } from "@/Models/booking";
+import { PaxType } from "@/constants/enum";
 import { useReactiveVar } from "@apollo/client";
 import { IconUserGroup } from "@/components/Icons";
 const InputPassenger: React.FC<{

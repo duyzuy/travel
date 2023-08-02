@@ -325,81 +325,79 @@ const DateRangPicker: React.FC<DatePickerProps> = ({
   }, []);
 
   return (
-    <>
-      <div className={styles.dateRangeWrapper + " date-range"}>
-        <div className="date-range-container">
-          <div className="date-rang-head"></div>
-          <div className="date-rang-body relative">
-            <div className="calendar-actions">
-              <PrevCalendarButton onClick={onNextAndPrevByMonth} />
-              <NextCalendarButton onClick={onNextAndPrevByMonth} />
-            </div>
-            <div className="calendar-months">
-              {calendars.map((dateRangeItem, monthIndx) => (
-                <div className="calendar-month" key={`month-${monthIndx}`}>
-                  <div className="date-range-top">
-                    <span className="calendar-month-name">
-                      {format(dateRangeItem.month, "MMMM, yyyy", {
-                        locale: locale,
-                      })}
-                    </span>
-                  </div>
-                  <div className="calendar-body">
-                    <DayNameOfWeek locale={vi} />
-                    {dateRangeItem.weeks.map((week, weekInd) => (
-                      <ul className="calendar-days" key={`week-${weekInd}`}>
-                        {week.dates.map(
-                          (date, dateInd) =>
-                            (typeof date !== "string" && (
-                              <DateItem
-                                key={format(date, "yyyy-MM-dd")}
-                                date={date}
-                                isSelectedEnd={isSelected(date, "endDate")}
-                                isSelectedStart={isSelected(date, "startDate")}
-                                isNotSameMonth={
-                                  !isSameMonth(date, dateRangeItem.month)
-                                }
-                                isDisable={
-                                  isDisableDate("min", date) ||
-                                  isDisableDate("max", date)
-                                }
-                                isInRange={isInRangeDate(date)}
-                                onClick={handleSelectDate}
-                              />
-                            )) || (
-                              <li
-                                className="date invalid faker"
-                                key={`faker-${dateInd}`}
-                              ></li>
-                            )
-                        )}
-                      </ul>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+    <div className={styles.dateRangeWrapper + " date-range-picker"}>
+      <div className="date-range-container">
+        <div className="date-rang-head"></div>
+        <div className="date-rang-body relative">
+          <div className="calendar-actions">
+            <PrevCalendarButton onClick={onNextAndPrevByMonth} />
+            <NextCalendarButton onClick={onNextAndPrevByMonth} />
           </div>
-          <div className="calendar-bottom">
-            <ButtonReset
-              onClick={onResetDate}
-              isDisable={
-                calendarInfor.selecting.start === null ||
-                calendarInfor.selecting.end === null
-              }
-            />
-
-            <ButtonConfirm
-              onClick={onConfirm}
-              isDisable={
-                calendarInfor.selecting.start === null ||
-                calendarInfor.selecting.end === null
-              }
-            />
+          <div className="calendar-months">
+            {calendars.map((dateRangeItem, monthIndx) => (
+              <div className="calendar-month" key={`month-${monthIndx}`}>
+                <div className="date-range-top">
+                  <span className="calendar-month-name">
+                    {format(dateRangeItem.month, "MMMM, yyyy", {
+                      locale: locale,
+                    })}
+                  </span>
+                </div>
+                <div className="calendar-body">
+                  <DayNameOfWeek locale={vi} />
+                  {dateRangeItem.weeks.map((week, weekInd) => (
+                    <ul className="calendar-days" key={`week-${weekInd}`}>
+                      {week.dates.map(
+                        (date, dateInd) =>
+                          (typeof date !== "string" && (
+                            <DateItem
+                              key={format(date, "yyyy-MM-dd")}
+                              date={date}
+                              isSelectedEnd={isSelected(date, "endDate")}
+                              isSelectedStart={isSelected(date, "startDate")}
+                              isNotSameMonth={
+                                !isSameMonth(date, dateRangeItem.month)
+                              }
+                              isDisable={
+                                isDisableDate("min", date) ||
+                                isDisableDate("max", date)
+                              }
+                              isInRange={isInRangeDate(date)}
+                              onClick={handleSelectDate}
+                            />
+                          )) || (
+                            <li
+                              className="date invalid faker"
+                              key={`faker-${dateInd}`}
+                            ></li>
+                          )
+                      )}
+                    </ul>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+        <div className="calendar-bottom">
+          <ButtonReset
+            onClick={onResetDate}
+            isDisable={
+              calendarInfor.selecting.start === null ||
+              calendarInfor.selecting.end === null
+            }
+          />
+
+          <ButtonConfirm
+            onClick={onConfirm}
+            isDisable={
+              calendarInfor.selecting.start === null ||
+              calendarInfor.selecting.end === null
+            }
+          />
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 export default DateRangPicker;

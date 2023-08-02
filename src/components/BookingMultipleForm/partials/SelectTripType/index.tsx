@@ -4,7 +4,7 @@ import Checkbox from "@/components/Checkbox";
 import React, { memo } from "react";
 import { useReactiveVar } from "@apollo/client";
 import { bookingInformationVar } from "@/cache/vars";
-import { TripType } from "@/Models/booking";
+import { TripType } from "@/constants/enum";
 import { useBookingInformation } from "@/hooks/useBooking";
 const SelectTripType: React.FC = () => {
   const { tripType } = useReactiveVar(bookingInformationVar);

@@ -1,13 +1,7 @@
 import { IAirPort } from "@/Models/airport";
-import {
-  IBookingType,
-  PaxType,
-  TripDate,
-  TripDestination,
-  TripType,
-} from "@/Models/booking";
+import { IBookingType } from "@/Models/booking";
 import { ReactiveVar } from "@apollo/client";
-
+import { PaxType, TripDate, TripDestination, TripType } from "@/constants/enum";
 export const useBookingInformation = (
   bookingInformationVar: ReactiveVar<IBookingType>
 ) => {
@@ -63,21 +57,21 @@ export const useBookingInformation = (
 
   const onUpdateBookingTripDate = (
     action: "update" | "reset",
-    data?: { tripDate: TripDate; date: Date | null }
+    data?: { tripDate: TripDate; date: Date | null; dateStr: string | null }
   ) => {
     let bookingInformation = bookingInformationVar();
     if (action === "update") {
       if (data && data.tripDate === TripDate.DATE_FROM) {
         bookingInformation = {
           ...bookingInformation,
-          departDate: { value: null, date: data.date },
+          departDate: { value: data.dateStr, date: data.date },
         };
       }
 
       if (data && data.tripDate === TripDate.DATE_TO) {
         bookingInformation = {
           ...bookingInformation,
-          returnDate: { value: null, date: data.date },
+          returnDate: { value: data.dateStr, date: data.date },
         };
       }
       bookingInformationVar(bookingInformation);

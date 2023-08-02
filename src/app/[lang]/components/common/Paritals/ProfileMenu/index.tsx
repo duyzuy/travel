@@ -1,13 +1,25 @@
 "use client";
-import React, { memo, useMemo, useState, useRef, useEffect } from "react";
+import React, { memo, useMemo, useState, useRef } from "react";
+import {
+  isShowLoginModalVar,
+  isShowRegisterModalVar,
+} from "@/cache/vars/profile";
 import styles from "./profileMenu.module.scss";
-
+import { useModal } from "@/hooks/useModal";
+import { useClickOutSide } from "@/hooks/useClickOutSide";
 type PropsType = {
   className?: string;
   children?: React.ReactNode;
 };
 const ProfileMenu: React.FC<PropsType> = ({ className }) => {
   const [isShowDropdown, setShowDropdown] = useState(false);
+
+  const dropDownRef = useRef<HTMLDivElement>(null);
+  const { onShowModal: onShowRegisterModal } = useModal(isShowRegisterModalVar);
+  const { onShowModal: onShowLoginModal } = useModal(isShowLoginModalVar);
+
+  useClickOutSide(dropDownRef, () => setShowDropdown(false));
+  const isLogedIn = false;
   const clx = useMemo(() => {
     let cls = `${styles.wrapper} relative`;
     if (className) {
@@ -15,21 +27,6 @@ const ProfileMenu: React.FC<PropsType> = ({ className }) => {
     }
     return cls;
   }, []);
-  const dropDownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!dropDownRef.current) return;
-    console.log(dropDownRef);
-    const onClickOutSide = (e: any) => {
-      if (isShowDropdown && !dropDownRef.current?.contains(e.target)) {
-        setShowDropdown(false);
-      }
-    };
-
-    document.addEventListener("click", onClickOutSide);
-
-    return () => document.removeEventListener("click", onClickOutSide);
-  }, [isShowDropdown]);
   return (
     <div className={clx}>
       <div>
@@ -39,23 +36,36 @@ const ProfileMenu: React.FC<PropsType> = ({ className }) => {
           id="user-menu-button"
           aria-expanded="false"
           aria-haspopup="true"
-          onClick={() => setShowDropdown((prev) => !prev)}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          <span className="inline-block ml-1 hidden md:block">Tài khoản</span>
+          <span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="#fff"
+              className="w-6 h-6 bg-emerald-500 p-1 rounded-full"
+            >
+              <path
+                fillRule="evenodd"
+                d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </span>
+          <div className="flex items-center hidden md:block ">
+            <span
+              className="px-3 py-1 hover:bg-gray-100 rounded-full"
+              onClick={onShowRegisterModal}
+            >
+              Đăng ký
+            </span>
+            <span>|</span>
+            <span
+              className="px-3 py-1 hover:bg-gray-100 rounded-full"
+              onClick={onShowLoginModal}
+            >
+              Đăng nhập
+            </span>
+          </div>
         </button>
       </div>
       {(isShowDropdown && (

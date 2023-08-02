@@ -1,4 +1,4 @@
 const Loading = () => {
-  return <>Global app loading.....</>;
+  return <>Home page app loading.....</>;
 };
 export default Loading;

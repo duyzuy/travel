@@ -1,0 +1,11 @@
+.wrapper {
+  :global {
+    position: relative;
+    .active-right {
+      box-shadow: 10px 12px 12px -6px rgb(0 0 0 / 20%);
+    }
+    .active-left {
+      box-shadow: -10px 12px 12px -6px rgb(0 0 0 / 20%);
+    }
+  }
+}

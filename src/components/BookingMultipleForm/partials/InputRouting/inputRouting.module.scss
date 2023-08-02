@@ -1,10 +1,11 @@
 @use "../../../../app/styles/variable" as *;
 
 .wrapper {
-  width: 100%;
   :global {
+    width: 100%;
     .routing-input {
       width: 100%;
+
       > div {
         width: 50%;
       }
@@ -17,16 +18,22 @@
     }
     .switcher {
       left: calc(50% - 12px);
-      top: calc(50% - 12px);
-      background: #fff;
+      top: 13px;
       border-radius: 50%;
+    }
+    .airport-list {
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
 }
 
 .airportList {
-  height: 280px;
-  width: 100%;
-  min-width: 320px;
-  overflow-y: auto;
+  :global {
+    height: 280px;
+    width: 100%;
+    min-width: 320px;
+    overflow-y: auto;
+  }
 }

@@ -1,30 +1,11 @@
-export enum TripType {
-  ONEWAY = "oneWay",
-  ROUND_TRIP = "roundTrip",
-}
-export enum Direction {
-  OUT_BOUND = "outbound",
-  IN_BOUND = "inbound",
-}
-export enum TripDestination {
-  TRIP_FROM = "tripFrom",
-  TRIP_TO = "tripTo",
-}
-export enum TripDate {
-  DATE_FROM = "dateFrom",
-  DATE_TO = "dateTo",
-}
-export enum PaxType {
-  ADULT = "adult",
-  CHILDREN = "children",
-  INFANT = "infant",
-}
+import { TripType, PaxType } from "@/constants/enum";
 import { IAirPort } from "./airport";
 import { FlightDetailItemType } from "./ticket";
 export type BookingDateType = {
   value: string | null;
   date: Date | null;
 };
+
 export interface IBookingType {
   tripType: TripType;
   returnDate: BookingDateType;

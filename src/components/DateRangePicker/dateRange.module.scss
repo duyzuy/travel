@@ -1,7 +1,5 @@
 .dateRangeWrapper {
   display: block;
-  position: absolute;
-  z-index: 999;
   border: 1px solid #fff;
   background-color: #fff;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -98,7 +96,6 @@
         border-radius: 3px;
         cursor: pointer;
         position: relative;
-
         .luna-date {
           font-size: 10px;
         }
@@ -141,7 +138,6 @@
             &:after,
             &:before {
               content: "";
-              z-index: -1;
               width: 20px;
               position: absolute;
               background-color: #f1f1f1;

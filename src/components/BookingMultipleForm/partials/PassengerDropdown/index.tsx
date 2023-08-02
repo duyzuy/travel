@@ -1,7 +1,7 @@
 "use client";
 import React, { memo } from "react";
 import styles from "./PassengerDropdown.module.scss";
-import { PaxType } from "@/Models/booking";
+import { PaxType } from "@/constants/enum";
 import AdultQuantity from "./AdultQuantity";
 import InfantQuantity from "./InfantQuantity";
 import ChildrenQuantity from "./ChildrenQuantity";

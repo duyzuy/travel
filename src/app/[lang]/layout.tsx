@@ -3,9 +3,8 @@ import localFont from "next/font/local";
 import dynamic from "next/dynamic";
 import "../styles/global.scss";
 import { ApolloWrapper } from "../ApolloWrapper";
-import Loading from "./loading";
-import { Suspense } from "react";
 import RegisterModal from "./components/RegisterModal";
+import LoginModal from "./components/LoginModal";
 const productSans = localFont({
   src: [
     {
@@ -62,8 +61,11 @@ export default function RootLayout({
       <body className={productSans.className} suppressHydrationWarning={true}>
         <ApolloWrapper>
           <DynamicMainHeader />
-          <Suspense fallback={<Loading />}>{children}</Suspense>
-          {/* <RegisterModal /> */}
+          <RegisterModal />
+          <LoginModal />
+          {/* <Suspense fallback={<Loading />}>{children}</Suspense> */}
+          {children}
+
           <DynamicFooter />
         </ApolloWrapper>
       </body>

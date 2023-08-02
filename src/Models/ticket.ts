@@ -14,7 +14,82 @@ export enum Polocies_keys {
   LUGGAGE_INFO = "LUGGAGE_INFO",
   OTHERS = "OTHERS",
 }
+export type TicketDetailType = {
+  cid: number;
+  providerId: number;
+  policy: string | null;
+  freeHandBaggage: number;
+  freeCheckedBaggage: string | null;
+  planeCode: string | null;
+  farePrice: number;
+  farePriceAdult: number;
+  farePriceChild: number;
+  priceAdults: number;
+  priceChildren: number;
+  priceInfants: number;
+  priceAdultsWithoutBookerMarkup: number;
+  priceChildrenWithoutBookerMarkup: number;
+  priceInfantsWithoutBookerMarkup: number;
+  priceAdultUnit: number;
+  priceChildUnit: number;
+  priceInfantUnit: number;
+  discountAdultUnit: number;
+  discountChildUnit: number;
+  discountInfantUnit: number;
+  discountAdult: number;
+  discountChild: number;
+  discountInfant: number;
+  priceAdultUnitWithoutBookerMarkup: number;
+  priceChildUnitWithoutBookerMarkup: number;
+  priceInfantUnitWithoutBookerMarkup: number;
+  ticketClassCode: "economy";
+  mileAccrualRate: number;
+  totalTicketingCharge: number;
+  grandTotal: number;
+  grandTotalWithoutBookerMarkup: number;
+  numStops: number;
+  flightChildren: string | null;
+  link: string | null;
+  holdingTime: number;
+  holdingTimeExactly: true;
+  additionalInfo: null;
+  detailTicketClass: string;
+  bonusPoint: number;
+  needPassport: boolean;
+  additionalPoliciesFetchingSupport: boolean;
+  supportsFrequentFlyerNumberInput: boolean;
+  buySignals: [];
+  polices: { code: Polocies_keys; description: string }[];
+  facilities: { code: Polocies_keys; description: string }[];
+  bestGroupPriceAdultUnit: number;
+  discount: number;
+};
+
+export type TicketInforType = {
+  aid: number;
+  arrivalAirport: string;
+  arrivalAirportName: string;
+  arrivalCity: string;
+  arrivalDayStr: string;
+  arrivalTimeStr: string;
+  departureAirport: string;
+  departureAirportName: string;
+  departureCity: string;
+  departureDayStr: string;
+  departureTimeStr: string;
+  detailTicketClass?: string;
+  facilities?: { code: string; description: string }[];
+  flightDuration: number;
+  flightNumber: string;
+  marketingAirlineId: number;
+  operatingAirlineId: number;
+  polices: { code: string; description: string }[];
+  ticketClassCode: string;
+  transitDuration: number;
+};
+
 export type FlightDetailItemType = {
+  aid: number;
   departureAirport: string;
   departureCity: string;
   arrivalAirport: string;
@@ -31,63 +106,13 @@ export type FlightDetailItemType = {
   departureAirportName: string;
   arrivalAirportName: string;
   fareTypes: {
-    "0": {
+    [key: string]: {
       name: string;
     };
   };
   seatRemaining: number;
-  aid: number;
-  ticketdetail: {
-    cid: number;
-    providerId: number;
-    policy: string | null;
-    freeHandBaggage: number;
-    freeCheckedBaggage: string | null;
-    planeCode: string | null;
-    farePrice: number;
-    farePriceAdult: number;
-    farePriceChild: number;
-    priceAdults: number;
-    priceChildren: number;
-    priceInfants: number;
-    priceAdultsWithoutBookerMarkup: number;
-    priceChildrenWithoutBookerMarkup: number;
-    priceInfantsWithoutBookerMarkup: number;
-    priceAdultUnit: number;
-    priceChildUnit: number;
-    priceInfantUnit: number;
-    discountAdultUnit: number;
-    discountChildUnit: number;
-    discountInfantUnit: number;
-    discountAdult: number;
-    discountChild: number;
-    discountInfant: number;
-    priceAdultUnitWithoutBookerMarkup: number;
-    priceChildUnitWithoutBookerMarkup: number;
-    priceInfantUnitWithoutBookerMarkup: number;
-    ticketClassCode: "economy";
-    mileAccrualRate: number;
-    totalTicketingCharge: number;
-    grandTotal: number;
-    grandTotalWithoutBookerMarkup: number;
-    numStops: number;
-    flightChildren: string | null;
-    link: string | null;
-    holdingTime: number;
-    holdingTimeExactly: true;
-    additionalInfo: null;
-    detailTicketClass: string;
-    bonusPoint: number;
-    needPassport: boolean;
-    additionalPoliciesFetchingSupport: boolean;
-    supportsFrequentFlyerNumberInput: boolean;
-    buySignals: [];
-    polices: { code: Polocies_keys; description: string }[];
-    facilities: { code: Polocies_keys; description: string }[];
-    bestGroupPriceAdultUnit: number;
-    discount: number;
-  };
-  transitTickets?: [];
+  ticketdetail: TicketDetailType;
+  transitTickets?: TicketInforType[];
 };
 export type AirportType = {
   cityCode: string;

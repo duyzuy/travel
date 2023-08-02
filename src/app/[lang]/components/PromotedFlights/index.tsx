@@ -8,27 +8,20 @@ import HotFlightsTicket from "./HotFlightsTicket";
 
 import { useQuery } from "@apollo/client";
 import { GET_HOT_FLIGHTS_TICKET } from "@/operations/queries/hotflights";
-import {
-  TypeAirLine,
-  TypeAirportItem,
-  TypeHotTickets,
-} from "@/Models/hotFlight";
-
+import { FlightTicketType } from "@/Models/hotFlight";
+import { Airline } from "@/Models/airline";
+import { AirportItemType } from "@/Models/hotFlight";
 type TypeHotTicketFlight = {
   hotFlightsTicket: {
-    airlines: TypeAirLine[];
-    airports: TypeAirportItem[];
-    hotTickets: TypeHotTickets;
+    airlines: Airline[];
+    airports: AirportItemType[];
+    hotTickets: FlightTicketType[];
   };
 };
 
 const PromotedFlights = () => {
   const client = useApolloClient();
 
-  const [airlinesSelection, setAirlineSelections] = useState({
-    current: "",
-    options: {},
-  });
   client.writeQuery({
     query: WRITE_HOT_FLIGHTS_TICKET,
     data: {
@@ -41,20 +34,18 @@ const PromotedFlights = () => {
   );
 
   if (loading) return "Loading...";
-  if (error) return `Error! ${error.message}`;
 
+  if (!data) {
+    return <></>;
+  }
   return (
-    <>
-      {(data && (
-        <section className="promote-section">
-          <HotFlightsTicket
-            airlines={data.hotFlightsTicket.airlines}
-            airports={data.hotFlightsTicket.airports}
-            hotTickets={data.hotFlightsTicket.hotTickets}
-          />
-        </section>
-      )) || <> </>}
-    </>
+    <section className="promote-section">
+      <HotFlightsTicket
+        airlines={data.hotFlightsTicket.airlines}
+        airports={data.hotFlightsTicket.airports}
+        hotTickets={data.hotFlightsTicket.hotTickets}
+      />
+    </section>
   );
 };
 export default memo(PromotedFlights);

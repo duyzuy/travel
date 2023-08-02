@@ -1,8 +1,9 @@
 "use client";
 
-import { TripType } from "@/Models/booking";
+import { TripType } from "@/constants/enum";
 import React, { memo } from "react";
 import FlightSectorItem from "@/app/[lang]/components/FlightSectorItem";
+
 const FlightSector: React.FC<{ tripType?: TripType }> = ({
   tripType = TripType.ROUND_TRIP,
 }) => {

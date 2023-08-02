@@ -20,7 +20,7 @@ const LanguageComponent: React.FC<{
     <>
       <div className="lang-item">
         <button
-          className="flex items-center rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 py-2 px-2 md:px-3"
+          className="flex items-center rounded-full py-2 px-2 md:px-2 hover:bg-gray-100 transition-colors"
           type="button"
           onClick={() => setShowDropdown((prev) => !prev)}
         >
@@ -34,7 +34,7 @@ const LanguageComponent: React.FC<{
             />
           </span>
           <span className="ml-2 hidden md:inline-block">
-            {currentLang.name}
+            {currentLang.shortName}
             <span className="inline-block ml-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

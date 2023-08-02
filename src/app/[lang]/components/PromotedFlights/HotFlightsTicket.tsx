@@ -1,28 +1,35 @@
 "use client";
-import React, { memo, useState, useRef, useMemo, useCallback } from "react";
-
-import {
-  TypeAirLine,
-  TypeAirportItem,
-  TypeHotTickets,
-} from "@/Models/hotFlight";
+import React, {
+  memo,
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+  useEffect,
+} from "react";
 import classNames from "classnames";
 import { useClickOutSide } from "@/hooks/useClickOutSide";
-import {
-  VNABrandIcon,
-  BBBrandIcon,
-  VJBrandOneIcon,
-  AirCraftRightIcon,
-} from "@/assets/icons";
-import Image from "next/image";
-import { formatCurrencyVND } from "@/utils/helper";
+import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
+import { Swiper as SwiperType } from "swiper";
+import { Grid, Scrollbar, Navigation, Virtual } from "swiper/modules";
+import FlightTicket from "./FlightTicket";
+import { Airline } from "@/Models/airline";
+import { AirportItemType, FlightTicketType } from "@/Models/hotFlight";
+
+import "swiper/css";
+import "swiper/css/grid";
+import "swiper/css/scrollbar";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+
+import styles from "./flight-ticket.module.scss";
 const HotFlightsTicket: React.FC<{
-  airlines: TypeAirLine[];
-  airports: TypeAirportItem[];
-  hotTickets: TypeHotTickets;
+  airlines: Airline[];
+  airports: AirportItemType[];
+  hotTickets: FlightTicketType[];
 }> = ({ airlines, airports, hotTickets }) => {
   const [airportSelection, setAirportSelection] = useState<{
-    current: TypeAirportItem;
+    current: AirportItemType;
     isShowing: boolean;
   }>({
     current: {
@@ -34,6 +41,8 @@ const HotFlightsTicket: React.FC<{
   });
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const swiperRef = useRef<SwiperType>();
+  const [isMounted, setMounted] = useState(false);
   useClickOutSide(dropdownRef, () => {
     setAirportSelection((prev) => ({
       ...prev,
@@ -47,7 +56,7 @@ const HotFlightsTicket: React.FC<{
       isShowing: true,
     }));
   };
-  const onSelectAirport = (airport: TypeAirportItem) => {
+  const onSelectAirport = (airport: AirportItemType) => {
     setAirportSelection((prev) => ({
       isShowing: false,
       current: {
@@ -73,6 +82,9 @@ const HotFlightsTicket: React.FC<{
     },
     [airports]
   );
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   return (
     <div className="container mx-auto">
       <div className="section-head py-3 mb-3">
@@ -80,12 +92,13 @@ const HotFlightsTicket: React.FC<{
           <h3 className="text-xl md:text-3xl text-center">
             Chuyến bay giá tốt khởi hành từ
           </h3>
+
           <div className="hotflight-selection relative inline-block">
             <div
-              className="selection-showing inline-flex items-center px-2 py-3 text-primary-default cursor-pointer"
+              className="selection-showing inline-flex items-center px-2 py-3 text-emerald-500 cursor-pointer"
               onClick={onShowDropdown}
             >
-              <span className="text-primary-default text-xl md:text-3xl block">
+              <span className="text-emerald-500 text-xl md:text-3xl block">
                 {airportSelection.current.cityName}
               </span>
               <span className="icon ml-3">
@@ -137,81 +150,96 @@ const HotFlightsTicket: React.FC<{
         </p>
       </div>
       <div className="section-body">
-        <div className="flights ">
-          {flightsListByAirports &&
-            flightsListByAirports.map((ticket) => (
-              <div
-                className="wrapper ticket-item flex items-center flex-wrap md:-mx-2"
-                key={`ticket-${ticket.itinerary.fromAirport}-${ticket.itinerary.toAirport}`}
+        {(isMounted && (
+          <div className="flights-ticker-slider relative">
+            <div className="swiper-navigation flex items-center justify-end mb-2">
+              <span
+                onClick={() => swiperRef.current?.slidePrev()}
+                className="w-8 h-8 flex items-center justify-center bg-slate-100 rounded-full cursor-pointer"
               >
-                {ticket.priceOptions.map((priceOption, index) => (
-                  <div
-                    className="ticket-item w-1/2 md:w-1/3 lg:w-1/4 px-2 mb-6"
-                    key={`trip-${priceOption.flightCode}-${index}`}
-                  >
-                    <div className="inner-item p-3 border rounded-md shadow-lg">
-                      <div className="brand mb-3">
-                        {
-                          <Image
-                            src={
-                              (priceOption.flightCode.includes("VN") &&
-                                VNABrandIcon) ||
-                              (priceOption.flightCode.includes("VJ") &&
-                                VJBrandOneIcon) ||
-                              BBBrandIcon
-                            }
-                            alt={
-                              (priceOption.flightCode.includes("VN") &&
-                                "Vietnam airline") ||
-                              (priceOption.flightCode.includes("VJ") &&
-                                "Vietjet") ||
-                              "Bamboo"
-                            }
-                            width={50}
-                            height={50}
-                            className="rounded-full p-1 border shadow-md border-gray-100"
-                          />
-                        }
-                      </div>
-                      <div className="destination items-center">
-                        <p className="flex items-center trip-destination">
-                          <span className="block trip-from">
-                            {getAirportName(ticket.itinerary.fromAirport)}
-                          </span>
-                          <span className="block w-4 h-4 mx-3">
-                            <Image
-                              src={AirCraftRightIcon}
-                              alt="icon"
-                              width={20}
-                            />
-                          </span>
-                          <span className="block trip-to">
-                            {getAirportName(ticket.itinerary.toAirport)}
-                          </span>
-                        </p>
-                        <p className="trip-date py-2">
-                          <span className="text-sm">Khởi hành lúc:</span>
-                          <span className="flex items-center">
-                            <span className="block text-sm mr-2">
-                              {priceOption.departureTime}
-                            </span>
-                            <span className="block text-sm ">
-                              {priceOption.departureDate}
-                            </span>
-                          </span>
-                        </p>
-                      </div>
-                      <div className="price flex items-center justify-between">
-                        <p className="font-bold text-sky-700">
-                          {formatCurrencyVND(priceOption.totalPrice)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-        </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-4 h-4"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7.28 7.72a.75.75 0 010 1.06l-2.47 2.47H21a.75.75 0 010 1.5H4.81l2.47 2.47a.75.75 0 11-1.06 1.06l-3.75-3.75a.75.75 0 010-1.06l3.75-3.75a.75.75 0 011.06 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                onClick={() => swiperRef.current?.slideNext()}
+                className="w-8 h-8 ml-3 flex items-center justify-center bg-slate-100 rounded-full cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-4 h-4"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.72 7.72a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75a.75.75 0 11-1.06-1.06l2.47-2.47H3a.75.75 0 010-1.5h16.19l-2.47-2.47a.75.75 0 010-1.06z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
+            <Swiper
+              slidesPerView={2}
+              freeMode={true}
+              spaceBetween={20}
+              scrollbar={{
+                hide: false,
+                draggable: true,
+              }}
+              grid={{
+                rows: 2,
+              }}
+              breakpoints={{
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+                },
+                768: {
+                  slidesPerView: 4,
+                  spaceBetween: 20,
+                },
+                1024: {
+                  slidesPerView: 4,
+                  spaceBetween: 20,
+                },
+              }}
+              onBeforeInit={(swiper) => {
+                swiperRef.current = swiper;
+              }}
+              modules={[Grid, Scrollbar, Navigation]}
+              className={styles.swiper}
+            >
+              {flightsListByAirports.map((ticket) => (
+                <React.Fragment
+                  key={`ticket-${ticket.itinerary.fromAirport}-${ticket.itinerary.toAirport}`}
+                >
+                  {ticket.priceOptions.map((priceOption, index) => (
+                    <SwiperSlide
+                      className="sw-slide"
+                      key={`${ticket.itinerary.fromAirport}-${ticket.itinerary.toAirport}-${index}`}
+                    >
+                      <FlightTicket
+                        data={priceOption}
+                        tripFrom={getAirportName(ticket.itinerary.fromAirport)}
+                        tripTo={getAirportName(ticket.itinerary.toAirport)}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </React.Fragment>
+              ))}
+            </Swiper>
+          </div>
+        )) || <>not</>}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 import React, { memo } from "react";
-import { PaxType } from "@/Models/booking";
+import { PaxType } from "@/constants/enum";
 import Image from "next/image";
 import { ChildrenIcon } from "@/assets/icons";
 import Quantity from "@/components/Quantity";

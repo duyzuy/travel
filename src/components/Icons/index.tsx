@@ -10,6 +10,7 @@ import IconNight from "./IconNight";
 import IconMorning from "./IconMorning";
 import IconEarlyMorning from "./IconEarlyMorning";
 import IconAfternoon from "./IconAfternoon";
+import IconSwitcher from "./IconSwitcher";
 export {
   CalendarIcon,
   IconUserGroup,
@@ -23,4 +24,5 @@ export {
   IconMorning,
   IconEarlyMorning,
   IconAfternoon,
+  IconSwitcher,
 };

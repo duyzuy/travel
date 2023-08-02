@@ -5,16 +5,14 @@ import React, { memo, useCallback, useMemo } from "react";
 import FlightItem from "../FlightItem";
 import { FlightDetailItemType } from "@/Models/ticket";
 import {
-  BRANDS,
   DEPARTURE_TIMES,
-  FILTER_KEYS,
   SHORTINGS,
   bookingInformationVar,
 } from "@/cache/vars";
 import { useReactiveVar } from "@apollo/client";
 import useSelectFlight from "@/hooks/useSelectFlight";
-import { Direction } from "@/Models/booking";
-import { Airline, Airlines } from "@/Models/airline";
+import { Direction } from "@/constants/enum";
+import { Airlines } from "@/Models/airline";
 import { flightsFilterVar } from "@/cache/vars";
 export type OnSelectFlightType = ({
   direction,
@@ -48,9 +46,48 @@ const BookingFlightItems: React.FC<{
     let filterOutput = [...flightItems];
     const { brands, departTimes, sorting } = filter;
 
+    //   filter by group
+    const restFlightItems: {
+      tid: string;
+      outbound: FlightDetailItemType;
+    }[] = [];
+
+    const flightNumbersUnique: string[] = [];
+    const uniqueFlights = flightItems.filter((item) => {
+      if (
+        flightNumbersUnique.length === 0 ||
+        !flightNumbersUnique.includes(item.outbound.flightNumber)
+      ) {
+        flightNumbersUnique.push(item.outbound.flightNumber);
+        return true;
+      } else {
+        restFlightItems.push(item);
+        return false;
+      }
+    });
+
+    const initFlightWithChilds: {
+      tid: string;
+      outbound: FlightDetailItemType;
+      childs: { tid: string; outbound: FlightDetailItemType }[];
+    }[] = [];
+
+    let uniqueFlightsWithChilds = uniqueFlights.reduce((acc, item) => {
+      const childs = restFlightItems.filter((childItem, childInd) => {
+        if (childItem.outbound.flightNumber === item.outbound.flightNumber) {
+          restFlightItems.splice(childInd, 1);
+          return true;
+        } else {
+          return false;
+        }
+      });
+
+      return [...acc, { ...item, childs: childs }];
+    }, initFlightWithChilds);
+
     //filter by brand
     if (brands.length > 0) {
-      filterOutput = filterOutput.filter((item) => {
+      uniqueFlightsWithChilds = uniqueFlightsWithChilds.filter((item) => {
         let itemExists = false;
         brands.forEach((branItem) => {
           if (item.outbound.flightNumber.includes(branItem)) {
@@ -64,9 +101,9 @@ const BookingFlightItems: React.FC<{
 
     //filter by depart time
     if (departTimes.length > 0) {
-      filterOutput = filterOutput.filter((item) => {
-        let itemValid = false;
+      uniqueFlightsWithChilds = uniqueFlightsWithChilds.filter((item) => {
         const departHour = new Date(item.outbound.departureTime).getHours();
+        let itemValid = false;
         departTimes.forEach((dpT) => {
           switch (dpT) {
             case DEPARTURE_TIMES.EARLY_MORNING: {
@@ -75,7 +112,7 @@ const BookingFlightItems: React.FC<{
               }
               break;
             }
-            case DEPARTURE_TIMES.MONRNING: {
+            case DEPARTURE_TIMES.MORNING: {
               if (6 <= departHour && departHour < 12) {
                 itemValid = true;
               }
@@ -102,17 +139,19 @@ const BookingFlightItems: React.FC<{
     // sorting items
     switch (sorting) {
       case SHORTINGS.EARLY: {
-        filterOutput.sort(
+        uniqueFlightsWithChilds.sort(
           (a, b) => a.outbound.departureTime - b.outbound.departureTime
         );
         break;
       }
       case SHORTINGS.FASTEST: {
-        filterOutput.sort((a, b) => a.outbound.duration - b.outbound.duration);
+        uniqueFlightsWithChilds.sort(
+          (a, b) => a.outbound.duration - b.outbound.duration
+        );
         break;
       }
       case SHORTINGS.LOWEST: {
-        filterOutput.sort(
+        uniqueFlightsWithChilds.sort(
           (a, b) =>
             a.outbound.ticketdetail.farePrice -
             b.outbound.ticketdetail.farePrice
@@ -120,7 +159,8 @@ const BookingFlightItems: React.FC<{
         break;
       }
     }
-    return filterOutput;
+
+    return uniqueFlightsWithChilds;
   }, [filter]);
 
   const getBrandNameFromFlightNumber = useCallback((flightCode: string) => {
@@ -140,6 +180,8 @@ const BookingFlightItems: React.FC<{
             isSelected={
               bookingInformation.flightItems[direction]?.tid === ticket.tid
             }
+            oneStop={ticket.outbound.ticketdetail.numStops === 0}
+            // childs={ticket.childs}
             airline={getBrandNameFromFlightNumber(ticket.outbound.flightNumber)}
           />
         );

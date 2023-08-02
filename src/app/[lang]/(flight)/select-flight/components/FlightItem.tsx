@@ -2,13 +2,6 @@
 
 import { AnimatedComponentMount } from "@/HOCs/AnimatedMount";
 import React, { useCallback, useEffect, useRef, useState, memo } from "react";
-import {
-  BBBrandIcon,
-  VJBrandOneIcon,
-  VJBrandTwoIcon,
-  VNABrandIcon,
-} from "@/assets/icons";
-import Image from "next/image";
 import FlightType from "@/components/FlightType";
 
 import styles from "./flight-item.module.scss";
@@ -19,7 +12,7 @@ import { formatCurrencyVND } from "@/utils/helper";
 import classNames from "classnames";
 import FlightItemPanelAndSubmit from "./FlightItemPanelAndSubmit";
 import { OnSelectFlightType } from "./FlightItems/BookingFlightItems";
-import { Direction } from "@/Models/booking";
+import { Direction } from "@/constants/enum";
 import { Airline } from "@/Models/airline";
 import BrandNameAirline from "@/app/[lang]/components/BrandNameAirline";
 type PropsType = {
@@ -30,6 +23,7 @@ type PropsType = {
   onSelectFlight: OnSelectFlightType;
   isSelected: boolean;
   airline?: Airline | undefined;
+  childs?: { outbound: FlightDetailItemType; tid: string }[];
 };
 const FlightItem: React.FC<PropsType> = ({
   oneStop = false,
@@ -39,6 +33,7 @@ const FlightItem: React.FC<PropsType> = ({
   isSelected = false,
   onSelectFlight,
   airline,
+  childs,
 }) => {
   return (
     <div
@@ -91,7 +86,20 @@ const FlightItem: React.FC<PropsType> = ({
             </div>
           </div>
         </div>
-
+        {childs &&
+          childs.map((item) => (
+            <div className="another-classes" key={item.tid}>
+              <div className="flex items-center p-2 justify-between">
+                <p>
+                  {item.outbound.ticketdetail.ticketClassCode}{" "}
+                  <span className="w-8 h-5 inline-block text-sm bg-emerald-600 text-white text-center rounded">
+                    {item.outbound.ticketdetail.detailTicketClass}
+                  </span>
+                </p>
+                <p>{item.outbound.ticketdetail.farePrice}</p>
+              </div>
+            </div>
+          ))}
         <FlightItemPanelAndSubmit
           data={flightItemData}
           onSelectFlight={onSelectFlight}

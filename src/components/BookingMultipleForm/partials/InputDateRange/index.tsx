@@ -5,7 +5,7 @@ import format from "date-fns/format";
 import { useClickOutSide } from "@/hooks/useClickOutSide";
 import { useBookingInformation } from "@/hooks/useBooking";
 import { bookingInformationVar } from "@/cache/vars";
-import { TripDate, TripType } from "@/Models/booking";
+import { TripDate, TripType } from "@/constants/enum";
 import { useReactiveVar } from "@apollo/client";
 import { FORMAT_DATE } from "@/constants/config";
 import DateRangPicker, {
@@ -45,7 +45,6 @@ const InputDateRange: React.FC<{
     if (departDate.date === null) {
       setSelecting(TripDate.DATE_FROM);
     } else {
-      console.log(isSelected);
       setSelecting(isSelected);
     }
     setShowCalendar(true);
@@ -63,6 +62,7 @@ const InputDateRange: React.FC<{
           onUpdateBookingTripDate("update", {
             tripDate: TripDate.DATE_FROM,
             date: date,
+            dateStr: format(date, FORMAT_DATE),
           });
 
           onUpdateCalendar({
@@ -81,6 +81,7 @@ const InputDateRange: React.FC<{
               onUpdateBookingTripDate("update", {
                 tripDate: TripDate.DATE_TO,
                 date: null,
+                dateStr: null,
               });
               setSelecting(TripDate.DATE_TO);
             }
@@ -95,6 +96,7 @@ const InputDateRange: React.FC<{
           onUpdateBookingTripDate("update", {
             tripDate: TripDate.DATE_TO,
             date: date,
+            dateStr: format(date, FORMAT_DATE),
           });
 
           if (departDate.date !== null && isBefore(date, departDate.date)) {
@@ -102,6 +104,7 @@ const InputDateRange: React.FC<{
             onUpdateBookingTripDate("update", {
               tripDate: TripDate.DATE_FROM,
               date: date,
+              dateStr: format(date, FORMAT_DATE),
             });
             onUpdateCalendar({
               key: "start",
@@ -169,24 +172,20 @@ const InputDateRange: React.FC<{
         )) || <></>}
       </div>
       {isShowCalendar && (
-        <div className="date-range-piker">
-          <DateRangPicker
-            numberOfMonth={2}
-            onUpdateCalendar={handleChangeTripDateOnBookingAndCalendar}
-            startOfDate={departDate.date}
-            endOfDate={returnDate.date}
-            minDate={new Date()}
-            maxDate={add(new Date(), { months: 6 })}
-            onReset={onResetDateRangge}
-            onConfirm={() => {
-              setShowCalendar(false);
-              setSelecting(null);
-            }}
-            dateRangeType={
-              (tripType === TripType.ONEWAY && "single") || "range"
-            }
-          />
-        </div>
+        <DateRangPicker
+          numberOfMonth={2}
+          onUpdateCalendar={handleChangeTripDateOnBookingAndCalendar}
+          startOfDate={departDate.date}
+          endOfDate={returnDate.date}
+          minDate={new Date()}
+          maxDate={add(new Date(), { months: 6 })}
+          onReset={onResetDateRangge}
+          onConfirm={() => {
+            setShowCalendar(false);
+            setSelecting(null);
+          }}
+          dateRangeType={(tripType === TripType.ONEWAY && "single") || "range"}
+        />
       )}
     </div>
   );

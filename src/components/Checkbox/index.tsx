@@ -42,9 +42,12 @@ const Checkbox: React.FC<PropsType> = ({
             checked={isChecked}
             className={`${
               type === "checkbox" ? "rounded " : " "
-            }h-4 w-4  border-gray-300 text-indigo-600`}
+            }h-4 w-4  border-gray-500 text-indigo-600`}
           />
-          <span className="input cursor-pointer" onClick={onChange}>
+          <span
+            className="input cursor-pointer border-gray-600 border"
+            onClick={onChange}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               version="1.1"

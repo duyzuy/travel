@@ -69,10 +69,12 @@ const DateItem: React.FC<{
       key={format(date, "yyyy-MM-dd")}
       onClick={() => onClick(date)}
     >
-      <span className="text-xs text-gray-500 absolute bottom-0 right-1 luna-date">
+      <span className="text-xs text-gray-500 absolute bottom-0 right-1 luna-date z-20">
         {getLunarYearFromSolarYear(date)}
       </span>
-      <time dateTime={format(date, "yyyy-MM-dd")}>{format(date, "d")}</time>
+      <time dateTime={format(date, "yyyy-MM-dd")} className="relative z-20">
+        {format(date, "d")}
+      </time>
     </li>
   );
 };

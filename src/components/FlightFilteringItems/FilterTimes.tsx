@@ -19,25 +19,25 @@ const FilterTimes: React.FC = () => {
   const FILTER_TIMES = [
     {
       name: "Sáng sớm",
-      nameCode: "EARLY_MORNING",
+      nameCode: DEPARTURE_TIMES.EARLY_MORNING,
       timeStr: "00:00 - 06:00",
       icon: IconEarlyMorning,
     },
     {
       name: "Buổi sáng",
-      nameCode: "MORNING",
+      nameCode: DEPARTURE_TIMES.MORNING,
       timeStr: "06:00 - 12:00",
       icon: IconMorning,
     },
     {
       name: "Buổi chiều",
-      nameCode: "AFTERNOON",
+      nameCode: DEPARTURE_TIMES.AFTERNOON,
       timeStr: "12:00 - 18:00",
       icon: IconAfternoon,
     },
     {
       name: "Buổi tối",
-      nameCode: "NIGHT",
+      nameCode: DEPARTURE_TIMES.NIGHT,
       timeStr: "18:00 - 24:00",
       icon: IconNight,
     },

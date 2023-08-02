@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_FLIGHT_OPTIONS = gql`
   query GetFlightOptions {
-    flightOptions @client {
+    flightOptions {
       ticketClasses
       header
       filters
