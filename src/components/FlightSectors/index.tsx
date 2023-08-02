@@ -22,6 +22,7 @@ const FlightSectors: React.FC<{
       className={classNames({
         [styles.wrapper]: styles.wrapper,
         "flight-sectors flex items-center": true,
+        [tripType]: tripType,
       })}
       style={style}
     >

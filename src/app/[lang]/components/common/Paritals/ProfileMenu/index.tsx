@@ -1,5 +1,5 @@
 "use client";
-import React, { memo, useMemo, useState, useRef } from "react";
+import React, { memo, useState, useRef } from "react";
 import {
   isShowLoginModalVar,
   isShowRegisterModalVar,
@@ -7,11 +7,12 @@ import {
 import styles from "./profileMenu.module.scss";
 import { useModal } from "@/hooks/useModal";
 import { useClickOutSide } from "@/hooks/useClickOutSide";
+import classNames from "classnames";
 type PropsType = {
   className?: string;
   children?: React.ReactNode;
 };
-const ProfileMenu: React.FC<PropsType> = ({ className }) => {
+const ProfileMenu: React.FC<PropsType> = ({ className = "" }) => {
   const [isShowDropdown, setShowDropdown] = useState(false);
 
   const dropDownRef = useRef<HTMLDivElement>(null);
@@ -20,15 +21,15 @@ const ProfileMenu: React.FC<PropsType> = ({ className }) => {
 
   useClickOutSide(dropDownRef, () => setShowDropdown(false));
   const isLogedIn = false;
-  const clx = useMemo(() => {
-    let cls = `${styles.wrapper} relative`;
-    if (className) {
-      cls = cls.concat(" ", className);
-    }
-    return cls;
-  }, []);
+
   return (
-    <div className={clx}>
+    <div
+      className={classNames({
+        [styles.wrapper]: styles.wrapper,
+        relative: true,
+        [className]: className,
+      })}
+    >
       <div>
         <button
           type="button"

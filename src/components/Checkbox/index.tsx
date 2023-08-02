@@ -1,6 +1,7 @@
 "use client";
-import React, { useMemo, memo, ChangeEvent, useId } from "react";
+import React, { memo, ChangeEvent, useId } from "react";
 import styles from "./checkbox.module.scss";
+import classNames from "classnames";
 type PropsType = {
   className?: string;
   label?: string;
@@ -12,26 +13,23 @@ type PropsType = {
   isChecked?: boolean;
 };
 const Checkbox: React.FC<PropsType> = ({
-  className,
+  className = "",
   onChange,
   label,
   type = "checkbox",
   name = "name",
   isChecked = true,
 }) => {
-  const clx = useMemo(() => {
-    let cls = "";
-    if (className) {
-      cls = cls.concat(" ", className);
-    }
-    cls = cls.concat(" ", type);
-
-    return cls;
-  }, [className, type]);
   const checkboxId = useId();
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={classNames({
+        [styles.wrapper]: styles.wrapper,
+        [className]: className,
+        [type]: type,
+      })}
+    >
       <div className={`inline-flex relative items-center`}>
         <div className="input-control">
           <input

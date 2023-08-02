@@ -9,7 +9,12 @@ const LuggageItem: React.FC<{
   onSelectLuggage?: () => void;
 }> = ({ data, isSelected, onSelectLuggage }) => {
   return (
-    <div className={styles.wrapper + ` luggage-item w-28 mb-4 mr-4`}>
+    <div
+      className={classNames({
+        [styles.wrapper]: styles.wrapper,
+        "luggage-item w-28 mb-4 mr-4": true,
+      })}
+    >
       <div
         className={classNames({
           "luggage-inner border px-4 py-3 rounded-md text-center bg-white shadow-sm cursor-pointer":

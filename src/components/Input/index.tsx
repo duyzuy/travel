@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useId, useMemo, memo } from "react";
+import React, { ChangeEvent, useId, memo } from "react";
 import classNames from "classnames";
 import styles from "./input.module.scss";
 type PropsType = {
@@ -50,7 +50,12 @@ const Input: React.FC<PropsType> = ({
 
   const Icon = icon;
   return (
-    <div className={`${styles.controller} ${className}`}>
+    <div
+      className={classNames({
+        [styles.controller]: styles.controller,
+        [className]: className,
+      })}
+    >
       <div
         className={classNames({
           "floating-label": floating,

@@ -42,10 +42,10 @@ const Modal: React.FC<ModalPropType> = ({
 
   return (
     <div
-      className={
-        styles.wrapper +
-        " modal fixed left-0 right-0 top-0 bottom-0 overflow-y-auto"
-      }
+      className={classNames({
+        [styles.wrapper]: styles.wrapper,
+        "modal fixed left-0 right-0 top-0 bottom-0 overflow-y-auto": true,
+      })}
     >
       <div className="modal-wrap w-full min-h-full flex items-center justify-center px-2">
         <div
