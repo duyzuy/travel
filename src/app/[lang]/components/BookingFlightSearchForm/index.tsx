@@ -70,8 +70,13 @@ const BookingFlightSearchForm: React.FC<{ showRecent?: boolean }> = ({
     onSubmitFlightSearchForm({
       ...searchInfor,
     });
-
-    router.push(`/${langCode}/select-flight`);
+    if (
+      !pathName.includes("seats") &&
+      !pathName.includes("passenger") &&
+      !pathName.includes("select-flight")
+    ) {
+      router.push(`/${langCode}/select-flight`);
+    }
   };
   return (
     <div className={styles.wrapper}>

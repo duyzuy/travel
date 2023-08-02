@@ -58,7 +58,7 @@ const SeatSelectionPage = ({
     },
   });
   return (
-    <div className="container mx-auto py-12">
+    <div className="container mx-auto">
       <div className="page-head py-6 flex items-center justify-between">
         <h1 className="text-2xl">Lựa chọn ghế ngồi</h1>
         <span className="text-sm text-emerald-500">Bỏ qua chọn ghế</span>
