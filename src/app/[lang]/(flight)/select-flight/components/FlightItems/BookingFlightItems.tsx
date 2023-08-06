@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useCallback, useMemo } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 
 import FlightItem from "../FlightItem";
 import { FlightDetailItemType } from "@/Models/ticket";
@@ -14,6 +14,9 @@ import useSelectFlight from "@/hooks/useSelectFlight";
 import { Direction } from "@/constants/enum";
 import { Airlines } from "@/Models/airline";
 import { flightsFilterVar } from "@/cache/vars";
+import FlightItemTicketsModal from "@/app/[lang]/components/FlightItemTicketsModal";
+import { useModal } from "@/hooks/useModal";
+import { flightItemTicketModalVar } from "@/cache/vars";
 export type OnSelectFlightType = ({
   direction,
   ticket,
@@ -28,19 +31,38 @@ const BookingFlightItems: React.FC<{
   airlines: Airlines;
 }> = ({ flightItems, direction, airlines }) => {
   const bookingInformation = useReactiveVar(bookingInformationVar);
+  const [tickets, setTickets] = useState<{
+    data: { tid: string; outbound: FlightDetailItemType };
+    childs: { tid: string; outbound: FlightDetailItemType }[];
+  }>();
+  const { onShowModal } = useModal(flightItemTicketModalVar);
 
   const filter = useReactiveVar(flightsFilterVar);
   const { onSelectFlight } = useSelectFlight(bookingInformationVar);
 
-  const handleSelectFlight: OnSelectFlightType = useCallback(
-    ({ direction, ticket }) => {
-      onSelectFlight({
-        direction,
-        ticket,
-      });
-    },
-    []
-  );
+  const handleSelectFlight: ({
+    flightItem,
+    childs,
+  }: {
+    flightItem: {
+      direction: Direction;
+      ticket: { tid: string; outbound: FlightDetailItemType };
+    };
+    childs: { tid: string; outbound: FlightDetailItemType }[];
+  }) => void = useCallback(({ flightItem, childs }) => {
+    console.log(childs);
+    setTickets(() => ({
+      data: {
+        ...flightItem.ticket,
+      },
+      childs: childs,
+    }));
+    onShowModal();
+    onSelectFlight({
+      direction: flightItem.direction,
+      ticket: flightItem.ticket,
+    });
+  }, []);
 
   const flightItemsFilter = useMemo(() => {
     let filterOutput = [...flightItems];
@@ -163,10 +185,6 @@ const BookingFlightItems: React.FC<{
     return uniqueFlightsWithChilds;
   }, [filter]);
 
-  const getBrandNameFromFlightNumber = useCallback((flightCode: string) => {
-    return airlines.find((item) => flightCode.includes(item.code));
-  }, []);
-
   return (
     <div className="flight-items">
       {flightItemsFilter.map((ticket) => {
@@ -176,16 +194,22 @@ const BookingFlightItems: React.FC<{
             key={ticket.tid}
             direction={Direction.OUT_BOUND}
             tid={ticket.tid}
-            onSelectFlight={handleSelectFlight}
+            onSelectFlight={(flightItem) =>
+              handleSelectFlight({
+                flightItem: flightItem,
+                childs: ticket.childs,
+              })
+            }
             isSelected={
               bookingInformation.flightItems[direction]?.tid === ticket.tid
             }
-            oneStop={ticket.outbound.ticketdetail.numStops === 0}
-            // childs={ticket.childs}
-            airline={getBrandNameFromFlightNumber(ticket.outbound.flightNumber)}
+            airlines={airlines}
           />
         );
       })}
+      {tickets && (
+        <FlightItemTicketsModal data={tickets.data} childs={tickets.childs} />
+      )}
     </div>
   );
 };

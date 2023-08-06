@@ -11,7 +11,7 @@ import { Direction } from "@/constants/enum";
 const FlightItems: React.FC = () => {
   const { data, loading } = useQuery<{
     flightOptions: FlightOptionsType;
-  }>(GET_FLIGHT_OPTIONS);
+  }>(GET_FLIGHT_OPTIONS, {});
 
   if (loading) {
     return <>...loading</>;

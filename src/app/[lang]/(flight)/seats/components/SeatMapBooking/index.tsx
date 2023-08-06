@@ -52,10 +52,16 @@ const SeatMapBooking: React.FC = () => {
         <PassengerList className="mb-4" />
         <AirCraftSeatNotes isSticky={isShort} />
       </div>
-      <div className="site-map -mt-52 relative">
+      <div className="flex top-0 z-50 -mt-52 justify-center bg-white">
+        {/* <PassengerList className="mb-4 w-64" type="vertical" /> */}
         <SeatMapA330 />
         {/* <SeatMapA321 />
         <SeatMapA320 /> */}
+        {/* <AirCraftSeatNotes
+          isSticky={isShort}
+          type="vertical"
+          className="w-64"
+        /> */}
       </div>
     </>
   );

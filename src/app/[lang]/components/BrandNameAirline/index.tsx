@@ -2,27 +2,37 @@
 import React, { memo } from "react";
 import Image from "next/image";
 import { Airline } from "@/Models/airline";
+import classNames from "classnames";
 const BrandNameAirline: React.FC<{
-  airline: Airline;
+  airline?: Airline;
   flightNumber: string;
-}> = ({ airline, flightNumber }) => {
+  className?: string;
+}> = ({ airline, flightNumber, className = "" }) => {
   return (
     <>
-      <div className="brand flex items-center">
-        <Image
-          src={airline.logo}
-          alt={airline.name}
-          width={40}
-          height={40}
-          className="rounded-full border p-1 mr-2"
-        />
-        <p className="brand-info ml-2">
-          <span className="brand-name block">{airline.name}</span>
-          <span className="flight-number text-sm text-gray-500 block">
-            {flightNumber}
+      {(airline && (
+        <div
+          className={classNames({
+            "brand flex items-center": true,
+            [className]: className,
+          })}
+        >
+          <span className="relative rounded-full mr-2 block w-8 h-8">
+            <Image
+              src={airline.logo}
+              alt={airline.name}
+              fill
+              style={{ objectFit: "contain" }}
+            />
           </span>
-        </p>
-      </div>
+          <p className="brand-info flex-1">
+            <span className="brand-name block text-sm">{airline.name}</span>
+            <span className="flight-number text-xs text-gray-500 block">
+              {flightNumber}
+            </span>
+          </p>
+        </div>
+      )) || <></>}
     </>
   );
 };

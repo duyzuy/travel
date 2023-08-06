@@ -47,6 +47,10 @@ const Button: React.FC<PropsType> = ({
           variant === "outline" && color === "secondary",
         "border-red-400 border text-red-500 hover:bg-red-500 hover:text-white":
           variant === "outline" && color === "danger",
+        "border-orange-500 border text-orange-500 hover:bg-orange-500 hover:text-white":
+          variant === "outline" && color === "orange",
+        "border-orange-400 border  hover:bg-orange-500 bg-orange-400 text-white":
+          variant === "contained" && color === "orange",
         "rounded-sm": rounded === "sm",
         "rounded-md": rounded === "md",
         "rounded-lg": rounded === "lg",

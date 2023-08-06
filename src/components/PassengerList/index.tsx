@@ -4,9 +4,10 @@ import React, { memo } from "react";
 import PassengerItem from "./PassengerItem";
 import styles from "./passenger-list.module.scss";
 import classNames from "classnames";
-const PassengerList: React.FC<{ className?: string }> = ({
-  className = "",
-}) => {
+const PassengerList: React.FC<{
+  className?: string;
+  type?: "vertical" | "horizon";
+}> = ({ className = "", type = "horizon" }) => {
   const PAX_LIST = [
     {
       id: "vtd",
@@ -52,7 +53,12 @@ const PassengerList: React.FC<{ className?: string }> = ({
         [className]: className,
       })}
     >
-      <ul className="pax-list flex items-center text-sm">
+      <ul
+        className={classNames({
+          "pax-list text-sm": true,
+          "flex items-center": type === "horizon",
+        })}
+      >
         {PAX_LIST.map((item) => (
           <PassengerItem key={item.id} data={item} isSelecting={item.current} />
         ))}

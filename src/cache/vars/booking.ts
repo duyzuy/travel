@@ -17,3 +17,4 @@ export const flightDirectionSelectVar = makeVar<DirectSelectionType>({
 });
 
 export const showLuggageVar = makeVar<boolean>(false);
+export const flightItemTicketModalVar = makeVar<boolean>(false);

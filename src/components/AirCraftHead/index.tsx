@@ -10,13 +10,13 @@ const AirCraftHead: React.FC<{
     <div className={`aircraft-top relative ${height}`}>
       <div className="relative w-full h-full flex">
         <div
-          className={`aircraft-top-left border-l-4 w-1/2 ${borderColor}`}
+          className={`aircraft-top-left border-l-4 w-1/2 bg-white ${borderColor}`}
           style={{
             borderTopLeftRadius: "100%",
           }}
         ></div>
         <div
-          className={`aircraft-top-right border-r-4 w-1/2 ${borderColor}`}
+          className={`aircraft-top-right border-r-4 w-1/2 bg-white ${borderColor}`}
           style={{
             borderTopRightRadius: "100%",
           }}

@@ -18,7 +18,7 @@ interface ModalPropType {
   modalTitle?: string;
   rounded?: "sm" | "md" | "lg" | "xl";
   onclose?: () => void;
-  width?: "sm" | "md" | "lg" | "xl";
+  width?: "sm" | "md" | "lg" | "xl" | "full";
 }
 const Modal: React.FC<ModalPropType> = ({
   isOpen = false,
@@ -44,7 +44,7 @@ const Modal: React.FC<ModalPropType> = ({
     <div
       className={classNames({
         [styles.wrapper]: styles.wrapper,
-        "modal fixed left-0 right-0 top-0 bottom-0 overflow-y-auto": true,
+        "modal left-0 right-0 top-0 bottom-0 overflow-y-auto": true,
       })}
     >
       <div className="modal-wrap w-full min-h-full flex items-center justify-center px-2">
@@ -60,6 +60,7 @@ const Modal: React.FC<ModalPropType> = ({
             "sm:max-w-md": width === "md",
             "sm:max-w-lg": width === "lg",
             "sm:max-w-xl": width === "xl",
+            "sm:max-w-5xl": width === "full",
             "opacity-0 translate-y-10": !stage,
             "opacity-100 translate-y-0": stage,
           })}

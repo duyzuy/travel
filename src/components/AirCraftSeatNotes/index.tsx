@@ -3,9 +3,12 @@
 import classNames from "classnames";
 import React, { memo, useEffect, useState } from "react";
 import useAnimation from "@/hooks/useAnimation";
-const AirCraftSeatNotes: React.FC<{ isSticky?: boolean }> = ({
-  isSticky = false,
-}) => {
+import IconSeat from "../Icons/IconSeat";
+const AirCraftSeatNotes: React.FC<{
+  isSticky?: boolean;
+  type?: "vertical" | "horizon";
+  className?: string;
+}> = ({ isSticky = false, type = "horizon", className = "" }) => {
   const SEAT_TYPES = [
     {
       id: "seat-1",
@@ -37,15 +40,20 @@ const AirCraftSeatNotes: React.FC<{ isSticky?: boolean }> = ({
       price: "",
       type: "unAvailable",
     },
-    {
-      id: "seat-6",
-      name: "Các ghế đang chọn",
-      price: "",
-      type: "selectings",
-    },
+    // {
+    //   id: "seat-6",
+    //   name: "Các ghế đang chọn",
+    //   price: "",
+    //   type: "selectings",
+    // },
   ];
   return (
-    <div className="seat-note relative">
+    <div
+      className={classNames({
+        "seat-note relative": true,
+        [className]: className,
+      })}
+    >
       <div className="seat-note-inner bg-white shadow-sm border">
         <div
           className={classNames({
@@ -58,27 +66,45 @@ const AirCraftSeatNotes: React.FC<{ isSticky?: boolean }> = ({
           <div className="border-b my-2"></div>
         </div>
 
-        <ul className="flex px-2 flex-wrap relative z-10">
+        <ul
+          className={classNames({
+            "px-2 relative z-10": true,
+            "flex flex-wrap": type === "horizon",
+          })}
+        >
           {SEAT_TYPES.map((seat) => (
             <li
               key={seat.id}
               className={classNames({
-                "flex items-center px-2 py-1 lg:px-4 lg:py-3 w-1/3 lg:w-1/6":
-                  true,
+                "flex items-center px-2 py-1 lg:px-4 lg:py-3": true,
+                "w-1/3 lg:w-1/5": type === "horizon",
+                "w-full": type === "vertical",
               })}
             >
-              <span
-                className={classNames({
-                  "w-6 h-6 block rounded-md mr-2 border-b-2": true,
-                  "bg-red-500 border-red-600": seat.type === "hotSeat",
-                  "bg-purple-500 border-purple-600": seat.type === "frontSeat",
-                  "bg-blue-500 border-blue-600": seat.type === "wideSeat",
-                  "bg-gray-300 border-gray-400": seat.type === "unAvailable",
-                  "bg-emerald-500 border-emerald-600":
-                    seat.type === "normalSeat",
-                  "bg-orange-400 border-orange-500": seat.type === "selectings",
-                })}
-              ></span>
+              <span className="w-6 h-6 block mr-2">
+                <IconSeat
+                  width={22}
+                  height={26}
+                  fill={
+                    (seat.type === "hotSeat" && "#FFE7E7") ||
+                    (seat.type === "wideSeat" && "#E5F3FF") ||
+                    (seat.type === "frontSeat" && "#E3CCFA") ||
+                    (seat.type === "normalSeat" && "#D6FFF0") ||
+                    (seat.type === "unAvailable" && "#ECECEC") ||
+                    (seat.type === "selectings" && "#FFF2DA") ||
+                    ""
+                  }
+                  fillLine={
+                    (seat.type === "hotSeat" && "#DA0000") ||
+                    (seat.type === "wideSeat" && "#0071DA") ||
+                    (seat.type === "frontSeat" && "#7700D4") ||
+                    (seat.type === "normalSeat" && "#1DB47D") ||
+                    (seat.type === "unAvailable" && "#484848") ||
+                    (seat.type === "selectings" && "#FF8A00") ||
+                    ""
+                  }
+                />
+              </span>
               <p className="text-sm flex-1">
                 <span className="block text-gray-600 text-xs">{seat.name}</span>
                 {(seat.price && (

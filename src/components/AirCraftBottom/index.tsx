@@ -8,7 +8,7 @@ const AirCraftBottom: React.FC<{
 }> = ({ height = "h-80", borderColor = "border-gray-300" }) => {
   return (
     <div
-      className={`aircraft-bottom border-l-4 border-r-4 border-b-4 relative border-gray-300 px-4`}
+      className={`aircraft-bottom border-l-4 border-r-4 border-b-4 relative bg-white border-gray-300 px-4`}
       style={{
         borderBottomLeftRadius: 150,
         borderBottomRightRadius: 150,

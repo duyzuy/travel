@@ -8,7 +8,12 @@ import IconTicket2 from "../Icons/IconTicket2";
 import IconInsurance from "../Icons/IconInsurance";
 import IconPlaneSeat from "../Icons/IconPlaneSeat";
 import IconBilling from "../Icons/IconBilling";
-const FlightPriceTicketDetail: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
+import { FlightDetailItemType } from "@/Models/ticket";
+const FlighItemTicketDetail: React.FC<{
+  isOpen: boolean;
+  data: FlightDetailItemType;
+}> = ({ isOpen, data }) => {
+  console.log(data);
   if (!isOpen) {
     return null;
   }
@@ -55,7 +60,7 @@ const FlightPriceTicketDetail: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
                 </div>
                 <Button
                   color="secondary"
-                  size="xs"
+                  size="sm"
                   className="w-16 text-xs"
                   rounded="sm"
                 >
@@ -123,7 +128,7 @@ const FlightPriceTicketDetail: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
                 </div>
                 <Button
                   color="secondary"
-                  size="xs"
+                  size="sm"
                   className="w-16 text-xs"
                   rounded="sm"
                 >
@@ -137,4 +142,4 @@ const FlightPriceTicketDetail: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
     </div>
   );
 };
-export default memo(FlightPriceTicketDetail);
+export default memo(FlighItemTicketDetail);

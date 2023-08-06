@@ -65,7 +65,7 @@ const SeatSelectionPage = ({
       </div>
       <div className="page-body relative overflow-clip">
         <FlightSectors style={{ top: 1 }} />
-        <div className="bg-white relative z-50">
+        <div className="relative z-50">
           <SeatMapBooking />
           <SeatBookingNavigation />
         </div>

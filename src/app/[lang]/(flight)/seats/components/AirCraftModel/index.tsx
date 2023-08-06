@@ -39,7 +39,7 @@ const AirCraftModel: React.FC<{
     >
       <div className="aircraft-inner w-fit relative mx-auto">
         <AirCraftHead />
-        <div className="aircraft-body w-fit border-l-4 border-r-4 px-4 pb-10 relative border-gray-300">
+        <div className="aircraft-body w-fit border-l-4 border-r-4 px-4 pb-10 relative border-gray-300 bg-white">
           <div className="row-seat-name flex item-center">
             {rowsHead?.map((rowName, index) => (
               <Fragment key={`row-name${index}`}>

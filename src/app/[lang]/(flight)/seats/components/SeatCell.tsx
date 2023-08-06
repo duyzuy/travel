@@ -4,15 +4,23 @@ import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 import classNames from "classnames";
 import { SeatOptionType } from "@/Models/seatMap";
 import { formatCurrencyVND } from "@/utils/helper";
+import IconSeat from "@/components/Icons/IconSeat";
 const SeatCell: React.FC<{
   data: SeatOptionType | null;
   onSelectSeat?: (seat: SeatOptionType) => void;
   seatSpacing?: "sm" | "md" | "lg";
-}> = ({ data, seatSpacing, onSelectSeat }) => {
+}> = ({ data, seatSpacing = "sm", onSelectSeat }) => {
   const [isHover, setHover] = useState(false);
   if (data === null) {
     return (
-      <div className="w-9 h-9 m-1 flex items-center justify-center invisible">
+      <div
+        className={classNames({
+          "w-9 h-9 flex items-center justify-center invisible": true,
+          "mx-1 my-2": seatSpacing === "sm",
+          "mx-2 my-3": seatSpacing === "md",
+          "m-3": seatSpacing === "lg",
+        })}
+      >
         <span className="text-sm null">&nbsp;</span>
       </div>
     );
@@ -26,19 +34,25 @@ const SeatCell: React.FC<{
   };
 
   const getSeatType = useCallback((data: SeatOptionType) => {
-    let seatName = "";
+    let seat = { seatName: "", seatType: "" };
 
     if (
       data.seatMapCell.seatQualifiers.emergencyExit &&
       !data.seatMapCell.seatQualifiers.disabled
     ) {
-      seatName = "Ghế ngồi chân rộng";
+      seat = {
+        seatName: "Ghế ngồi chân rộng",
+        seatType: "wideSeat",
+      };
     }
     if (
       data.seatMapCell.seatQualifiers.bulkheadFront &&
       !data.seatMapCell.seatQualifiers.disabled
     ) {
-      seatName = "Ghế cao cấp";
+      seat = {
+        seatName: "Ghế cao cấp",
+        seatType: "hotSeat",
+      };
     }
 
     if (
@@ -47,38 +61,27 @@ const SeatCell: React.FC<{
       !data.seatMapCell.seatQualifiers.bulkheadFront &&
       !data.seatMapCell.seatQualifiers.disabled
     ) {
-      seatName = "Ghế tiêu chuẩn";
+      seat = {
+        seatName: "Ghế tiêu chuẩn",
+        seatType: "normalSeat",
+      };
     }
     if (data.seatMapCell.seatQualifiers.limitedRecline) {
-      seatName = "Ghế hàng phía trước";
+      seat = {
+        seatName: "Ghế hàng phía trước",
+        seatType: "frontSeat",
+      };
     }
-    return seatName;
+    return seat;
   }, []);
   return (
-    <div
+    <span
       className={classNames({
-        "seat-option w-9 h-9 m-1 flex items-center justify-center rounded-md text-xs text-white shadow-sm relative cursor-pointer":
+        "seat-option w-9 h-9 flex items-center justify-center rounded-md text-xs shadow-sm relative cursor-pointer":
           true,
-        "wide-seat bg-blue-500 border-b-2 border-blue-600":
-          data.seatMapCell.seatQualifiers.emergencyExit &&
-          !data.seatMapCell.seatQualifiers.disabled,
-        "seat--hot bg-red-500 border-b-2 border-red-600":
-          data.seatMapCell.seatQualifiers.bulkheadFront &&
-          !data.seatMapCell.seatQualifiers.disabled,
-        "seat--head-back":
-          data.seatMapCell.seatQualifiers.bulkheadBack &&
-          !data.seatMapCell.seatQualifiers.disabled,
-        "front-seat bg-purple-500 border-b-2 border-purple-600":
-          data.seatMapCell.seatQualifiers.limitedRecline,
-        "normal-seat bg-emerald-500 border-b-2 border-emerald-600":
-          !data.seatMapCell.seatQualifiers.limitedRecline &&
-          !data.seatMapCell.seatQualifiers.emergencyExit &&
-          !data.seatMapCell.seatQualifiers.bulkheadFront &&
-          !data.seatMapCell.seatQualifiers.disabled,
-        "un-available": !data.selectionValidity.available,
-        // "disable bg-gray-300 border-b-4 border-gray-400":
-        //   data.seatMapCell.seatQualifiers.disabled ||
-        //   !data.selectionValidity.available,
+        "mx-1 my-2": seatSpacing === "sm",
+        "mx-2 my-3": seatSpacing === "md",
+        "m-3": seatSpacing === "lg",
       })}
       onMouseOver={handleMouseOver}
       onMouseLeave={handleMouseLeave}
@@ -86,6 +89,28 @@ const SeatCell: React.FC<{
         onSelectSeat && onSelectSeat(data);
       }}
     >
+      <IconSeat
+        width={36}
+        height={36}
+        fill={
+          (getSeatType(data).seatType === "hotSeat" && "#FFE7E7") ||
+          (getSeatType(data).seatType === "wideSeat" && "#E5F3FF") ||
+          (getSeatType(data).seatType === "frontSeat" && "#E3CCFA") ||
+          (getSeatType(data).seatType === "normalSeat" && "#D6FFF0") ||
+          (getSeatType(data).seatType === "unAvailable" && "#ECECEC") ||
+          (getSeatType(data).seatType === "selectings" && "#FFF2DA") ||
+          ""
+        }
+        fillLine={
+          (getSeatType(data).seatType === "hotSeat" && "#DA0000") ||
+          (getSeatType(data).seatType === "wideSeat" && "#0071DA") ||
+          (getSeatType(data).seatType === "frontSeat" && "#7700D4") ||
+          (getSeatType(data).seatType === "normalSeat" && "#1DB47D") ||
+          (getSeatType(data).seatType === "unAvailable" && "#484848") ||
+          (getSeatType(data).seatType === "selectings" && "#FF8A00") ||
+          ""
+        }
+      />
       {(isHover && (
         <SeatToolTip
           row={data.seatMapCell.rowIdentifier}
@@ -93,13 +118,12 @@ const SeatCell: React.FC<{
           price={formatCurrencyVND(
             data.seatCharges[0].currencyAmounts[0].baseAmount
           )}
-          seatName={getSeatType(data)}
+          seatName={getSeatType(data).seatName}
         />
       )) || <></>}
-
-      <div
+      <span
         className={classNames({
-          "seat invisible": true,
+          "seat invisible hidden": true,
         })}
         data-row={data.seatMapCell.rowIdentifier}
         data-seat={data.seatMapCell.seatIdentifier}
@@ -108,8 +132,8 @@ const SeatCell: React.FC<{
         <span className="seat-identifier">
           {data.seatMapCell.seatIdentifier}
         </span>
-      </div>
-    </div>
+      </span>
+    </span>
   );
 };
 export default memo(SeatCell);
@@ -121,10 +145,10 @@ const SeatToolTip: React.FC<{
   price: string;
 }> = ({ seatName, row, seat, price }) => {
   return (
-    <div className="seat-info bg-emerald-500 absolute -top-20 px-3 py-2 w-48 shadow-2xl z-10 rounded-md flex items-center border-b-4 border-b-emerald-600 pointer-events-none">
-      <div className="flex items-center justify-center  rounded-lg mr-2">
+    <div className="seat-info bg-white absolute -top-20 px-3 py-3 w-48 drop-shadow-sm z-10 rounded-md flex items-center border-gray-100 border-b-2 border pointer-events-none">
+      <div className="flex items-center justify-center rounded-lg mr-2">
         <span className="seat-value text-2xl font-extrabold rounded flex items-center justify-center">
-          <span>
+          <span className="text-emerald-500">
             <span className="row-identifier">{row}</span>
             <span className="seat-identifier">{seat}</span>
           </span>
@@ -135,7 +159,7 @@ const SeatToolTip: React.FC<{
         <span className="seat-price block font-bold">{price}</span>
       </div>
       <span
-        className="caret absolute bottom-0 border-t-emerald-600 border-r-transparent border-b-transparent border-l-transparent"
+        className="caret absolute bottom-0 border-t-gray-200 border-r-transparent border-b-transparent border-l-transparent"
         style={{
           borderStyle: "solid",
           borderWidth: 10,

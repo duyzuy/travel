@@ -9,7 +9,7 @@ const PassengerItem: React.FC<{
   return (
     <li
       className={classNames({
-        "pax-item flex items-center px-4 py-2 h-16 border rounded-sm mr-3 bg-white md:1/3 lg:w-80 cursor-pointer":
+        "pax-item flex items-center px-4 py-2 h-16 border rounded-sm mr-3 bg-white md:1/3 lg:w-64 cursor-pointer":
           true,
         "border-emerald-500 active": isSelecting,
         "shadow-sm": !isSelecting,
