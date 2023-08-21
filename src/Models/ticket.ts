@@ -1,4 +1,4 @@
-import { Airline } from "./airline";
+import { Airline, Airlines } from "./airline";
 
 export type TicketType = {
   cid: number;

@@ -3,8 +3,9 @@ import localFont from "next/font/local";
 import dynamic from "next/dynamic";
 import "../styles/global.scss";
 import { ApolloWrapper } from "../ApolloWrapper";
-import RegisterModal from "./components/RegisterModal";
-import LoginModal from "./components/LoginModal";
+import RegisterModal from "./(auth)/_components/RegisterModal";
+import LoginModal from "./(auth)/_components/LoginModal";
+
 const productSans = localFont({
   src: [
     {
@@ -36,7 +37,7 @@ const productSans = localFont({
 });
 
 const DynamicMainHeader = dynamic(
-  () => import("@/app/[lang]/components/common/MainHeader"),
+  () => import("@/app/[lang]/_components/common/MainHeader"),
   {
     loading: () => <p>Loading...</p>,
   }

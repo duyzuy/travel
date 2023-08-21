@@ -1,9 +1,9 @@
 import React, { memo } from "react";
-const IconAdult: React.FC<{
-  className?: string;
-  width?: number;
-  height?: number;
-}> = ({ className = "", width = 22, height = 22 }) => {
+const IconAdult = ({
+  className = "",
+  width = 22,
+  height = 22,
+}: React.SVGProps<SVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

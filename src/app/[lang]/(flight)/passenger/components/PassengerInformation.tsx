@@ -1,8 +1,8 @@
 "use client";
 
 import React, { memo } from "react";
-import Select from "@/components/Select";
-import Input from "@/components/Input";
+import Select from "@/components/base/Select";
+import Input from "@/components/base/Input";
 import { PaxType } from "@/constants/enum";
 import IconInfant from "@/components/Icons/IconInfant";
 import IconAdult from "@/components/Icons/IconAdult";

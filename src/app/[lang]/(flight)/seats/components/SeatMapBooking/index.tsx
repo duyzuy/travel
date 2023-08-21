@@ -1,7 +1,7 @@
 "use client";
 
 import React, { memo, useEffect, useRef, useState } from "react";
-import AirCraftSeatNotes from "@/components/AirCraftSeatNotes";
+import AirCraftSeatNotes from "@/components/Flights/AirCraftModel/AirCraftSeatNotes";
 import PassengerList from "@/components/PassengerList";
 import SeatMapA320 from "../SeatMapModel/SeatMapA320";
 import SeatMapA321 from "../SeatMapModel/SeatMapA321";

@@ -17,7 +17,7 @@ export enum FILTER_KEYS {
   DEPARTIME = "departTimes",
   SORTING = "sorting",
 }
-export enum SHORTINGS {
+export enum SORTS_ENUM {
   LOWEST = "lowest",
   EARLY = "early",
   FASTEST = "fastest",
@@ -29,9 +29,9 @@ export type DepartTimes = string[];
 export const flightsFilterVar = makeVar<{
   [FILTER_KEYS.BRAND]: Brands;
   [FILTER_KEYS.DEPARTIME]: DepartTimes;
-  [FILTER_KEYS.SORTING]: SHORTINGS;
+  [FILTER_KEYS.SORTING]: SORTS_ENUM;
 }>({
   [FILTER_KEYS.BRAND]: [],
   [FILTER_KEYS.DEPARTIME]: [],
-  [FILTER_KEYS.SORTING]: SHORTINGS.LOWEST,
+  [FILTER_KEYS.SORTING]: SORTS_ENUM.LOWEST,
 });

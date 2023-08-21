@@ -1,10 +1,10 @@
 "use client";
-import Drawler from "@/components/Drawler";
+import Drawler from "@/components/base/Drawler";
 import React, { memo } from "react";
 import { showLuggageVar } from "@/cache/vars";
 import { useModal } from "@/hooks/useModal";
 import { useReactiveVar } from "@apollo/client";
-import Button from "@/components/Button";
+import Button from "@/components/base/Button";
 import LuggagesBySectors from "./LuggagesBySectors";
 import LuggageNavigationBar from "../LuggageNavigationBar";
 const LuggagesDrawler: React.FC = () => {

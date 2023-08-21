@@ -136,14 +136,14 @@ const makeMoneyFormatter =
     return output;
   };
 
-export const formatCurrencyVND = makeMoneyFormatter({
+export const moneyFormatVND = makeMoneyFormatter({
   sign: "VND",
   precision: 0,
   append: true,
   isShowCurrency: true,
 });
 
-export const formatCurrencyNoneVND = makeMoneyFormatter({
+export const moneyFormatNoSymbol = makeMoneyFormatter({
   sign: "VND",
   precision: 0,
   append: true,

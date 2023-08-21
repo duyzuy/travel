@@ -8,7 +8,7 @@ import IconFlightRight from "@/components/Icons/IconFlightRight";
 import IconInssurance from "@/assets/icons/ico-insurance.svg";
 import IconSafty from "@/assets/icons/ico-safety.svg";
 
-import Checkbox from "@/components/Checkbox";
+import Checkbox from "@/components/base/Checkbox";
 import IconChubb from "@/components/Icons/IconChubb";
 
 const Inssurance: React.FC = () => {

@@ -5,7 +5,7 @@ import React, { memo, useMemo } from "react";
 import { useQuery } from "@apollo/client";
 import { QUERY_SEAT_MAP_BY_MODEL } from "@/operations/queries/seatMap";
 import { ISeatMapModel, SeatOptionType } from "@/Models/seatMap";
-import AirCraftModel from "../AirCraftModel";
+import AirCraftModel from "@/components/Flights/AirCraftModel";
 const SeatMapA320: React.FC = () => {
   const { data, loading, refetch, error } = useQuery<{
     seatMapModel: ISeatMapModel;

@@ -1,9 +1,9 @@
 import Image from "next/image";
 import SlideImage from "../../assets/images/top-main-banner.jpeg";
 import styles from "../styles/home.module.scss";
-import PromotedFlights from "./components/PromotedFlights";
-import SectionArticles from "./components/SectionArticles";
-import BookingMultipleForm from "@/components/BookingMultipleForm";
+import PromotedFlights from "./_components/PromotedFlights";
+import SectionArticles from "./_components/SectionArticles";
+import MultipleSearchBooking from "./_components/MultipleSearchBooking";
 import classNames from "classnames";
 import { Suspense } from "react";
 export default function Page({
@@ -21,12 +21,13 @@ export default function Page({
             className={classNames({
               vi: lang === "vi-VN",
               en: lang === "en-US",
+              "mx-auto": true,
             })}
           />
         </div>
       </section>
       <section>
-        <BookingMultipleForm />
+        <MultipleSearchBooking />
       </section>
       <div className="gap md:py-8 py-4"></div>
       <Suspense fallback="loading promote flight...">

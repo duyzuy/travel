@@ -5,7 +5,7 @@ import IconFlightRight from "@/components/Icons/IconFlightRight";
 import classNames from "classnames";
 import { formatCurrencyVND } from "@/utils/helper";
 import LuggageItem from "@/components/LuggageItem";
-import Checkbox from "@/components/Checkbox";
+import Checkbox from "@/components/base/Checkbox";
 const LuggagesDropdown = () => {
   const LUGGAGE_ITEMS = [
     { id: "luggage-1", name: "30kg", price: 150000, current: true },

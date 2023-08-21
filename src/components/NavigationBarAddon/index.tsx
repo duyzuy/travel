@@ -1,7 +1,7 @@
 "use client";
 
 import React, { memo } from "react";
-import Button from "../Button";
+import Button from "../base/Button";
 import classNames from "classnames";
 import styles from "./navigation-addon.module.scss";
 const NavigationBarAddOn: React.FC<{

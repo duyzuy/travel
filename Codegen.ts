@@ -1,8 +1,7 @@
 import { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
-  schema: "https://cqy2y.sse.codesandbox.io",
-  documents: ["src/**/*.tsx"],
+  documents: ["src/Models/**/*.tsx"],
   generates: {
     "./src/__generated__/": {
       preset: "client",

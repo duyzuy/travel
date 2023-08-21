@@ -1,9 +1,9 @@
 import LuggagesDrawler from "./addons/luggages/components/LuggagesDrawler";
-import BookingInformationHeaderBar from "@/components/BookingInformationHeaderBar";
+import FlightBookingHeaderBar from "./_components/FlightBookingHeaderBar";
 const LayoutFlightBooking = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flight-booking">
-      <BookingInformationHeaderBar />
+      <FlightBookingHeaderBar />
       {children}
       <LuggagesDrawler />
     </div>

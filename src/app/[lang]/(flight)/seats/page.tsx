@@ -3,8 +3,8 @@
 import { useApolloClient } from "@apollo/client";
 import { SEAT_MAP_A320, SEAT_MAP_A321, SEAT_MAP_A330 } from "./datavj";
 import { WRITE_SEAT_MAP } from "@/cache/wtire";
-import FlightSectors from "@/components/FlightSectors";
-import Button from "@/components/Button";
+import FlightSectors from "@/components/Flights/FlightSectors";
+import Button from "@/components/base/Button";
 import SeatMapBooking from "./components/SeatMapBooking";
 import SeatBookingNavigation from "./components/SeatBookingNavigation";
 const SeatSelectionPage = ({
