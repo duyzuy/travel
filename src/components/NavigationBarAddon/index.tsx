@@ -8,7 +8,6 @@ const NavigationBarAddOn: React.FC<{
   addOn?: "meal" | "luggage" | "seats";
   buttonText?: string;
   onNavigationBarSubmit?: () => void;
-
   subTotal?: string;
   subText?: string;
   className?: string;

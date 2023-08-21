@@ -4,8 +4,8 @@ import React, { Fragment, memo } from "react";
 
 import AirCraftHead from "@/components/Flights/AirCraftModel/AirCraftHead";
 import AirCraftBottom from "@/components/Flights/AirCraftModel/AirCraftBottom";
-import AirCraftExistDoor from "@/components/Flights/AirCraftModel/AirCraftExistDoor";
 import AirCraftWings from "@/components/Flights/AirCraftWings";
+import AirCraftDoor from "./AirCraftDoor";
 import classNames from "classnames";
 import SeatCell from "./SeatCell";
 import { SeatOptionType } from "@/Models/seatMap";
@@ -84,7 +84,7 @@ const AirCraftModel: React.FC<{
                 )) || <></>}
 
                 {(rowsEmergency && rowsEmergency.includes(row.rowNumber) && (
-                  <AirCraftExistDoor className="absolute -left-6 -right-6 pointer-events-none bottom-3" />
+                  <AirCraftDoor className="absolute -left-6 -right-6 pointer-events-none bottom-3" />
                 )) || <></>}
 
                 {(rowsSpacing && rowsSpacing.includes(row.rowNumber) && (

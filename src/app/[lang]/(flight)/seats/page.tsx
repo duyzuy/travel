@@ -1,12 +1,15 @@
 "use client";
 
+import React, { useEffect, useState, useRef } from "react";
 import { useApolloClient } from "@apollo/client";
 import { SEAT_MAP_A320, SEAT_MAP_A321, SEAT_MAP_A330 } from "./datavj";
 import { WRITE_SEAT_MAP } from "@/cache/wtire";
 import FlightSectors from "@/components/Flights/FlightSectors";
-import Button from "@/components/base/Button";
-import SeatMapBooking from "./components/SeatMapBooking";
-import SeatBookingNavigation from "./components/SeatBookingNavigation";
+import SeatBookingNavigation from "./_components/SeatBookingNavigation";
+import PassengerList from "@/components/PassengerList";
+import SeatMapA320 from "./_components/SeatMapModel/SeatMapA320";
+import SeatsNote from "@/components/Flights/AirCraftModel/SeatsNote";
+import classNames from "classnames";
 const SeatSelectionPage = ({
   children,
   params,
@@ -15,6 +18,36 @@ const SeatSelectionPage = ({
   params: { lang: string };
 }) => {
   const client = useApolloClient();
+  const paxSeatNoteRef = useRef<HTMLDivElement>(null);
+
+  const [isSticky, setSticky] = useState(false);
+  const [isShort, setShort] = useState(false);
+
+  useEffect(() => {
+    const handleWindowScroll = () => {
+      if (!paxSeatNoteRef.current) return;
+
+      const windowScrollY = window.scrollY;
+      const elmShouldSticky =
+        paxSeatNoteRef.current.getBoundingClientRect().top;
+
+      if (elmShouldSticky <= 0) {
+        setSticky(() => true);
+      } else {
+        setSticky(() => false);
+        setShort(() => false);
+      }
+
+      if (windowScrollY > 450) {
+        setShort(() => true);
+      }
+    };
+
+    window.addEventListener("scroll", handleWindowScroll);
+
+    return () => window.removeEventListener("scroll", handleWindowScroll);
+  }, []);
+
   client.writeQuery({
     query: WRITE_SEAT_MAP,
     data: {
@@ -66,7 +99,21 @@ const SeatSelectionPage = ({
       <div className="page-body relative overflow-clip">
         <FlightSectors style={{ top: 1 }} />
         <div className="relative z-50">
-          <SeatMapBooking />
+          <div
+            className={classNames({
+              "seat-selection-top px-3 py-2 lg:px-6 lg:py-4 top-0 z-50 bg-white":
+                true,
+              "sticky top-0 shadow-lg": isSticky,
+              relative: !isSticky,
+            })}
+            ref={paxSeatNoteRef}
+          >
+            <PassengerList className="mb-4" />
+            <SeatsNote isSticky={isShort} />
+          </div>
+          <div className="flex top-0 z-50 -mt-52 justify-center bg-white">
+            <SeatMapA320 />
+          </div>
           <SeatBookingNavigation />
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import React, { memo } from "react";
 import classNames from "classnames";
-const AirCraftExistDoor: React.FC<{
+const AirCraftDoor: React.FC<{
   className?: string;
   doorName?: string;
 }> = ({ className = "", doorName = "Lối thoát hiểm" }) => {
@@ -30,4 +30,4 @@ const AirCraftExistDoor: React.FC<{
     </div>
   );
 };
-export default memo(AirCraftExistDoor);
+export default memo(AirCraftDoor);

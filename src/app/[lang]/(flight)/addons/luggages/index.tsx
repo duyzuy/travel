@@ -3,10 +3,10 @@ import React, { memo, useState } from "react";
 import Image from "next/image";
 import LuggageIcon from "@/assets/icons/suitcase.svg";
 
-import { showLuggageVar } from "@/cache/vars";
+import { showModalLuggageVar } from "@/cache/vars";
 import { useModal } from "@/hooks/useModal";
 const Luggages: React.FC = () => {
-  const { onShowModal } = useModal(showLuggageVar);
+  const { onShowModal } = useModal(showModalLuggageVar);
 
   return (
     <>

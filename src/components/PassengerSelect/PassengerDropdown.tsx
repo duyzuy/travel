@@ -1,8 +1,7 @@
 "use client";
 import React, { memo } from "react";
 import { PaxType } from "@/constants/enum";
-import { QUANTITY_ACTION } from "@/components/Quantity";
-import Quantity from "@/components/Quantity";
+import Quantity, { QUANTITY_ACTION } from "../base/Quantity";
 import { AdultIcon, ChildrenIcon, BabyIcon } from "@/assets/icons";
 import Image from "next/image";
 import classNames from "classnames";

@@ -8,11 +8,10 @@ import { useModal } from "@/hooks/useModal";
 import { useReactiveVar } from "@apollo/client";
 import { FlightDetailItemType } from "@/Models/ticket";
 import { moneyFormatVND } from "@/utils/helper";
-import FlightDetailItem from "@/components/Flights/FlightInformationDetail/FlightDetailItem";
 import Ticket from "./Ticket";
 import { format } from "date-fns";
 import { FORMAT_DATE_SHORT } from "@/constants/config";
-import FlightItemDuration from "@/components/Flights/FlightItemDuration";
+import FlightSchedule from "@/components/Flights/FlightTicketItem/FlightSchedule";
 const FlightItemTicketsModal: React.FC<{
   data: { tid: string; outbound: FlightDetailItemType };
   childs: { tid: string; outbound: FlightDetailItemType }[];
@@ -21,12 +20,13 @@ const FlightItemTicketsModal: React.FC<{
   const { onCloseModal } = useModal(flightItemTicketModalVar);
 
   const { outbound } = data;
+
   const ContentsModal = () => {
     return (
       <>
         <div className="flight-items-modal">
           <div className="flight-item-detail flex items-center mb-4 px-4 py-2">
-            <FlightItemDuration data={outbound} />
+            {/* <FlightSchedule data={outbound} /> */}
           </div>
           <div className="tickets flex">
             {(outbound.transitTickets && (

@@ -2,13 +2,17 @@ export enum TripType {
   ONEWAY = "oneWay",
   ROUND_TRIP = "roundTrip",
 }
-export enum FlightDirection {
+export enum FlightType {
   DIRECT = "direct",
   ONESTOP = "oneStop",
 }
 export enum Direction {
   OUT_BOUND = "outbound",
   IN_BOUND = "inbound",
+}
+export enum FlightDirection {
+  flightDepart = "flightDepart",
+  flightReturn = "flightReturn",
 }
 export enum TripDestination {
   TRIP_FROM = "tripFrom",

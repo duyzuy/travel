@@ -1,13 +1,14 @@
 "use client";
 import React, { memo } from "react";
 import classNames from "classnames";
-import { formatCurrencyVND } from "@/utils/helper";
+
 import styles from "./luggage-item.module.scss";
 const LuggageItem: React.FC<{
   isSelected: boolean;
-  data: { id: string; name: string; price: number };
+  price: string;
+  name: string;
   onSelectLuggage?: () => void;
-}> = ({ data, isSelected, onSelectLuggage }) => {
+}> = ({ price, name, isSelected, onSelectLuggage }) => {
   return (
     <div
       className={classNames({
@@ -22,7 +23,7 @@ const LuggageItem: React.FC<{
           "border-emerald-500 is-active": isSelected,
         })}
       >
-        {(isSelected && (
+        {isSelected ? (
           <span className="absolute top-1 right-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -36,10 +37,9 @@ const LuggageItem: React.FC<{
               />
             </svg>
           </span>
-        )) || <></>}
-
-        <div className="text-sm text-gray-500">{data.name}</div>
-        <div className="text-sm">{formatCurrencyVND(data.price)}</div>
+        ) : null}
+        <div className="text-sm text-gray-500">{name}</div>
+        <div className="text-sm">{price}</div>
       </div>
     </div>
   );

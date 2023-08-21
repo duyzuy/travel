@@ -1,7 +1,7 @@
 "use client";
 import React, { memo } from "react";
-import IconAirCraftTL from "../../../Icons/IconAirCraftTL";
-import AirCraftExistDoor from "../AirCraftExistDoor";
+import IconAirCraftTL from "@/components/Icons/IconAirCraftTL";
+import AirCraftDoor from "./AirCraftDoor";
 const AirCraftBottom: React.FC<{
   height?: "h-40" | "h-80" | "h-60";
   borderColor?: "border-gray-300" | "border-gray-200" | "border-gray-100";
@@ -23,7 +23,7 @@ const AirCraftBottom: React.FC<{
             <IconAirCraftTL width={24} height={24} fill="#9ca3af" />
           </span>
         </div>
-        <AirCraftExistDoor className="absolute -left-6 -right-6 pointer-events-none" />
+        <AirCraftDoor className="absolute -left-6 -right-6 pointer-events-none" />
       </div>
     </div>
   );

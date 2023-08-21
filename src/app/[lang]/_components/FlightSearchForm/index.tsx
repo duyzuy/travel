@@ -1,5 +1,5 @@
 "use client";
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 
 import { useApolloClient } from "@apollo/client";
 import { AIRPORT_LIST } from "./airportList";
@@ -17,7 +17,7 @@ import { getLangeCode } from "@/utils/helper";
 import { TripType } from "@/constants/enum";
 import { flightSearchFormVar, bookingInformationVar } from "@/cache/vars";
 
-import { useFlightBookingInformation } from "@/modules/bookingTicket/useFlightBookingInformation";
+import { useBookingFlightInfo } from "@/modules/bookingTicket/useBookingFlightInfo";
 import { useSearchFormFlight } from "@/modules/bookingTicket/useSearchFlight";
 import Checkbox from "@/components/base/Checkbox";
 import FlightSearchRecent from "@/components/Flights/FlightSearchRecent";
@@ -58,7 +58,7 @@ const BookingFlightSearchForm: React.FC<{ showRecent?: boolean }> = ({
       dateStr: "17 thg 10",
     },
   ];
-  const { onSubmitFlightSearchForm } = useFlightBookingInformation(
+  const { onSubmitFlightSearchForm } = useBookingFlightInfo(
     bookingInformationVar
   );
   const [error, setError] = useState<{
@@ -102,6 +102,7 @@ const BookingFlightSearchForm: React.FC<{ showRecent?: boolean }> = ({
     }
   };
 
+  useEffect(() => {}, []);
   return (
     <div className="bg-white relative z-20">
       <form onSubmit={handleSubmitFlightBookingForm} method="POST">

@@ -16,7 +16,7 @@ const FlightBookingHeaderBar = () => {
   const [isShowBooking, setIsShowBooking] = useState(false);
 
   return (
-    <div className="summary-header-bar bg-white border-t drop-shadow-md relative z-10">
+    <div className="summary-header-bar bg-white border-t drop-shadow-md relative z-20">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           <SearchFlightInformation

@@ -1,11 +1,8 @@
 import { Metadata } from "next";
-import PassengerInformation from "./components/PassengerInformation";
-import { PaxType } from "@/constants/enum";
-import PassengerContact from "./components/PassengerContact";
+import PassengerInformation from "./_components/PassengerInformation";
+import PassengerContact from "./_components/PassengerContact";
 import Button from "@/components/base/Button";
-import Image from "next/image";
-import { VJBrandOneIcon } from "@/assets/icons";
-import FlightInformationDetail from "@/components/Flights/FlightInformationDetail";
+import { PaxType } from "@/constants/enum";
 import OrderSummary from "@/components/OrderSummary";
 import Luggages from "../addons/luggages";
 import Inssurance from "../addons/Inssurance";

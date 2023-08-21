@@ -1,15 +1,15 @@
 "use client";
 import Drawler from "@/components/base/Drawler";
 import React, { memo } from "react";
-import { showLuggageVar } from "@/cache/vars";
+import { showModalLuggageVar } from "@/cache/vars";
 import { useModal } from "@/hooks/useModal";
 import { useReactiveVar } from "@apollo/client";
 import Button from "@/components/base/Button";
 import LuggagesBySectors from "./LuggagesBySectors";
 import LuggageNavigationBar from "../LuggageNavigationBar";
 const LuggagesDrawler: React.FC = () => {
-  const isShowLuggage = useReactiveVar(showLuggageVar);
-  const { onCloseModal } = useModal(showLuggageVar);
+  const isShowLuggage = useReactiveVar(showModalLuggageVar);
+  const { onCloseModal } = useModal(showModalLuggageVar);
 
   return (
     <Drawler isOpen={isShowLuggage} onClose={onCloseModal}>

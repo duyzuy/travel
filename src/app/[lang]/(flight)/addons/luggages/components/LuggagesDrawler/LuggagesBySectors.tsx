@@ -2,6 +2,7 @@
 
 import React, { memo } from "react";
 import LuggageItem from "@/components/LuggageItem";
+import { moneyFormatVND } from "@/utils/helper";
 const LuggagesBySectors = () => {
   const LUGGAGE_ITEMS = [
     { id: "luggage-1", name: "30kg", price: 150000, current: true },
@@ -56,7 +57,8 @@ const LuggagesBySectors = () => {
               {LUGGAGE_ITEMS.map((item) => (
                 <LuggageItem
                   key={`dep-a-${item.id}`}
-                  data={item}
+                  price={moneyFormatVND(item.price)}
+                  name={item.name}
                   isSelected={item.current}
                 />
               ))}
@@ -72,23 +74,8 @@ const LuggagesBySectors = () => {
               {LUGGAGE_ITEMS.map((item) => (
                 <LuggageItem
                   key={`dep-b-${item.id}`}
-                  data={item}
-                  isSelected={item.current}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="pax-luggage-item">
-            <div className="pax-full-name py-2 w-52">
-              <div className="flex items-center">
-                <p>HOANG, NGUYEN ANH THU</p>
-              </div>
-            </div>
-            <div className="luggage-packages flex items-center flex-wrap flex-1">
-              {LUGGAGE_ITEMS.map((item) => (
-                <LuggageItem
-                  key={`dep-c-${item.id}`}
-                  data={item}
+                  price={moneyFormatVND(item.price)}
+                  name={item.name}
                   isSelected={item.current}
                 />
               ))}
@@ -133,7 +120,8 @@ const LuggagesBySectors = () => {
               {LUGGAGE_ITEMS.map((item) => (
                 <LuggageItem
                   key={`rt-a-${item.id}`}
-                  data={item}
+                  price={moneyFormatVND(item.price)}
+                  name={item.name}
                   isSelected={item.current}
                 />
               ))}
@@ -149,23 +137,8 @@ const LuggagesBySectors = () => {
               {LUGGAGE_ITEMS.map((item) => (
                 <LuggageItem
                   key={`rt-b-${item.id}`}
-                  data={item}
-                  isSelected={item.current}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="pax-luggage-item border-b border-dashed mb-4">
-            <div className="pax-full-name py-2 w-52">
-              <div className="flex items-center">
-                <p>HOANG, NGUYEN ANH THU</p>
-              </div>
-            </div>
-            <div className="luggage-packages flex items-center flex-wrap flex-1">
-              {LUGGAGE_ITEMS.map((item) => (
-                <LuggageItem
-                  key={`rt-c-${item.id}`}
-                  data={item}
+                  price={moneyFormatVND(item.price)}
+                  name={item.name}
                   isSelected={item.current}
                 />
               ))}

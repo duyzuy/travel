@@ -1,14 +1,12 @@
 "use client";
-import React, { memo, useMemo, useCallback } from "react";
+import React, { memo, useCallback } from "react";
 
-import { VJBrandOneIcon } from "@/assets/icons";
-import Image from "next/image";
 import classNames from "classnames";
 import { FlightDetailItemType } from "@/Models/ticket";
 import { format } from "date-fns";
 import { FORMAT_DATE } from "@/constants/config";
 import FlightDetailItem from "./FlightDetailItem";
-import { Airline, Airlines } from "@/Models";
+import { Airlines } from "@/Models";
 
 type PropsType = {
   isOpen: boolean;

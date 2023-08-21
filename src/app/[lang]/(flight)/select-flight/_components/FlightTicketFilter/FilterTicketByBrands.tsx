@@ -27,6 +27,7 @@ const FilterTicketByBrands: React.FC<Props> = ({
           <ul className="order-list">
             {itemList.map((item) => (
               <li
+                key={item.name}
                 className="item flex items-center py-2"
                 onClick={() =>
                   onFilter({
