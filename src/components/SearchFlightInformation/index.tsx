@@ -2,7 +2,7 @@ import { memo } from "react";
 import Button from "../base/Button";
 import { IconRoundTrip, IconOneWay } from "../Icons";
 
-import { TripType } from "@/constants/enum";
+import { TRIP_TYPE } from "@/constants/enum";
 
 interface ISearchFlightInformation {
   onEditSearch: () => void;
@@ -11,7 +11,7 @@ interface ISearchFlightInformation {
   departureCode: string;
   arrivalCityName: string;
   arrivalCode: string;
-  tripType: TripType;
+  tripType: TRIP_TYPE;
   departDate: string;
   returnDate: string;
   adultAmount: number;
@@ -44,7 +44,7 @@ const SearchFlightInformation: React.FC<ISearchFlightInformation> = ({
           </span>
 
           <span className="trip-type mx-2">
-            {(tripType === TripType.ROUND_TRIP && <IconRoundTrip />) || (
+            {(tripType === TRIP_TYPE.ROUND_TRIP && <IconRoundTrip />) || (
               <IconOneWay />
             )}
           </span>
@@ -55,13 +55,13 @@ const SearchFlightInformation: React.FC<ISearchFlightInformation> = ({
         </p>
         <p className="trip-info text-sm text-gray-500">
           <span>
-            {(tripType === TripType.ROUND_TRIP && "Khứ hồi") || "Một chiều"}
+            {(tripType === TRIP_TYPE.ROUND_TRIP && "Khứ hồi") || "Một chiều"}
           </span>
           <span className="mx-2 text-xs">|</span>
           <span className="">
             <span className="depart-date">
               {departDate}
-              {tripType === TripType.ROUND_TRIP ? (
+              {tripType === TRIP_TYPE.ROUND_TRIP ? (
                 <>
                   <span className="mx-1">-</span>
                   <span className="return-date">{returnDate}</span>

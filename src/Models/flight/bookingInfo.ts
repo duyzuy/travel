@@ -1,22 +1,21 @@
 import { ISearchFlightForm } from "./searchFlight";
-import { FlightDetailItemType } from "../ticket";
-import { TripType } from "@/constants/enum";
+import { FlightTicket } from "./ticket";
 export interface IFlightBookingInfo {
   bookingInfo: Partial<ISearchFlightForm>;
   flightDepart?: {
-    tid: string;
-    outbound: FlightDetailItemType;
+    ticket: FlightTicket;
+    others: FlightTicket[];
   };
   flightReturn?: {
-    tid: string;
-    outbound: FlightDetailItemType;
+    ticket: FlightTicket;
+    others: FlightTicket[];
   };
-  passengersInfo: {};
+  passengers: {};
 }
 
 export const bookingInitialState: IFlightBookingInfo = {
   bookingInfo: {},
   flightDepart: undefined,
   flightReturn: undefined,
-  passengersInfo: {},
+  passengers: {},
 };

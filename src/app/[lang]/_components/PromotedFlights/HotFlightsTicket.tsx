@@ -13,7 +13,7 @@ import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
 import { Swiper as SwiperType } from "swiper";
 import { Grid, Scrollbar, Navigation, Virtual } from "swiper/modules";
 import FlightTicket from "./FlightTicket";
-import { Airline } from "@/Models/airline";
+import { Airline } from "@/Models/flight/airline";
 import { AirportItemType, FlightTicketType } from "@/Models/hotFlight";
 
 import "swiper/css";

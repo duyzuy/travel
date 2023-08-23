@@ -4,7 +4,7 @@ import React, { memo, useState } from "react";
 import { useReactiveVar } from "@apollo/client";
 import FlightSearchForm from "@/app/[lang]/_components/FlightSearchForm";
 import { bookingInformationVar } from "@/cache/vars";
-import { TripType } from "@/constants/enum";
+import { TRIP_TYPE } from "@/constants/enum";
 import format from "date-fns/format";
 import { FORMAT_DATE_SHORT } from "@/constants/config";
 import { vi } from "date-fns/locale";
@@ -21,7 +21,7 @@ const FlightBookingHeaderBar = () => {
         <div className="flex items-center justify-between">
           <SearchFlightInformation
             tripType={
-              bookingInfo.tripType ? bookingInfo.tripType : TripType.ROUND_TRIP
+              bookingInfo.tripType ? bookingInfo.tripType : TRIP_TYPE.ROUND_TRIP
             }
             departDate={
               bookingInfo.departDate

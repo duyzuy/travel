@@ -1,6 +1,6 @@
 "use client";
 import React, { memo } from "react";
-import { PaxType } from "@/constants/enum";
+import { PAX_TYPE } from "@/constants/enum";
 import Quantity, { QUANTITY_ACTION } from "../base/Quantity";
 import { AdultIcon, ChildrenIcon, BabyIcon } from "@/assets/icons";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import classNames from "classnames";
 
 interface Props {
   onChangeQuantity: (
-    type: PaxType,
+    type: PAX_TYPE,
     data: { action: QUANTITY_ACTION; value: number }
   ) => void;
   adultAmount: number;
@@ -40,7 +40,7 @@ const PassengerDropdown = ({
               subTitle="12 tuổi trở lên"
               value={adultAmount}
               onChange={onChangeQuantity}
-              paxType={PaxType.ADULT}
+              paxType={PAX_TYPE.ADULT}
               iconPath={AdultIcon}
             />
           </li>
@@ -50,7 +50,7 @@ const PassengerDropdown = ({
               subTitle="2 - 11 tuổi"
               value={childrenAmount}
               onChange={onChangeQuantity}
-              paxType={PaxType.CHILDREN}
+              paxType={PAX_TYPE.CHILDREN}
               iconPath={ChildrenIcon}
             />
           </li>
@@ -60,7 +60,7 @@ const PassengerDropdown = ({
               subTitle="< 2 tuổi"
               value={infantAmount}
               onChange={onChangeQuantity}
-              paxType={PaxType.INFANT}
+              paxType={PAX_TYPE.INFANT}
               iconPath={BabyIcon}
             />
           </li>
@@ -77,9 +77,9 @@ interface PassengerDropDownQuantity {
   subTitle: string;
   value: number;
   iconPath?: string;
-  paxType: PaxType;
+  paxType: PAX_TYPE;
   onChange: (
-    paxType: PaxType,
+    paxType: PAX_TYPE,
     { action, value }: { action: QUANTITY_ACTION; value: number }
   ) => void;
 }

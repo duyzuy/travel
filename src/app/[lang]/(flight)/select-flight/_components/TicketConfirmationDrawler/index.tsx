@@ -6,27 +6,40 @@ import Modal from "@/components/base/Modal";
 import { flightItemTicketModalVar } from "@/cache/vars";
 import { useModal } from "@/hooks/useModal";
 import { useReactiveVar } from "@apollo/client";
-import { FlightDetailItemType } from "@/Models/ticket";
 import { moneyFormatVND } from "@/utils/helper";
 import Ticket from "./Ticket";
-import { format } from "date-fns";
-import { FORMAT_DATE_SHORT } from "@/constants/config";
+import Drawler from "@/components/base/Drawler";
+import { FlightTicket } from "@/Models/flight/ticket";
+
 import FlightSchedule from "@/components/Flights/FlightTicketItem/FlightSchedule";
-const FlightItemTicketsModal: React.FC<{
-  data: { tid: string; outbound: FlightDetailItemType };
-  childs: { tid: string; outbound: FlightDetailItemType }[];
-}> = ({ data, childs }) => {
+interface IFlightConfirmationModal {
+  flightDepart: {
+    ticket: FlightTicket;
+    others: FlightTicket[];
+  };
+  flightReturn?: {
+    ticket: FlightTicket;
+    others: FlightTicket[];
+  };
+}
+const TicketConfirmationModal: React.FC<IFlightConfirmationModal> = ({
+  flightDepart,
+  flightReturn,
+}) => {
   const isShowModal = useReactiveVar(flightItemTicketModalVar);
   const { onCloseModal } = useModal(flightItemTicketModalVar);
 
-  const { outbound } = data;
+  const {
+    ticket: { outbound },
+    others,
+  } = flightDepart;
 
   const ContentsModal = () => {
     return (
       <>
         <div className="flight-items-modal">
           <div className="flight-item-detail flex items-center mb-4 px-4 py-2">
-            {/* <FlightSchedule data={outbound} /> */}
+            {/* <FlightSchedule /> */}
           </div>
           <div className="tickets flex">
             {(outbound.transitTickets && (
@@ -47,7 +60,7 @@ const FlightItemTicketsModal: React.FC<{
               </>
             )}
 
-            {childs.map((flItem) => (
+            {/* {childs.map((flItem) => (
               <React.Fragment key={flItem.tid}>
                 {(flItem.outbound.transitTickets && (
                   <Ticket
@@ -70,7 +83,7 @@ const FlightItemTicketsModal: React.FC<{
                   </>
                 )}
               </React.Fragment>
-            ))}
+            ))} */}
           </div>
         </div>
       </>
@@ -78,15 +91,15 @@ const FlightItemTicketsModal: React.FC<{
   };
 
   return (
-    <Modal
+    <Drawler
       // modalTitle="Đăng ký tài khoản"
-      width="full"
-      isOpen={isShowModal}
-      bodyContent={<ContentsModal />}
-      onclose={onCloseModal}
+      width="xl"
+      isOpen={true}
       // onCancel={() => {}}
       // onSubmit={() => {}}
-    />
+    >
+      <ContentsModal />
+    </Drawler>
   );
 };
-export default memo(FlightItemTicketsModal);
+export default memo(TicketConfirmationModal);

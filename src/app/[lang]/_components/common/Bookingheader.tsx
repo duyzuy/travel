@@ -4,12 +4,13 @@ import Logo from "./Paritals/Logo";
 import Menus from "./Paritals/Menus";
 import LanguageSwitcher from "./Paritals/LanguageSwitcher";
 import ProfileMenu from "./Paritals/ProfileMenu";
+import Steps from "@/components/Steps";
 
-const MainHeader = () => {
+const BookingHeader = () => {
   return (
     <nav className="main-nav w-full">
       <div className="container mx-auto">
-        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-0">
           <div className="relative flex h-16 items-center justify-between">
             <div className="absolute inset-y-0 left-0 flex items-center md:hidden">
               <button
@@ -19,6 +20,7 @@ const MainHeader = () => {
                 aria-expanded="false"
               >
                 <span className="sr-only">Open main menu</span>
+
                 <svg
                   className="block h-6 w-6"
                   fill="none"
@@ -52,13 +54,19 @@ const MainHeader = () => {
               <div className="flex flex-shrink-0 items-center">
                 <Logo />
               </div>
-              <div className="hidden md:block mx-auto">
-                <Menus />
-              </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
-              <LanguageSwitcher className="hidden md:block" />
-              <ProfileMenu />
+              <div className="steps">
+                <Steps
+                  steps={[
+                    { index: 0, num: 1, text: "Chọn chuyến bay" },
+                    { index: 1, num: 2, text: "Thông tin hành khách" },
+                    { index: 2, num: 3, text: "Thêm dịch vụ" },
+                    { index: 3, num: 4, text: "Thanh toán" },
+                  ]}
+                  currentIndexs={[0]}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -66,4 +74,4 @@ const MainHeader = () => {
     </nav>
   );
 };
-export default MainHeader;
+export default BookingHeader;

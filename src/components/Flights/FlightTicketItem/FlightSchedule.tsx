@@ -1,10 +1,9 @@
 "use client";
 import React, { memo } from "react";
 import FlightType from "./FlightType";
-import { FlightDetailItemType } from "@/Models/ticket";
-
+import { FlightTicket } from "@/Models/flight/ticket";
 type FlightScheduleType = Pick<
-  FlightDetailItemType,
+  FlightTicket["outbound"],
   | "departureTimeStr"
   | "arrivalTimeStr"
   | "departureAirport"

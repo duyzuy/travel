@@ -1,70 +1,34 @@
 "use client";
 
-import React, { memo, useCallback, useMemo, useState } from "react";
+import React, { memo, useMemo } from "react";
 
 import FlightTicketItem from "@/components/Flights/FlightTicketItem";
-import { FlightDetailItemType } from "@/Models/ticket";
+import { FlightTicket } from "@/Models/flight/ticket";
 import { DEPARTURE_TIMES, SORTS_ENUM } from "@/cache/vars";
 import { useReactiveVar } from "@apollo/client";
-import { Airlines } from "@/Models/airline";
+import { Airline } from "@/Models/flight/airline";
 import { flightsFilterVar } from "@/cache/vars";
-import FlightItemTicketsModal from "@/app/[lang]/(flight)/select-flight/_components/FlightItemTicketsModal";
-import { useModal } from "@/hooks/useModal";
-import { flightItemTicketModalVar } from "@/cache/vars";
-import { moneyFormatVND } from "@/utils/helper";
-import { getOperationFromFlightNumber } from "@/helpers/flightItem";
+
 const BookingFlightItems: React.FC<{
-  flightTickets: { tid: string; outbound: FlightDetailItemType }[];
+  flightTickets: FlightTicket[];
+  airlines: Airline[];
+  ticketIdSelected?: string;
 
-  airlines: Airlines;
-  ticketId?: string;
   onSelectFlight: ({
-    tid,
-    outbound,
-  }: {
-    tid: string;
-    outbound: FlightDetailItemType;
-  }) => void;
-}> = ({ flightTickets, airlines, ticketId, onSelectFlight }) => {
-  const [tickets, setTickets] = useState<{
-    data: { tid: string; outbound: FlightDetailItemType };
-    childs: { tid: string; outbound: FlightDetailItemType }[];
-  }>();
-  const { onShowModal } = useModal(flightItemTicketModalVar);
-
-  const filter = useReactiveVar(flightsFilterVar);
-
-  const onSelectFlightTicketWithChilds = ({
-    tid,
-    outbound,
+    ticket,
     otherTickets,
   }: {
-    tid: string;
-    outbound: FlightDetailItemType;
-    otherTickets: { tid: string; outbound: FlightDetailItemType }[];
-  }) => {
-    setTickets(() => ({
-      data: {
-        tid,
-        outbound,
-      },
-      childs: otherTickets,
-    }));
-    onShowModal();
-    onSelectFlight({
-      tid,
-      outbound,
-    });
-  };
+    ticket: FlightTicket;
+    otherTickets: FlightTicket[];
+  }) => void;
+}> = ({ flightTickets, airlines, ticketIdSelected, onSelectFlight }) => {
+  const filter = useReactiveVar(flightsFilterVar);
 
   const flightItemsFilter = useMemo(() => {
     const { brands, departTimes, sorting } = filter;
 
     //   filter by group
-    const restFlightItems: {
-      tid: string;
-      outbound: FlightDetailItemType;
-    }[] = [];
+    const restFlightItems: FlightTicket[] = [];
 
     const flightNumbersUnique: string[] = [];
     const uniqueFlights = flightTickets.filter((item) => {
@@ -81,9 +45,9 @@ const BookingFlightItems: React.FC<{
     });
 
     const initFlightWithChilds: {
-      tid: string;
-      outbound: FlightDetailItemType;
-      childs: { tid: string; outbound: FlightDetailItemType }[];
+      tid: FlightTicket["tid"];
+      outbound: FlightTicket["outbound"];
+      childs: FlightTicket[];
     }[] = [];
 
     let uniqueFlightsWithChilds = uniqueFlights.reduce((acc, item) => {
@@ -185,29 +149,18 @@ const BookingFlightItems: React.FC<{
     <div className="flight-items">
       {flightItemsFilter.map((ticket) => (
         <FlightTicketItem
-          flightItemData={ticket.outbound}
+          ticketInfo={ticket.outbound}
           key={ticket.tid}
-          tid={ticket.tid}
           onSelectFlight={() =>
-            onSelectFlightTicketWithChilds({
-              tid: ticket.tid,
-              outbound: ticket.outbound,
+            onSelectFlight({
+              ticket,
               otherTickets: ticket.childs,
             })
           }
-          isSelected={ticketId === ticket.tid}
-          operation={getOperationFromFlightNumber(
-            airlines,
-            ticket.outbound.flightNumber
-          )}
-          flightNumber={ticket.outbound.flightNumber}
-          price={moneyFormatVND(ticket.outbound.ticketdetail.farePrice)}
+          isSelected={ticketIdSelected === ticket.tid}
           airlines={airlines}
         />
       ))}
-      {tickets && (
-        <FlightItemTicketsModal data={tickets.data} childs={tickets.childs} />
-      )}
     </div>
   );
 };

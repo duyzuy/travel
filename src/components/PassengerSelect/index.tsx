@@ -4,13 +4,13 @@ import PassengerDropdown from "./PassengerDropdown";
 import Input from "@/components/base/Input";
 import classNames from "classnames";
 import { useClickOutSide } from "@/hooks/useClickOutSide";
-import { PaxType } from "@/constants/enum";
+import { PAX_TYPE } from "@/constants/enum";
 import { IconUserGroup } from "@/components/Icons";
 
 interface Props {
   variant?: "field" | "text";
   onSelectPassenger: (
-    paxType: PaxType,
+    paxType: PAX_TYPE,
     { action, value }: { action: "minus" | "plus"; value: number }
   ) => void;
   adultAmount: number;

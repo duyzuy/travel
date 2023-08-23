@@ -1,4 +1,4 @@
-import { TripType, PaxType } from "@/constants/enum";
+import { TRIP_TYPE, PAX_TYPE } from "@/constants/enum";
 import { IAirPort } from "../airport";
 
 export interface ISearchDate {
@@ -7,28 +7,28 @@ export interface ISearchDate {
 }
 
 export interface ISearchFlightForm {
-  tripType: TripType;
+  tripType: TRIP_TYPE;
   tripFrom?: IAirPort;
   tripTo?: IAirPort;
   departDate?: ISearchDate;
   returnDate?: ISearchDate;
-  passengers: Record<PaxType, { amount: number }>;
+  passengers: Record<PAX_TYPE, { amount: number }>;
 }
 
 export const searchFlightFormInit: ISearchFlightForm = {
-  tripType: TripType.ROUND_TRIP,
+  tripType: TRIP_TYPE.ROUND_TRIP,
   returnDate: undefined,
   departDate: undefined,
   tripFrom: undefined,
   tripTo: undefined,
   passengers: {
-    [PaxType.ADULT]: {
+    [PAX_TYPE.ADULT]: {
       amount: 1,
     },
-    [PaxType.CHILDREN]: {
+    [PAX_TYPE.CHILDREN]: {
       amount: 0,
     },
-    [PaxType.INFANT]: {
+    [PAX_TYPE.INFANT]: {
       amount: 0,
     },
   },

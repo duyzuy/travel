@@ -2,15 +2,12 @@
 import React, { memo } from "react";
 import Image, { StaticImageData } from "next/image";
 import classNames from "classnames";
+import { FLIGHT_DIRECTION } from "@/constants/enum";
 
 export enum SECTOR_STATUS {
   SELECTED = "selected",
   IN_PROCESS = "in_process",
   WAITING = "waiting",
-}
-export enum FLIGHT_DIRECTION {
-  DEPARTURE = "departure",
-  RETURN = "return",
 }
 
 type FlightInformationType = {
@@ -34,7 +31,7 @@ interface IFlightSectorItem<T> {
   departDate: string;
   status: SECTOR_STATUS;
   labelText: string;
-  flightInfo?: T;
+  flightSelectedInfo?: T;
 }
 const FlightSector = ({
   depart,
@@ -43,7 +40,7 @@ const FlightSector = ({
   departDate = "T3, 15 tháng 8",
   status = SECTOR_STATUS.IN_PROCESS,
   labelText = "Chuyến đi",
-  flightInfo,
+  flightSelectedInfo,
 }: IFlightSectorItem<FlightInformationType>) => {
   return (
     <div
@@ -95,8 +92,8 @@ const FlightSector = ({
         ) : null}
       </p>
       <div className="line border-b my-2"></div>
-      {(status === SECTOR_STATUS.SELECTED && flightInfo && (
-        <FlightSector.FlightInfo {...flightInfo} />
+      {(status === SECTOR_STATUS.SELECTED && flightSelectedInfo && (
+        <FlightSector.FlightInfo {...flightSelectedInfo} />
       )) ||
         (status === SECTOR_STATUS.IN_PROCESS && (
           <FlightSector.Selecting flightDirection={flightDirection} />

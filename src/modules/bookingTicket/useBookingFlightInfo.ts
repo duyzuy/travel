@@ -1,10 +1,10 @@
 import { IFlightBookingInfo } from "@/Models";
 
 import { ReactiveVar, useReactiveVar } from "@apollo/client";
-import { Direction, TripType } from "@/constants/enum";
-import { FlightDetailItemType } from "@/Models/ticket";
+import { DIRECTION, TRIP_TYPE } from "@/constants/enum";
+import { FlightTicket } from "@/Models/flight/ticket";
 import { useQuery } from "@apollo/client";
-import { FlightOptionsType } from "@/Models/ticket";
+import { FlightOptions } from "@/Models/flight/flightOptions";
 import { GET_FLIGHT_OPTIONS } from "@/operations/queries/flightOptions";
 export const useBookingFlightInfo = (
   bookingInformationVar: ReactiveVar<IFlightBookingInfo>
@@ -22,25 +22,34 @@ export const useBookingFlightInfo = (
   };
 
   const onSelectFlight = (
-    direction: Direction,
-    { tid, outbound }: { tid: string; outbound: FlightDetailItemType }
+    direction: DIRECTION,
+    {
+      ticket,
+      otherTickets,
+    }: { ticket: FlightTicket; otherTickets: FlightTicket[] }
   ) => {
     let newData = { ...flightBookingInfo };
 
-    if (direction === Direction.OUT_BOUND) {
+    if (direction === DIRECTION.OUT_BOUND) {
       newData = {
         ...newData,
-        flightDepart: { tid, outbound },
+        flightDepart: {
+          ticket,
+          others: otherTickets,
+        },
       };
     }
 
     if (
-      direction === Direction.IN_BOUND &&
-      flightBookingInfo.bookingInfo.tripType === TripType.ROUND_TRIP
+      direction === DIRECTION.IN_BOUND &&
+      flightBookingInfo.bookingInfo.tripType === TRIP_TYPE.ROUND_TRIP
     ) {
       newData = {
         ...newData,
-        flightReturn: { tid, outbound },
+        flightReturn: {
+          ticket,
+          others: otherTickets,
+        },
       };
     }
     bookingInformationVar(newData);
@@ -48,7 +57,7 @@ export const useBookingFlightInfo = (
 
   const doSearchFlight = () => {
     const { data, loading } = useQuery<{
-      flightOptions: FlightOptionsType;
+      flightOptions: FlightOptions;
     }>(GET_FLIGHT_OPTIONS);
 
     return { data, loading };

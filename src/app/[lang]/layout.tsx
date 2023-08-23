@@ -5,7 +5,7 @@ import "../styles/global.scss";
 import { ApolloWrapper } from "../ApolloWrapper";
 import RegisterModal from "./(auth)/_components/RegisterModal";
 import LoginModal from "./(auth)/_components/LoginModal";
-
+import DynamicHeader from "./_components/common/DynamicHeader";
 const productSans = localFont({
   src: [
     {
@@ -36,12 +36,6 @@ const productSans = localFont({
   ],
 });
 
-const DynamicMainHeader = dynamic(
-  () => import("@/app/[lang]/_components/common/MainHeader"),
-  {
-    loading: () => <p>Loading...</p>,
-  }
-);
 const DynamicFooter = dynamic(() => import("@/components/common/Footer"), {
   loading: () => <p>Loading...</p>,
 });
@@ -61,7 +55,7 @@ export default function RootLayout({
     <html lang={params.lang}>
       <body className={productSans.className} suppressHydrationWarning={true}>
         <ApolloWrapper>
-          <DynamicMainHeader />
+          <DynamicHeader />
           <RegisterModal />
           <LoginModal />
           {/* <Suspense fallback={<Loading />}>{children}</Suspense> */}

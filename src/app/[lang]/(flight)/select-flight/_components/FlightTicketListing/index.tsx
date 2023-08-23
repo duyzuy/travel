@@ -2,39 +2,38 @@
 
 import React, { memo } from "react";
 
-import { FlightDetailItemType, FlightOptionsType } from "@/Models/ticket";
+import { FlightTicket } from "@/Models/flight/ticket";
 
 import FlightTicketItems from "./FlightTicketItems";
-import { Direction } from "@/constants/enum";
+import { DIRECTION } from "@/constants/enum";
+import { FlightOptions } from "@/Models/flight/flightOptions";
 
 interface IFlightTicket {
-  direction: Direction;
+  direction: DIRECTION;
   onSelectFlight: (
-    direction: Direction,
-    { tid, outbound }: { tid: string; outbound: FlightDetailItemType }
+    direction: DIRECTION,
+    {
+      ticket,
+      otherTickets,
+    }: { ticket: FlightTicket; otherTickets: FlightTicket[] }
   ) => void;
-  flightOptions: FlightOptionsType;
+  flightOptions: FlightOptions;
 }
 const FlightTicketListing: React.FC<IFlightTicket> = ({
   direction,
   onSelectFlight,
   flightOptions,
 }) => {
-  const selectFlightCallback = ({
-    tid,
-    outbound,
-  }: {
-    tid: string;
-    outbound: FlightDetailItemType;
-  }) => {
-    onSelectFlight(direction, { tid, outbound });
-  };
-
   return (
     <FlightTicketItems
       flightTickets={flightOptions[direction].tickets}
       airlines={flightOptions.airlines}
-      onSelectFlight={selectFlightCallback}
+      onSelectFlight={(data) =>
+        onSelectFlight(direction, {
+          ticket: data.ticket,
+          otherTickets: data.otherTickets,
+        })
+      }
     />
   );
 };

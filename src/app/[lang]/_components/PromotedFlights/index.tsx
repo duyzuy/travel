@@ -9,7 +9,7 @@ import HotFlightsTicket from "./HotFlightsTicket";
 import { useQuery } from "@apollo/client";
 import { GET_HOT_FLIGHTS_TICKET } from "@/operations/queries/hotflights";
 import { FlightTicketType } from "@/Models/hotFlight";
-import { Airline } from "@/Models/airline";
+import { Airline } from "@/Models/flight/airline";
 import { AirportItemType } from "@/Models/hotFlight";
 type TypeHotTicketFlight = {
   hotFlightsTicket: {

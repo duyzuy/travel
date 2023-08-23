@@ -5,14 +5,14 @@ import { useQuery } from "@apollo/client";
 import classNames from "classnames";
 import { useClickOutSide } from "@/hooks/useClickOutSide";
 import { AirPortList, IAirPort } from "@/Models/airport";
-import { TripDestination } from "@/constants/enum";
+import { TRIP_DESTINATION } from "@/constants/enum";
 import { QUERY_AIRPORT_LIST } from "@/operations/queries/airtPort";
 
 import Input from "@/components/base/Input";
 import { IconSwitcher } from "@/components/Icons";
 import styles from "./inputRouting.module.scss";
 type PropsType = {
-  onSelectAirport: (destination: TripDestination, airport: IAirPort) => void;
+  onSelectAirport: (destination: TRIP_DESTINATION, airport: IAirPort) => void;
   onSwapDestination: () => void;
   tripFrom?: IAirPort;
   tripTo?: IAirPort;
@@ -28,7 +28,9 @@ const DestinationSelect: React.FC<PropsType> = ({
     airportList: AirPortList;
   }>(QUERY_AIRPORT_LIST);
 
-  const [destination, setDestination] = useState<TripDestination | undefined>();
+  const [destination, setDestination] = useState<
+    TRIP_DESTINATION | undefined
+  >();
   const [showDropdown, setShowdropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +39,7 @@ const DestinationSelect: React.FC<PropsType> = ({
     setShowdropdown(false);
   });
 
-  const onClickInputDestination = (tripDestination: TripDestination) => {
+  const onClickInputDestination = (tripDestination: TRIP_DESTINATION) => {
     setDestination(tripDestination);
     setShowdropdown(true);
   };
@@ -48,10 +50,10 @@ const DestinationSelect: React.FC<PropsType> = ({
 
       onSelectAirport(destination, airport);
 
-      if (destination === TripDestination.TRIP_FROM) {
-        setDestination(TripDestination.TRIP_TO);
+      if (destination === TRIP_DESTINATION.TRIP_FROM) {
+        setDestination(TRIP_DESTINATION.TRIP_TO);
       }
-      if (destination === TripDestination.TRIP_TO) {
+      if (destination === TRIP_DESTINATION.TRIP_TO) {
         setShowdropdown(false);
         setDestination(undefined);
       }
@@ -72,10 +74,10 @@ const DestinationSelect: React.FC<PropsType> = ({
           placeholder="Điểm đi"
           label="Điểm đi"
           name="from"
-          onClick={() => onClickInputDestination(TripDestination.TRIP_FROM)}
+          onClick={() => onClickInputDestination(TRIP_DESTINATION.TRIP_FROM)}
           className={classNames({
             tripFrom: true,
-            isSelecting: destination === TripDestination.TRIP_FROM,
+            isSelecting: destination === TRIP_DESTINATION.TRIP_FROM,
           })}
           onChange={() => {}}
           value={
@@ -99,12 +101,12 @@ const DestinationSelect: React.FC<PropsType> = ({
           onChange={() => {}}
           className={classNames({
             tripTo: true,
-            isSelecting: destination === TripDestination.TRIP_TO,
+            isSelecting: destination === TRIP_DESTINATION.TRIP_TO,
           })}
           value={
             tripTo ? `${tripTo.province.provinceName} - ${tripTo.code}` : ""
           }
-          onClick={() => onClickInputDestination(TripDestination.TRIP_TO)}
+          onClick={() => onClickInputDestination(TRIP_DESTINATION.TRIP_TO)}
         />
       </div>
       {showDropdown ? (

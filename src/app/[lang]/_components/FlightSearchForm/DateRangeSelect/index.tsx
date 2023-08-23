@@ -3,7 +3,7 @@ import React, { memo, useState, useRef, useCallback } from "react";
 import Input from "@/components/base/Input";
 import format from "date-fns/format";
 import { useClickOutSide } from "@/hooks/useClickOutSide";
-import { TripDate, TripType } from "@/constants/enum";
+import { TRIP_DATE, TRIP_TYPE } from "@/constants/enum";
 import { FORMAT_DATE } from "@/constants/config";
 import DateRangPicker, {
   OnUpdateCalendarType,
@@ -17,11 +17,11 @@ import { ISearchDate } from "@/Models";
 
 interface Props {
   locale: Locale;
-  tripType: TripType;
+  tripType: TRIP_TYPE;
   className?: string;
   onSelectDateRange: (
     action: "update" | "reset",
-    tripDate?: TripDate,
+    tripDate?: TRIP_DATE,
     data?: {
       date: Date;
       dateStr: string;
@@ -40,7 +40,7 @@ const DateRangeSelect: React.FC<Props> = ({
 }) => {
   const calendarRef = useRef<HTMLDivElement>(null);
 
-  const [selecting, setSelecting] = useState<TripDate | null>(null);
+  const [selecting, setSelecting] = useState<TRIP_DATE | null>(null);
   const [isShowCalendar, setShowCalendar] = useState(false);
 
   useClickOutSide(calendarRef, () => {
@@ -50,11 +50,11 @@ const DateRangeSelect: React.FC<Props> = ({
 
   const onResetDateRangge = () => {
     onSelectDateRange("reset");
-    setSelecting(TripDate.DATE_FROM);
+    setSelecting(TRIP_DATE.DATE_FROM);
   };
-  const onFocusInputDate = (isSelected: TripDate) => {
+  const onFocusInputDate = (isSelected: TRIP_DATE) => {
     if (departDate) {
-      setSelecting(TripDate.DATE_FROM);
+      setSelecting(TRIP_DATE.DATE_FROM);
     } else {
       setSelecting(isSelected);
     }
@@ -69,8 +69,8 @@ const DateRangeSelect: React.FC<Props> = ({
 
         if (isBefore(date, today)) return;
 
-        if (selecting === TripDate.DATE_FROM) {
-          onSelectDateRange("update", TripDate.DATE_FROM, {
+        if (selecting === TRIP_DATE.DATE_FROM) {
+          onSelectDateRange("update", TRIP_DATE.DATE_FROM, {
             date: date,
             dateStr: format(date, FORMAT_DATE),
           });
@@ -80,33 +80,33 @@ const DateRangeSelect: React.FC<Props> = ({
             date: date,
           });
 
-          if (tripType === TripType.ROUND_TRIP) {
-            !returnDate && setSelecting(TripDate.DATE_TO);
+          if (tripType === TRIP_TYPE.ROUND_TRIP) {
+            !returnDate && setSelecting(TRIP_DATE.DATE_TO);
 
             if (returnDate && isAfter(date, returnDate.date)) {
               onUpdateCalendar({
                 key: "end",
                 date: null,
               });
-              onSelectDateRange("update", TripDate.DATE_TO, undefined);
-              setSelecting(TripDate.DATE_TO);
+              onSelectDateRange("update", TRIP_DATE.DATE_TO, undefined);
+              setSelecting(TRIP_DATE.DATE_TO);
             }
           }
         }
 
-        if (selecting === TripDate.DATE_TO) {
+        if (selecting === TRIP_DATE.DATE_TO) {
           onUpdateCalendar({
             key: "end",
             date: date,
           });
-          onSelectDateRange("update", TripDate.DATE_TO, {
+          onSelectDateRange("update", TRIP_DATE.DATE_TO, {
             date: date,
             dateStr: format(date, FORMAT_DATE),
           });
 
           if (departDate && isBefore(date, departDate.date)) {
             onSelectDateRange("reset");
-            onSelectDateRange("update", TripDate.DATE_FROM, {
+            onSelectDateRange("update", TRIP_DATE.DATE_FROM, {
               date: date,
               dateStr: format(date, FORMAT_DATE),
             });
@@ -131,7 +131,7 @@ const DateRangeSelect: React.FC<Props> = ({
       <div
         className={classNames({
           "flex flex-1 input-date": true,
-          roundTrip: tripType === TripType.ROUND_TRIP,
+          roundTrip: tripType === TRIP_TYPE.ROUND_TRIP,
         })}
       >
         <Input
@@ -147,14 +147,14 @@ const DateRangeSelect: React.FC<Props> = ({
               format(departDate.date, FORMAT_DATE, { locale: locale })) ||
             ""
           }
-          onFocus={() => onFocusInputDate(TripDate.DATE_FROM)}
+          onFocus={() => onFocusInputDate(TRIP_DATE.DATE_FROM)}
           className={classNames({
             "depart-date": true,
-            isSelecting: TripDate.DATE_FROM === selecting,
+            isSelecting: TRIP_DATE.DATE_FROM === selecting,
             isFilled: departDate,
           })}
         />
-        {(tripType === TripType.ROUND_TRIP && (
+        {tripType === TRIP_TYPE.ROUND_TRIP ? (
           <Input
             showLabel={false}
             placeholder="Ngày về"
@@ -168,16 +168,16 @@ const DateRangeSelect: React.FC<Props> = ({
                 format(returnDate.date, FORMAT_DATE, { locale: locale })) ||
               ""
             }
-            onFocus={() => onFocusInputDate(TripDate.DATE_TO)}
+            onFocus={() => onFocusInputDate(TRIP_DATE.DATE_TO)}
             className={classNames({
               "return-date": true,
-              isSelecting: TripDate.DATE_TO === selecting,
+              isSelecting: TRIP_DATE.DATE_TO === selecting,
               isFilled: returnDate,
             })}
           />
-        )) || <></>}
+        ) : null}
       </div>
-      {isShowCalendar && (
+      {isShowCalendar ? (
         <DateRangPicker
           numberOfMonth={2}
           onUpdateCalendar={handleChangeTripDateOnBookingAndCalendar}
@@ -190,9 +190,9 @@ const DateRangeSelect: React.FC<Props> = ({
             setShowCalendar(false);
             setSelecting(null);
           }}
-          dateRangeType={(tripType === TripType.ONEWAY && "single") || "range"}
+          dateRangeType={tripType === TRIP_TYPE.ONEWAY ? "single" : "range"}
         />
-      )}
+      ) : null}
     </div>
   );
 };

@@ -1,39 +1,38 @@
 "use client";
 
-import React, { memo, useCallback, useState } from "react";
-import { FlightDetailItemType } from "@/Models/ticket";
+import React, { memo, useState } from "react";
+import { FlightTicket } from "@/Models/flight/ticket";
 import classNames from "classnames";
-import { Airline, Airlines } from "@/Models/airline";
+import { Airline } from "@/Models/flight/airline";
 import FlightSchedule from "./FlightSchedule";
 import FlightOperation from "./FlightOperation";
-import FlightInformationDetail from "../FlightInformationDetail";
 import Button from "@/components/base/Button";
-import { durationToString } from "@/helpers/flightItem";
-type PropsType = {
-  oneStop?: boolean;
-  flightItemData: FlightDetailItemType;
-  operation?: Airline;
-  tid: string;
+import {
+  durationToString,
+  getOperationFromFlightNumber,
+} from "@/helpers/flightItem";
+import { moneyFormatVND } from "@/utils/helper";
+import FlightTicketDetail from "./FlightTicketDetail";
+
+interface IFlightTicketItem {
+  ticketInfo: FlightTicket["outbound"];
   onSelectFlight: () => void;
   isSelected: boolean;
-  airlines: Airlines;
-  flightNumber: string;
-  price: string;
-};
-enum TICKET_PANEL {
+  children?: React.ReactNode;
+  airlines: Airline[];
+}
+enum PANEL_TYPE {
   TICKET_DETAIL = "ticketDetail",
   FLIGHT_INFO = "flightInfo",
 }
-const FlightItem = ({
-  flightItemData,
-  operation,
-  flightNumber,
+const FlightTicketItem = ({
+  ticketInfo,
   isSelected = false,
   onSelectFlight,
   airlines,
-  price,
-}: PropsType) => {
-  const [ticketPanel, setTicketPanel] = useState<TICKET_PANEL | undefined>(
+  children,
+}: IFlightTicketItem) => {
+  const [ticketPanel, setTicketPanel] = useState<PANEL_TYPE | undefined>(
     undefined
   );
 
@@ -48,35 +47,39 @@ const FlightItem = ({
     >
       <div className="flight-item-top flex items-center px-4 pt-4">
         <FlightOperation
-          operation={operation}
-          flightNumber={flightNumber}
+          airline={getOperationFromFlightNumber(
+            airlines,
+            ticketInfo.flightNumber
+          )}
+          flightNumber={ticketInfo.flightNumber}
           className="w-44"
         />
         <FlightSchedule
-          arrivalAirport={flightItemData.arrivalAirport}
-          departureAirport={flightItemData.departureAirport}
-          transitTickets={flightItemData.transitTickets}
-          departureTimeStr={flightItemData.departureTimeStr}
-          arrivalTimeStr={flightItemData.arrivalTimeStr}
-          durationStr={durationToString(flightItemData.duration)}
+          arrivalAirport={ticketInfo.arrivalAirport}
+          departureAirport={ticketInfo.departureAirport}
+          transitTickets={ticketInfo.transitTickets}
+          departureTimeStr={ticketInfo.departureTimeStr}
+          arrivalTimeStr={ticketInfo.arrivalTimeStr}
+          durationStr={durationToString(ticketInfo.duration)}
         />
-        <FlightItem.Pricings price={price} />
+        <FlightTicketItem.Pricings
+          priceStr={moneyFormatVND(ticketInfo.ticketdetail.farePrice)}
+        />
       </div>
 
-      <FlightItem.Actions
+      <FlightTicketItem.Actions
         className="flight-item-bottom"
         isActivePanel={ticketPanel}
         onSelect={onSelectFlight}
         onShowTicketDetail={() =>
           setTicketPanel((prev) =>
-            prev ? undefined : TICKET_PANEL.TICKET_DETAIL
+            prev ? undefined : PANEL_TYPE.TICKET_DETAIL
           )
         }
       />
-
-      <FlightInformationDetail
-        isOpen={ticketPanel === TICKET_PANEL.TICKET_DETAIL}
-        data={flightItemData}
+      <FlightTicketItem.TicketDetail
+        isOpen={PANEL_TYPE.TICKET_DETAIL === ticketPanel}
+        ticketInfo={ticketInfo}
         airlines={airlines}
         className="border-t"
       />
@@ -84,18 +87,20 @@ const FlightItem = ({
   );
 };
 
-export default memo(FlightItem);
+export default memo(FlightTicketItem);
 
 interface IFlightItemPrice {
-  price: string;
+  priceStr: string;
   currency?: string;
 }
-FlightItem.Pricings = function FlightItemPrice({ price }: IFlightItemPrice) {
+FlightTicketItem.Pricings = function FlightItemPrice({
+  priceStr,
+}: IFlightItemPrice) {
   return (
     <div className="right w-44 text-right">
       <div className="price ">
         <span className="amount text-xl font-bold text-emerald-500 drop-shadow-sm">
-          {price}
+          {priceStr}
         </span>
       </div>
     </div>
@@ -105,11 +110,11 @@ FlightItem.Pricings = function FlightItemPrice({ price }: IFlightItemPrice) {
 interface IFlightItemActions {
   onSelect: () => void;
   onShowTicketDetail: () => void;
-  isActivePanel?: TICKET_PANEL;
+  isActivePanel?: PANEL_TYPE;
   className?: string;
 }
 
-FlightItem.Actions = function FlightItemActions({
+FlightTicketItem.Actions = function FlightItemActions({
   onShowTicketDetail,
   onSelect,
   isActivePanel,
@@ -128,7 +133,7 @@ FlightItem.Actions = function FlightItemActions({
           onClick={onShowTicketDetail}
         >
           <span>Thông tin chuyến bay</span>
-          {isActivePanel === TICKET_PANEL.TICKET_DETAIL ? (
+          {isActivePanel === PANEL_TYPE.TICKET_DETAIL ? (
             <span className="absolute -bottom-2 w-12 h-1 block bg-emerald-500 rounded-tl rounded-tr panel-active"></span>
           ) : null}
         </li>
@@ -145,5 +150,24 @@ FlightItem.Actions = function FlightItemActions({
         </Button>
       </div>
     </div>
+  );
+};
+interface IFlightTicketDetail {
+  isOpen: boolean;
+  ticketInfo: FlightTicket["outbound"];
+  airlines: Airline[];
+  className?: string;
+}
+FlightTicketItem.TicketDetail = function FlightItemTicketDetail(
+  props: IFlightTicketDetail
+) {
+  const { isOpen, ticketInfo, airlines, className } = props;
+  return (
+    <FlightTicketDetail
+      isOpen={isOpen}
+      ticketInfo={ticketInfo}
+      airlines={airlines}
+      className={className}
+    />
   );
 };

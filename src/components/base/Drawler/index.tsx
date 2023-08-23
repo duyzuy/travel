@@ -5,11 +5,17 @@ import classNames from "classnames";
 import useAnimation from "@/hooks/useAnimation";
 const Drawler: React.FC<{
   direction?: "left" | "right" | "bottom" | "top";
-  width?: "full";
+  width?: "xl" | "lg" | "md" | "sm";
   isOpen?: boolean;
   children?: React.ReactNode;
   onClose?: () => void;
-}> = ({ direction = "right", width, isOpen = false, children, onClose }) => {
+}> = ({
+  direction = "right",
+  width = "md",
+  isOpen = false,
+  children,
+  onClose,
+}) => {
   const { stage, isMounted } = useAnimation(isOpen, 300);
 
   if (!isMounted) {
@@ -34,9 +40,14 @@ const Drawler: React.FC<{
       >
         <div
           className={classNames({
-            "bg-white w-144 h-full transition-all pointer-events-auto": true,
+            "bg-white h-full transition-all pointer-events-auto w-full": true,
             "translate-x-0": stage,
-            "translate-x-144": !stage,
+            "translate-x-144": !stage && width === "md",
+            "max-w-144": width === "md",
+            "translate-x-[650px]": !stage && width === "lg",
+            "max-w-[650]": width === "lg",
+            "translate-x-[850px]": !stage && width === "xl",
+            "max-w-[850px]": width === "xl",
           })}
         >
           <span

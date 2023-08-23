@@ -14,7 +14,7 @@ import { WTIRE_AIRPORT_LIST } from "@/cache/wtire";
 import { useRouter, usePathname } from "next/navigation";
 
 import { getLangeCode } from "@/utils/helper";
-import { TripType } from "@/constants/enum";
+import { TRIP_TYPE } from "@/constants/enum";
 import { flightSearchFormVar, bookingInformationVar } from "@/cache/vars";
 
 import { useBookingFlightInfo } from "@/modules/bookingTicket/useBookingFlightInfo";
@@ -84,7 +84,7 @@ const BookingFlightSearchForm: React.FC<{ showRecent?: boolean }> = ({
     if (!searchInfo.departDate) {
       return;
     }
-    if (searchInfo.tripType === TripType.ROUND_TRIP) {
+    if (searchInfo.tripType === TRIP_TYPE.ROUND_TRIP) {
       if (!searchInfo.returnDate) {
         return;
       }
@@ -114,16 +114,16 @@ const BookingFlightSearchForm: React.FC<{ showRecent?: boolean }> = ({
                 type="radio"
                 className="cursor-pointer"
                 name="roundTrip"
-                isChecked={searchInfo.tripType === TripType.ROUND_TRIP}
-                onChange={() => onChangeTripType(TripType.ROUND_TRIP)}
+                isChecked={searchInfo.tripType === TRIP_TYPE.ROUND_TRIP}
+                onChange={() => onChangeTripType(TRIP_TYPE.ROUND_TRIP)}
               />
               <Checkbox
                 label="Một chiều"
                 type="radio"
                 className=" cursor-pointer"
                 name="oneWay"
-                isChecked={searchInfo.tripType === TripType.ONEWAY}
-                onChange={() => onChangeTripType(TripType.ONEWAY)}
+                isChecked={searchInfo.tripType === TRIP_TYPE.ONEWAY}
+                onChange={() => onChangeTripType(TRIP_TYPE.ONEWAY)}
               />
             </div>
             <span className="line border-l border-gray-300 inline-block h-6 ml-2"></span>

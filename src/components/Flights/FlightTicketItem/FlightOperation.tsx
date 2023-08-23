@@ -1,14 +1,13 @@
 "use client";
 import React, { memo } from "react";
 import Image from "next/image";
-import { Airline } from "@/Models/airline";
+import { Airline } from "@/Models/flight/airline";
 import classNames from "classnames";
 const FlightOperation: React.FC<{
-  operation?: Airline;
+  airline?: Airline;
   flightNumber: string;
   className?: string;
-  thumbnailUrl?: string;
-}> = ({ flightNumber, className = "", operation }) => {
+}> = ({ flightNumber, className = "", airline }) => {
   return (
     <div
       className={classNames({
@@ -17,10 +16,10 @@ const FlightOperation: React.FC<{
       })}
     >
       <span className="relative rounded-full mr-2 block w-8 h-8">
-        {operation ? (
+        {airline ? (
           <Image
-            src={operation.logo}
-            alt={operation.name}
+            src={airline.logo}
+            alt={airline.name}
             fill
             sizes="100px"
             style={{ objectFit: "contain" }}
@@ -28,7 +27,7 @@ const FlightOperation: React.FC<{
         ) : null}
       </span>
       <p className="brand-info flex-1">
-        <span className="brand-name block text-sm">{operation?.name}</span>
+        <span className="brand-name block text-sm">{airline?.name}</span>
         <span className="flight-number text-xs text-gray-500 block">
           {flightNumber}
         </span>
