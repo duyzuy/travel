@@ -52,7 +52,7 @@ const ProfileMenu: React.FC<PropsType> = ({ className = "" }) => {
               />
             </svg>
           </span>
-          <div className="flex items-center hidden md:block ">
+          <div className="items-center hidden md:block ">
             <span
               className="px-3 py-1 hover:bg-gray-100 rounded-full"
               onClick={onShowRegisterModal}

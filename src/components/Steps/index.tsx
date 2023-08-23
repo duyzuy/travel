@@ -16,6 +16,7 @@ const Steps = (props: Props) => {
     <ul className="steps flex items-center gap-x-3 text-sm">
       {steps.map((step) => (
         <Step
+          key={step.index}
           name={step.text}
           active={currentIndexs.includes(step.index)}
           num={step.num}

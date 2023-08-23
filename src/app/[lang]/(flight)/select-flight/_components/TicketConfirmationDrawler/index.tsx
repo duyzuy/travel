@@ -1,19 +1,19 @@
 "use client";
 
-import React, { memo } from "react";
-import Modal from "@/components/base/Modal";
+import React, { memo, useEffect, useState } from "react";
 
-import { flightItemTicketModalVar } from "@/cache/vars";
-import { useModal } from "@/hooks/useModal";
-import { useReactiveVar } from "@apollo/client";
 import { moneyFormatVND } from "@/utils/helper";
-import Ticket from "./Ticket";
+import TicketBox from "./Ticketbox";
 import Drawler from "@/components/base/Drawler";
 import { FlightTicket } from "@/Models/flight/ticket";
 
 import FlightSchedule from "@/components/Flights/FlightTicketItem/FlightSchedule";
+import { durationToString } from "@/helpers/flightItem";
+import FlightSectorItemDetail from "./FlightSectorItemDetail";
+import { FLIGHT_DIRECTION } from "@/constants/enum";
+import Button from "@/components/base/Button";
 interface IFlightConfirmationModal {
-  flightDepart: {
+  flightDepart?: {
     ticket: FlightTicket;
     others: FlightTicket[];
   };
@@ -21,72 +21,72 @@ interface IFlightConfirmationModal {
     ticket: FlightTicket;
     others: FlightTicket[];
   };
+  isOpen?: boolean;
+  onNext: () => void;
+  onChangeTicket: (direction: FLIGHT_DIRECTION, ticket: FlightTicket) => void;
 }
 const TicketConfirmationModal: React.FC<IFlightConfirmationModal> = ({
   flightDepart,
   flightReturn,
+  isOpen = false,
+  onNext,
+  onChangeTicket,
 }) => {
-  const isShowModal = useReactiveVar(flightItemTicketModalVar);
-  const { onCloseModal } = useModal(flightItemTicketModalVar);
+  const [isShowModal, setShowModal] = useState(isOpen);
 
-  const {
-    ticket: { outbound },
-    others,
-  } = flightDepart;
+  useEffect(() => {
+    setShowModal(isOpen);
+  }, [isOpen]);
 
+  if (!isShowModal) {
+    return null;
+  }
+  console.log("render");
   const ContentsModal = () => {
     return (
-      <>
-        <div className="flight-items-modal">
-          <div className="flight-item-detail flex items-center mb-4 px-4 py-2">
-            {/* <FlightSchedule /> */}
-          </div>
-          <div className="tickets flex">
-            {(outbound.transitTickets && (
-              <Ticket
-                polices={outbound.transitTickets[0].polices}
-                fareName={outbound.ticketdetail.ticketClassCode}
-                price={moneyFormatVND(outbound.ticketdetail.farePrice)}
-                isCurrent={true}
-              />
-            )) || (
-              <>
-                <Ticket
-                  polices={outbound.ticketdetail.polices}
-                  fareName={outbound.ticketdetail.ticketClassCode}
-                  price={moneyFormatVND(outbound.ticketdetail.farePrice)}
-                  isCurrent={true}
-                />
-              </>
-            )}
+      <div className="flight-items-modal">
+        <div className="flight-sector">
+          {flightDepart ? (
+            <FlightSectorItemDetail
+              sectorLabel="Chuyến đi"
+              ticket={flightDepart.ticket}
+              otherTickets={flightDepart.others}
+              onSelect={(ticket) =>
+                onChangeTicket(FLIGHT_DIRECTION.DEPARTURE, ticket)
+              }
+              className="overflow-auto"
+            />
+          ) : null}
 
-            {/* {childs.map((flItem) => (
-              <React.Fragment key={flItem.tid}>
-                {(flItem.outbound.transitTickets && (
-                  <Ticket
-                    polices={flItem.outbound.transitTickets[0].polices}
-                    fareName={flItem.outbound.ticketdetail.ticketClassCode}
-                    price={moneyFormatVND(
-                      flItem.outbound.ticketdetail.farePrice
-                    )}
-                  />
-                )) || (
-                  <>
-                    {" "}
-                    <Ticket
-                      polices={flItem.outbound.ticketdetail.polices}
-                      fareName={flItem.outbound.ticketdetail.ticketClassCode}
-                      price={moneyFormatVND(
-                        flItem.outbound.ticketdetail.farePrice
-                      )}
-                    />
-                  </>
-                )}
-              </React.Fragment>
-            ))} */}
+          {flightReturn ? (
+            <>
+              <div className="spacing pt-4 mt-4 border-t border-separate"></div>
+              <FlightSectorItemDetail
+                sectorLabel="Chuyến về"
+                ticket={flightReturn.ticket}
+                otherTickets={flightReturn.others}
+                onSelect={(ticket) =>
+                  onChangeTicket(FLIGHT_DIRECTION.RETURN, ticket)
+                }
+                className="overflow-auto"
+              />
+            </>
+          ) : null}
+        </div>
+        <div className="confirmation-navbar sticky bottom-0 bg-white drop-shadow-2xl">
+          <div className="drawler-bottom-bar py-4 flex justify-between px-4">
+            <div className="flight-summary">
+              <p className="label text-sm">Tổng tiền</p>
+              <p className="price text-2xl text-emerald-400 font-bold">
+                120.000 VND
+              </p>
+            </div>
+            <Button className="w-40 drop-shadow-sm" color="secondary" size="lg">
+              Tiếp tục
+            </Button>
           </div>
         </div>
-      </>
+      </div>
     );
   };
 
@@ -94,12 +94,14 @@ const TicketConfirmationModal: React.FC<IFlightConfirmationModal> = ({
     <Drawler
       // modalTitle="Đăng ký tài khoản"
       width="xl"
-      isOpen={true}
+      isOpen={isShowModal}
       // onCancel={() => {}}
       // onSubmit={() => {}}
+      onClose={() => setShowModal(false)}
+      hideCloseButton
     >
       <ContentsModal />
     </Drawler>
   );
 };
-export default memo(TicketConfirmationModal);
+export default TicketConfirmationModal;

@@ -1,5 +1,5 @@
 "use client";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 
@@ -31,16 +31,26 @@ import styles from "./selectFlight.module.scss";
 
 const SearchFlightPage = () => {
   const client = useApolloClient();
-
-  const { flightBookingInfo, onSelectFlight, doSearchFlight } =
-    useBookingFlightInfo(bookingInformationVar);
-
   client.writeQuery({
     query: WRITE_FLIGHT_OPTIONS,
     data: {
       flightOptions: FLIGHT_OPTIONS_2,
     },
   });
+
+  const { flightBookingInfo, onSelectFlight, doSearchFlight } =
+    useBookingFlightInfo(bookingInformationVar);
+
+  const [showDrawlerConfirm, setShowDrawler] = useState(
+    (flightBookingInfo.bookingInfo.tripType === TRIP_TYPE.ONEWAY &&
+      flightBookingInfo.flightDepart &&
+      true) ||
+      (flightBookingInfo.bookingInfo.tripType === TRIP_TYPE.ROUND_TRIP &&
+        flightBookingInfo.flightDepart &&
+        flightBookingInfo.flightReturn &&
+        true) ||
+      false
+  );
 
   const handleSelectFlight = useCallback(
     (
@@ -50,10 +60,33 @@ const SearchFlightPage = () => {
         otherTickets,
       }: { ticket: FlightTicket; otherTickets: FlightTicket[] }
     ) => {
+      if (
+        !flightBookingInfo.bookingInfo.tripType ||
+        !flightBookingInfo.bookingInfo.departDate ||
+        !flightBookingInfo.bookingInfo.tripFrom ||
+        !flightBookingInfo.bookingInfo.tripTo
+      ) {
+        return;
+      }
+
       onSelectFlight(direction, { ticket, otherTickets });
     },
     [flightBookingInfo]
   );
+
+  useEffect(() => {
+    if (
+      (flightBookingInfo.bookingInfo.tripType === TRIP_TYPE.ONEWAY &&
+        flightBookingInfo.flightDepart) ||
+      (flightBookingInfo.bookingInfo.tripType === TRIP_TYPE.ROUND_TRIP &&
+        flightBookingInfo.flightDepart &&
+        flightBookingInfo.flightReturn)
+    ) {
+      setShowDrawler(true);
+    }
+  }, [flightBookingInfo]);
+
+  console.log(flightBookingInfo);
   const { data, loading } = doSearchFlight();
 
   const departFlightSelectedInfo = (flightDirection: FLIGHT_DIRECTION) => {
@@ -169,12 +202,14 @@ const SearchFlightPage = () => {
             )) || <>Data not found</>}
           </div>
         </div>
-        {flightBookingInfo.flightDepart && flightBookingInfo.flightReturn && (
-          <TicketConfirmationDrawler
-            flightDepart={flightBookingInfo.flightDepart}
-            flightReturn={flightBookingInfo.flightReturn}
-          />
-        )}
+
+        <TicketConfirmationDrawler
+          flightDepart={flightBookingInfo.flightDepart}
+          flightReturn={flightBookingInfo.flightReturn}
+          isOpen={showDrawlerConfirm}
+          onNext={() => {}}
+          onChangeTicket={() => {}}
+        />
       </div>
     </div>
   );

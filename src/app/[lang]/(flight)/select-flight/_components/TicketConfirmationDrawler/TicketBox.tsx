@@ -5,21 +5,36 @@ import Button from "@/components/base/Button";
 import IconLuggage2 from "@/components/Icons/IconLuggage2";
 import IconTicket2 from "@/components/Icons/IconTicket2";
 import IconPlaneSeat from "@/components/Icons/IconPlaneSeat";
-const Ticket: React.FC<{
-  polices?: { code: string; description: string }[];
+import { Police } from "@/Models/flight/police";
+import classNames from "classnames";
+const TicketBox: React.FC<{
+  polices?: Police[];
   fareName: string;
   price: string;
   onSelectTicket?: () => void;
   isCurrent?: boolean;
-}> = ({ polices = [], fareName, price, onSelectTicket, isCurrent }) => {
+  className?: string;
+}> = ({
+  polices = [],
+  fareName,
+  price,
+  onSelectTicket,
+  isCurrent,
+  className = "",
+}) => {
   return (
-    <div className="ticket w-72 px-2">
+    <div
+      className={classNames({
+        "ticket max-w-72 px-3": true,
+        [className]: className,
+      })}
+    >
       <div className="ticket-inner p-4 rounded-sm drop-shadow-md bg-white border-t-4 border-t-emerald-400">
         <div className="ticket-head border-b mb-4">
           <div className="ticket-name">
             <p className="text-center">{fareName}</p>
           </div>
-          <p className="price px-4 py-2 text-center font-bold text-emerald-400 drop-shadow-sm text-2xl">
+          <p className="price px-4 py-2 text-center font-bold text-emerald-400 drop-shadow-sm text-xl">
             {price}
           </p>
         </div>
@@ -56,7 +71,10 @@ const Ticket: React.FC<{
           <ul className="py-2">
             {polices.map((pl, ind) => (
               <li
-                className="flex items-center mb-1 border-b py-2"
+                className={classNames({
+                  "flex items-center mb-1 py-2": true,
+                  "border-t": ind !== 0,
+                })}
                 key={`${pl.code}-${ind}`}
               >
                 {(pl.code === "LUGGAGE_INFO" && (
@@ -87,4 +105,4 @@ const Ticket: React.FC<{
     </div>
   );
 };
-export default Ticket;
+export default memo(TicketBox);

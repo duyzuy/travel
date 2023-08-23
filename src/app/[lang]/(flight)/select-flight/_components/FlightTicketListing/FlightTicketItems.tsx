@@ -50,9 +50,9 @@ const BookingFlightItems: React.FC<{
       childs: FlightTicket[];
     }[] = [];
 
-    let uniqueFlightsWithChilds = uniqueFlights.reduce((acc, item) => {
+    let uniqueFlightsWithChilds = uniqueFlights.reduce((acc, _tkItem) => {
       const childs = restFlightItems.filter((childItem, childInd) => {
-        if (childItem.outbound.flightNumber === item.outbound.flightNumber) {
+        if (childItem.outbound.flightNumber === _tkItem.outbound.flightNumber) {
           restFlightItems.splice(childInd, 1);
           return true;
         } else {
@@ -60,7 +60,7 @@ const BookingFlightItems: React.FC<{
         }
       });
 
-      return [...acc, { ...item, childs: childs }];
+      return [...acc, { ..._tkItem, childs: [_tkItem, ...childs] }];
     }, initFlightWithChilds);
 
     /**
@@ -153,7 +153,7 @@ const BookingFlightItems: React.FC<{
           key={ticket.tid}
           onSelectFlight={() =>
             onSelectFlight({
-              ticket,
+              ticket: { tid: ticket.tid, outbound: ticket.outbound },
               otherTickets: ticket.childs,
             })
           }
