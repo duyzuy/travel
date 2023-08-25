@@ -1,14 +1,8 @@
 "use client";
 
-import React, { memo, useEffect, useState } from "react";
-
-import { moneyFormatVND } from "@/utils/helper";
-import TicketBox from "./Ticketbox";
+import React, { useEffect, useState } from "react";
 import Drawler from "@/components/base/Drawler";
 import { FlightTicket } from "@/Models/flight/ticket";
-
-import FlightSchedule from "@/components/Flights/FlightTicketItem/FlightSchedule";
-import { durationToString } from "@/helpers/flightItem";
 import FlightSectorItemDetail from "./FlightSectorItemDetail";
 import { FLIGHT_DIRECTION } from "@/constants/enum";
 import Button from "@/components/base/Button";
@@ -37,11 +31,11 @@ const TicketConfirmationModal: React.FC<IFlightConfirmationModal> = ({
   useEffect(() => {
     setShowModal(isOpen);
   }, [isOpen]);
-
+  console.log("render", isShowModal);
   if (!isShowModal) {
     return null;
   }
-  console.log("render");
+
   const ContentsModal = () => {
     return (
       <div className="flight-items-modal">
@@ -81,7 +75,12 @@ const TicketConfirmationModal: React.FC<IFlightConfirmationModal> = ({
                 120.000 VND
               </p>
             </div>
-            <Button className="w-40 drop-shadow-sm" color="secondary" size="lg">
+            <Button
+              className="w-40 drop-shadow-sm"
+              color="secondary"
+              size="lg"
+              onClick={onNext}
+            >
               Tiếp tục
             </Button>
           </div>

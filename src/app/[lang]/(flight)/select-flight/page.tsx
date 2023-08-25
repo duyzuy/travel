@@ -1,8 +1,7 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
-
 import { useApolloClient } from "@apollo/client";
 import { WRITE_FLIGHT_OPTIONS } from "@/cache/wtire/flightOptions";
 import { bookingInformationVar } from "@/cache/vars";
@@ -19,7 +18,7 @@ import FlightSortingTicket from "./_components/FlightSortingTicket";
 import FlightTicketFilter from "./_components/FlightTicketFilter";
 import FlightTicketListing from "./_components/FlightTicketListing";
 import TicketConfirmationDrawler from "./_components/TicketConfirmationDrawler";
-
+import { useRouter } from "next/navigation";
 import { FlightTicket } from "@/Models/flight/ticket";
 
 import {
@@ -38,16 +37,34 @@ const SearchFlightPage = () => {
     },
   });
 
+  const router = useRouter();
   const { flightBookingInfo, onSelectFlight, doSearchFlight } =
     useBookingFlightInfo(bookingInformationVar);
+  const { data, loading } = doSearchFlight();
+
+  const flightOptions = useMemo(() => {
+    return data?.flightOptions;
+  }, [data]);
+
+  const bookingInformation = useMemo(() => {
+    return flightBookingInfo.bookingInfo;
+  }, [flightBookingInfo]);
+
+  const flightDepartSelected = useMemo(() => {
+    return flightBookingInfo.flightDepart;
+  }, [flightBookingInfo]);
+
+  const flightReturnSelected = useMemo(() => {
+    return flightBookingInfo.flightReturn;
+  }, [flightBookingInfo]);
 
   const [showDrawlerConfirm, setShowDrawler] = useState(
-    (flightBookingInfo.bookingInfo.tripType === TRIP_TYPE.ONEWAY &&
-      flightBookingInfo.flightDepart &&
+    (bookingInformation.tripType === TRIP_TYPE.ONEWAY &&
+      flightDepartSelected &&
       true) ||
       (flightBookingInfo.bookingInfo.tripType === TRIP_TYPE.ROUND_TRIP &&
-        flightBookingInfo.flightDepart &&
-        flightBookingInfo.flightReturn &&
+        flightDepartSelected &&
+        flightReturnSelected &&
         true) ||
       false
   );
@@ -61,10 +78,10 @@ const SearchFlightPage = () => {
       }: { ticket: FlightTicket; otherTickets: FlightTicket[] }
     ) => {
       if (
-        !flightBookingInfo.bookingInfo.tripType ||
-        !flightBookingInfo.bookingInfo.departDate ||
-        !flightBookingInfo.bookingInfo.tripFrom ||
-        !flightBookingInfo.bookingInfo.tripTo
+        !bookingInformation.tripType ||
+        !bookingInformation.departDate ||
+        !bookingInformation.tripFrom ||
+        !bookingInformation.tripTo
       ) {
         return;
       }
@@ -74,24 +91,28 @@ const SearchFlightPage = () => {
     [flightBookingInfo]
   );
 
+  const handleNext = () => {
+    router.push("./passenger");
+  };
+
   useEffect(() => {
     if (
-      (flightBookingInfo.bookingInfo.tripType === TRIP_TYPE.ONEWAY &&
-        flightBookingInfo.flightDepart) ||
-      (flightBookingInfo.bookingInfo.tripType === TRIP_TYPE.ROUND_TRIP &&
+      (bookingInformation.tripType === TRIP_TYPE.ONEWAY &&
+        flightDepartSelected) ||
+      (bookingInformation.tripType === TRIP_TYPE.ROUND_TRIP &&
         flightBookingInfo.flightDepart &&
         flightBookingInfo.flightReturn)
     ) {
       setShowDrawler(true);
     }
-  }, [flightBookingInfo]);
-
-  console.log(flightBookingInfo);
-  const { data, loading } = doSearchFlight();
+  }, [bookingInformation, flightDepartSelected, flightReturnSelected]);
 
   const departFlightSelectedInfo = (flightDirection: FLIGHT_DIRECTION) => {
-    const flightSelectedData = flightBookingInfo[flightDirection];
-    if (!data || !flightSelectedData) {
+    const flightSelectedData =
+      flightDirection === FLIGHT_DIRECTION.DEPARTURE
+        ? flightDepartSelected
+        : flightReturnSelected;
+    if (!flightOptions || !flightSelectedData) {
       return;
     }
     const {
@@ -99,19 +120,19 @@ const SearchFlightPage = () => {
     } = flightSelectedData;
     return {
       thumbnailUrl: getOperationFromFlightNumber(
-        data.flightOptions.airlines,
+        flightOptions.airlines,
         outbound.flightNumber
       )?.logo,
-      flightNumber: outbound.flightNumber || "",
-      departureTime: outbound.departureTimeStr || "",
-      departureCode: outbound.departureAirport || "",
-      arrivalCode: outbound.arrivalAirport || "",
-      arrivalTime: outbound.arrivalTimeStr || "",
+      flightNumber: outbound.flightNumber,
+      departureTime: outbound.departureTimeStr,
+      departureCode: outbound.departureAirport,
+      arrivalCode: outbound.arrivalAirport,
+      arrivalTime: outbound.arrivalTimeStr,
       operationName:
-        (data &&
+        (flightOptions &&
           flightBookingInfo[flightDirection] &&
           getOperationFromFlightNumber(
-            data.flightOptions.airlines,
+            flightOptions.airlines,
             outbound.flightNumber
           )?.name) ||
         "",
@@ -122,8 +143,8 @@ const SearchFlightPage = () => {
 
       flightTypeName: "",
       isDirectFlight: outbound.ticketdetail.numStops === 0,
-      departDate: outbound.departureDayStr || "",
-      fareClassName: outbound.ticketdetail.ticketClassCode || "",
+      departDate: outbound.departureDayStr,
+      fareClassName: outbound.ticketdetail.ticketClassCode,
     };
   };
 
@@ -133,16 +154,14 @@ const SearchFlightPage = () => {
         <div className="select-flight-trip py-6 flex gap-x-3">
           <FlightSectorItem
             labelText="Chuyến đi"
-            depart={getProvinceName(flightBookingInfo.bookingInfo.tripFrom)}
-            arrival={getProvinceName(flightBookingInfo.bookingInfo.tripTo)}
+            depart={getProvinceName(bookingInformation.tripFrom)}
+            arrival={getProvinceName(bookingInformation.tripTo)}
             departDate={
-              (flightBookingInfo.bookingInfo &&
-                flightBookingInfo.bookingInfo.departDate &&
-                format(
-                  flightBookingInfo.bookingInfo.departDate.date,
-                  FORMAT_DATE_LONG,
-                  { locale: vi }
-                )) ||
+              (bookingInformation &&
+                bookingInformation.departDate &&
+                format(bookingInformation.departDate.date, FORMAT_DATE_LONG, {
+                  locale: vi,
+                })) ||
               ""
             }
             flightDirection={FLIGHT_DIRECTION.DEPARTURE}
@@ -155,19 +174,17 @@ const SearchFlightPage = () => {
               FLIGHT_DIRECTION.DEPARTURE
             )}
           />
-          {flightBookingInfo.bookingInfo.tripType === TRIP_TYPE.ROUND_TRIP ? (
+          {bookingInformation.tripType === TRIP_TYPE.ROUND_TRIP ? (
             <FlightSectorItem
               labelText="Chuyến về"
-              depart={getProvinceName(flightBookingInfo.bookingInfo.tripTo)}
-              arrival={getProvinceName(flightBookingInfo.bookingInfo.tripFrom)}
+              depart={getProvinceName(bookingInformation.tripTo)}
+              arrival={getProvinceName(bookingInformation.tripFrom)}
               departDate={
-                (flightBookingInfo.bookingInfo &&
-                  flightBookingInfo.bookingInfo.returnDate &&
-                  format(
-                    flightBookingInfo.bookingInfo.returnDate.date,
-                    FORMAT_DATE_LONG,
-                    { locale: vi }
-                  )) ||
+                (bookingInformation &&
+                  bookingInformation.returnDate &&
+                  format(bookingInformation.returnDate.date, FORMAT_DATE_LONG, {
+                    locale: vi,
+                  })) ||
                 ""
               }
               flightDirection={FLIGHT_DIRECTION.RETURN}
@@ -190,24 +207,26 @@ const SearchFlightPage = () => {
             <SingleDatePiker />
             <div className="mb-4"></div>
             <FlightSortingTicket />
-            {(data && (
+            {flightOptions ? (
               <FlightTicketListing
                 onSelectFlight={handleSelectFlight}
                 direction={
-                  (flightBookingInfo.flightDepart && DIRECTION.IN_BOUND) ||
+                  (flightDepartSelected && DIRECTION.IN_BOUND) ||
                   DIRECTION.OUT_BOUND
                 }
-                flightOptions={data.flightOptions}
+                flightOptions={flightOptions}
               />
-            )) || <>Data not found</>}
+            ) : (
+              <>Data not found</>
+            )}
           </div>
         </div>
 
         <TicketConfirmationDrawler
-          flightDepart={flightBookingInfo.flightDepart}
-          flightReturn={flightBookingInfo.flightReturn}
+          flightDepart={flightDepartSelected}
+          flightReturn={flightReturnSelected}
           isOpen={showDrawlerConfirm}
-          onNext={() => {}}
+          onNext={handleNext}
           onChangeTicket={() => {}}
         />
       </div>

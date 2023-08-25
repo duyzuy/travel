@@ -32,7 +32,10 @@ const FlightSearchRecent: React.FC<IFlightSearchRecent> = ({
           <div className="recent-search">
             <ul>
               {recentItems.map((item) => (
-                <li className="item inline-flex px-2 py-1 bg-gray-100 text-sm rounded-sm mr-2 items-center">
+                <li
+                  key={item.id}
+                  className="item inline-flex px-2 py-1 bg-gray-100 text-sm rounded-sm mr-2 items-center"
+                >
                   <span className="flex items-center">
                     <span> {`${item.depart.code} - ${item.arrival.code}`}</span>
                     <span className="w-1 h-1 rounded-full bg-gray-300 mx-2"></span>

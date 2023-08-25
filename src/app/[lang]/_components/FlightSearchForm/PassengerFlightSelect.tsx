@@ -1,11 +1,11 @@
 "use client";
 import React, { memo } from "react";
 import PassengerSelect from "@/components/PassengerSelect";
-import { PAX_TYPE } from "@/constants/enum";
-import { ISearchFlightForm } from "@/Models";
+import { PASSENGER_TYPE } from "@/constants/enum";
+import { SearchBookingFormValue } from "@/modules/bookingTicket/searchBookingForm.interface";
 interface Props {
-  onSelectPassenger: (passengers: ISearchFlightForm["passengers"]) => void;
-  passengers: ISearchFlightForm["passengers"];
+  onSelectPassenger: (passengers: SearchBookingFormValue["passengers"]) => void;
+  passengers: SearchBookingFormValue["passengers"];
   variant?: "text" | "field";
 }
 
@@ -16,19 +16,18 @@ const PassengerFlightSelect: React.FC<Props> = ({
 }) => {
   const { adult, children, infant } = passengers;
   const onSelectPassengerFlight = (
-    paxType: PAX_TYPE,
+    paxType: PASSENGER_TYPE,
     { action, value }: { action: "minus" | "plus"; value: number }
   ) => {
     const MAXIMUM_PAX_AMOUNT = 9;
 
-    console.log(passengers);
     let passengersData = {
       adult,
       infant,
       children,
     };
     switch (paxType) {
-      case PAX_TYPE.ADULT: {
+      case PASSENGER_TYPE.ADULT: {
         if (
           action === "plus" &&
           adult.amount + children.amount < MAXIMUM_PAX_AMOUNT
@@ -61,7 +60,7 @@ const PassengerFlightSelect: React.FC<Props> = ({
         }
         break;
       }
-      case PAX_TYPE.CHILDREN: {
+      case PASSENGER_TYPE.CHILDREN: {
         if (
           action === "plus" &&
           children.amount + adult.amount < MAXIMUM_PAX_AMOUNT
@@ -80,7 +79,7 @@ const PassengerFlightSelect: React.FC<Props> = ({
         }
         break;
       }
-      case PAX_TYPE.INFANT: {
+      case PASSENGER_TYPE.INFANT: {
         if (action === "plus" && adult.amount > infant.amount) {
           passengersData = {
             ...passengersData,

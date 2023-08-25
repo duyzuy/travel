@@ -1,4 +1,4 @@
-import { IFlightBookingInfo } from "@/Models";
+import { IFlightBookingInformation } from "./bookingInformation.interface";
 
 import { ReactiveVar, useReactiveVar } from "@apollo/client";
 import { DIRECTION, TRIP_TYPE } from "@/constants/enum";
@@ -7,13 +7,13 @@ import { useQuery } from "@apollo/client";
 import { FlightOptions } from "@/Models/flight/flightOptions";
 import { GET_FLIGHT_OPTIONS } from "@/operations/queries/flightOptions";
 export const useBookingFlightInfo = (
-  bookingInformationVar: ReactiveVar<IFlightBookingInfo>
+  bookingInformationVar: ReactiveVar<IFlightBookingInformation>
 ) => {
   const flightBookingInfo = bookingInformationVar();
   const bookingInfo = useReactiveVar(bookingInformationVar);
 
   const onSubmitFlightSearchForm = (
-    searchData: IFlightBookingInfo["bookingInfo"]
+    searchData: IFlightBookingInformation["bookingInfo"]
   ) => {
     bookingInformationVar({
       ...flightBookingInfo,

@@ -13,7 +13,13 @@ import {
   IconMorning,
   IconNight,
 } from "@/components/Icons";
-const FlightTicketFilter = () => {
+import classNames from "classnames";
+interface IFlightTicketFilter {
+  className?: string;
+}
+const FlightTicketFilter: React.FC<IFlightTicketFilter> = ({
+  className = "",
+}) => {
   const {
     onFilterFlightTicket,
     filter: { brands, departTimes },
@@ -50,7 +56,13 @@ const FlightTicketFilter = () => {
     },
   ];
   return (
-    <div className="select-flight-left bg-white shadow-sm rounded-sm px-4">
+    <div
+      className={classNames({
+        "select-flight-left bg-white shadow-sm rounded-sm px-4 sticky top-0":
+          true,
+        [className]: className,
+      })}
+    >
       <div className="filter-head flex items-center justify-between border-b py-4">
         <p className="flex items-center">
           <svg

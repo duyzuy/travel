@@ -3,8 +3,9 @@
 import { FlightTicket } from "@/Models/flight/ticket";
 import FlightSchedule from "@/components/Flights/FlightTicketItem/FlightSchedule";
 import { durationToString } from "@/helpers/flightItem";
-import TicketBox from "./Ticketbox";
+
 import { moneyFormatVND } from "@/utils/helper";
+import FlightTicketBox from "./FlightTicketBox";
 import { FLIGHT_DIRECTION } from "@/constants/enum";
 import classNames from "classnames";
 interface IFlightSectorItemDetail {
@@ -74,18 +75,17 @@ const FlightSectorItemDetail = ({
 
       <div className="others px-6">
         <div className="other-tickets flex -mx-2 flex-wrap">
-          {otherTickets.map((_otherTicket) => (
-            <TicketBox
+          {otherTickets.map((_ticket) => (
+            <FlightTicketBox
+              key={_ticket.tid}
               polices={
-                (_otherTicket.outbound.transitTickets &&
-                  _otherTicket.outbound.transitTickets[0].polices) ||
+                (_ticket.outbound.transitTickets &&
+                  _ticket.outbound.transitTickets[0].polices) ||
                 undefined
               }
-              fareName={_otherTicket.outbound.ticketdetail.ticketClassCode}
-              price={moneyFormatVND(
-                _otherTicket.outbound.ticketdetail.farePrice
-              )}
-              isCurrent={_otherTicket.tid === ticket.tid}
+              fareName={_ticket.outbound.ticketdetail.ticketClassCode}
+              price={moneyFormatVND(_ticket.outbound.ticketdetail.farePrice)}
+              isCurrent={_ticket.tid === ticket.tid}
               className="w-1/3 mb-6"
             />
           ))}

@@ -1,86 +1,94 @@
 "use client";
 
-import React, { memo } from "react";
-import Select from "@/components/base/Select";
-import Input from "@/components/base/Input";
-import { PaxType } from "@/constants/enum";
-import IconInfant from "@/components/Icons/IconInfant";
-import IconAdult from "@/components/Icons/IconAdult";
-import IconChildren from "@/components/Icons/IconChildren";
+import React, { memo, useEffect, useMemo } from "react";
+
+import { FlightBookingInformation } from "@/modules/bookingTicket/bookingInformation.interface";
+import PassengerForm from "./PassengerForm";
+import { GENDER, PASSENGER_TITLE, PASSENGER_TYPE } from "@/constants/enum";
+import {
+  IPassengerInformationFormValue,
+  PassengerInformationStore,
+} from "@/modules/passengerInformation/passengerInformation.interface";
+
+type BookingInfoType = FlightBookingInformation["bookingInfo"];
+type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+type BookingInforWithPassengersRequired = WithRequired<
+  BookingInfoType,
+  "passengers"
+>;
+
+const createPassengersRecord = (num: number, passengerType: PASSENGER_TYPE) => {
+  let passengers: PassengerInformationStore["passengers"] = [];
+  Array.from({ length: num }).map((index) => {
+    passengers.push({
+      title: PASSENGER_TITLE.MR,
+      firstName: "",
+      lastName: "",
+      dependent: null,
+      gender: GENDER.MALE,
+      birthDate: undefined,
+      isContact: false,
+      type: passengerType,
+    });
+  });
+
+  return passengers;
+};
 const PassengerInformation: React.FC<{
-  paxType: PaxType;
-}> = ({ paxType }) => {
+  person: BookingInforWithPassengersRequired["passengers"];
+  passengers: IPassengerInformationFormValue["passengers"];
+  onAddPassengers: (data: IPassengerInformationFormValue["passengers"]) => void;
+}> = ({ person, onAddPassengers, passengers }) => {
+  //init records Data
+  const passengerInitRecords = useMemo(() => {
+    let result: PassengerInformationStore["passengers"] = [];
+    Object.keys(person).forEach((paxKey) => {
+      result = [
+        ...result,
+        ...createPassengersRecord(
+          person[paxKey as PASSENGER_TYPE].amount,
+          paxKey as PASSENGER_TYPE
+        ),
+      ];
+    });
+
+    return result;
+  }, [person]);
+
+  const onChangeInformation = (
+    index: number,
+    formData: PassengerInformationStore["passengers"][0]
+  ) => {
+    const newPassengers = passengers.splice(index, 1, { ...formData });
+    onAddPassengers(newPassengers);
+  };
+  useEffect(() => {
+    onAddPassengers(passengerInitRecords);
+  }, []);
   return (
-    <div className="pax-infor mb-6">
-      <div className="pax-head mb-4 flex items-center">
-        <span className="mr-2">
-          {(paxType === PaxType.ADULT && (
-            <IconAdult width={24} height={24} />
-          )) ||
-            (paxType === PaxType.CHILDREN && (
-              <IconChildren width={24} height={24} />
-            )) || <IconInfant width={24} height={24} />}
-        </span>
-        <span className="text-lg ">
-          {(paxType === PaxType.ADULT && "Người lớn") ||
-            (paxType === PaxType.CHILDREN && "Trẻ em") ||
-            "Em bé"}
-        </span>
+    <div className="box bg-white rounded-sm mb-6 p-6 shadow-sm">
+      <div className="head-passenger mb-4">
+        <h3 className="text-xl">
+          <span className="line w-3 bg-emerald-400 block h-5 rounded-tr-xl rounded-br-xl -translate-x-6 translate-y-1 absolute"></span>
+          Thông tin hành khách
+        </h3>
+        <p className="py-2 text-sm text-gray-500">
+          Nhập tiếng Việt không dấu, họ tên trùng khớp trên giấy tờ tuỳ thân.
+        </p>
       </div>
-      <div className="flex items-center mb-4">
-        <div className="pax-select-title w-28">
-          <Select
-            name="sex"
-            label="Danh xưng"
-            required
-            value={{ id: 1, name: "Ông", value: "Mr" }}
-          />
+      <div className="line border-t py-2"></div>
+      <div className="body-passenger">
+        <div className="form">
+          {passengerInitRecords.map((pax, _index) => (
+            <PassengerForm
+              key={_index}
+              passengerInfo={pax}
+              paxType={pax.type}
+              index={_index}
+              onChangeForm={(formData) => onChangeInformation(_index, formData)}
+            />
+          ))}
         </div>
-        <div className="flex items-center flex-1 ml-4">
-          <Input
-            name="firstName"
-            label="Họ"
-            required
-            textSize="sm"
-            placeholder="Ví dụ: NGUYEN"
-            value=""
-            onChange={() => {}}
-            floating={false}
-          />
-          <Input
-            name="lastName"
-            label="Tên đệm và tên"
-            value=""
-            required
-            textSize="sm"
-            placeholder="Ví dụ: VAN A"
-            floating={false}
-            onChange={() => {}}
-            className="ml-4"
-          />
-        </div>
-      </div>
-      <div className="w-72">
-        <Input
-          name="birthDay"
-          label="Ngày sinh"
-          value=""
-          required
-          textSize="sm"
-          placeholder="MM-DD-YYYY"
-          floating={false}
-          onChange={() => {}}
-        />
-        {paxType === PaxType.CHILDREN && (
-          <p className="text-xs text-gray-800 mt-2">
-            Hành khách trẻ em (từ 2 - 11 tuổi)
-          </p>
-        )}
-        {paxType === PaxType.INFANT && (
-          <p className="text-xs text-gray-800 mt-2">
-            Hành khách trẻ sơ sinh (dưới 2 tuổi)
-          </p>
-        )}
       </div>
     </div>
   );

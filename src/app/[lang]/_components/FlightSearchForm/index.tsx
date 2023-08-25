@@ -4,7 +4,7 @@ import React, { memo, useEffect, useState } from "react";
 import { useApolloClient } from "@apollo/client";
 import { AIRPORT_LIST } from "./airportList";
 
-import DestinationSelect from "@/app/[lang]/_components/FlightSearchForm/DestinationSelect";
+import DestinationSelect from "./DestinationSelect";
 import PassengerFlightSelect from "./PassengerFlightSelect";
 import DateRangeSelect from "./DateRangeSelect";
 

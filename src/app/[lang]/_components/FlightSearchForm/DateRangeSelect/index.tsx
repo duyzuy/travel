@@ -13,7 +13,7 @@ import classNames from "classnames";
 import { isAfter, isBefore, startOfToday } from "date-fns";
 import { CalendarIcon } from "@/components/Icons";
 import styles from "./inputDateRange.module.scss";
-import { ISearchDate } from "@/Models";
+import { ISearchDate } from "@/modules/bookingTicket/searchBookingForm.interface";
 
 interface Props {
   locale: Locale;

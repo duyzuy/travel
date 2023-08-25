@@ -24,7 +24,7 @@ const Quantity: React.FC<PropsType> = ({
 }) => {
   const [quantity, setQuantity] = useState(value);
 
-  const onChangeQuantity = useCallback((action: QUANTITY_ACTION) => {
+  const onChangeQuantity = (action: QUANTITY_ACTION) => {
     if (onChange) {
       const amount = action === QUANTITY_ACTION.MINUS ? value - 1 : value + 1;
       onChange(action, amount);
@@ -33,7 +33,7 @@ const Quantity: React.FC<PropsType> = ({
         return action === QUANTITY_ACTION.MINUS ? prev - 1 : prev + 1;
       });
     }
-  }, []);
+  };
 
   return (
     <div

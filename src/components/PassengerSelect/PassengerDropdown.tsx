@@ -1,6 +1,6 @@
 "use client";
 import React, { memo } from "react";
-import { PAX_TYPE } from "@/constants/enum";
+import { PASSENGER_TYPE } from "@/constants/enum";
 import Quantity, { QUANTITY_ACTION } from "../base/Quantity";
 import { AdultIcon, ChildrenIcon, BabyIcon } from "@/assets/icons";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import classNames from "classnames";
 
 interface Props {
   onChangeQuantity: (
-    type: PAX_TYPE,
+    type: PASSENGER_TYPE,
     data: { action: QUANTITY_ACTION; value: number }
   ) => void;
   adultAmount: number;
@@ -40,7 +40,7 @@ const PassengerDropdown = ({
               subTitle="12 tuổi trở lên"
               value={adultAmount}
               onChange={onChangeQuantity}
-              paxType={PAX_TYPE.ADULT}
+              paxType={PASSENGER_TYPE.ADULT}
               iconPath={AdultIcon}
             />
           </li>
@@ -50,7 +50,7 @@ const PassengerDropdown = ({
               subTitle="2 - 11 tuổi"
               value={childrenAmount}
               onChange={onChangeQuantity}
-              paxType={PAX_TYPE.CHILDREN}
+              paxType={PASSENGER_TYPE.CHILDREN}
               iconPath={ChildrenIcon}
             />
           </li>
@@ -60,7 +60,7 @@ const PassengerDropdown = ({
               subTitle="< 2 tuổi"
               value={infantAmount}
               onChange={onChangeQuantity}
-              paxType={PAX_TYPE.INFANT}
+              paxType={PASSENGER_TYPE.INFANT}
               iconPath={BabyIcon}
             />
           </li>
@@ -72,14 +72,14 @@ const PassengerDropdown = ({
 };
 export default memo(PassengerDropdown);
 
-interface PassengerDropDownQuantity {
+interface IPassengerDropDownQuantity {
   title: string;
   subTitle: string;
   value: number;
   iconPath?: string;
-  paxType: PAX_TYPE;
+  paxType: PASSENGER_TYPE;
   onChange: (
-    paxType: PAX_TYPE,
+    paxType: PASSENGER_TYPE,
     { action, value }: { action: QUANTITY_ACTION; value: number }
   ) => void;
 }
@@ -91,7 +91,7 @@ PassengerDropdown.BaseQuantity = function PassengerBaseQuantity({
   title,
   iconPath,
   paxType,
-}: PassengerDropDownQuantity) {
+}: IPassengerDropDownQuantity) {
   return (
     <>
       <div className="passenger-type flex items-center">

@@ -22,17 +22,27 @@ export enum TRIP_DATE {
   DATE_FROM = "dateFrom",
   DATE_TO = "dateTo",
 }
-export enum PAX_TYPE {
+export enum PASSENGER_TYPE {
   ADULT = "adult",
   CHILDREN = "children",
   INFANT = "infant",
 }
 
 export enum SEAT_TYPE {
-  HOT_SEAT = "HOT_SEAT",
-  FRONT_SEAT = "FRONT_SEAT",
-  EXIT_SEAT = "EXIT_SEAT",
-  NORMAL_SEAT = "NORMAL_SEAT",
-  DISABLE_SEAT = "DISABLE_SEAT",
-  SELECTING_SEAT = "SELECTING_SEAT",
+  HOT_SEAT = "hotSeat",
+  FRONT_SEAT = "frontSeat",
+  EXIT_SEAT = "exitSeat",
+  NORMAL_SEAT = "normalSeat",
+  DISABLE_SEAT = "disable",
+  SELECTING_SEAT = "Selecting",
+}
+export enum GENDER {
+  MALE = "Male",
+  FEMALE = "Female",
+}
+
+export enum PASSENGER_TITLE {
+  MR = "Mr",
+  MS = "Ms",
+  MRS = "Mrs",
 }
