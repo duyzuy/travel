@@ -9,7 +9,7 @@ import SeatService from "./_components/SeatService";
 import { bookingInformationVar } from "@/cache/vars";
 import { useReactiveVar } from "@apollo/client";
 import { useState } from "react";
-import SeatDrawler from "./_components/SeatService/SeatDrawler";
+import SeatDrawler from "./_components/SeatService/SeatDrawler/index.tsx";
 import { FLIGHT_SERVICES } from "@/modules/bookingServices/bookingServices.interface";
 enum DRAWLER {
   LUGGAGE = "luggage",
@@ -61,6 +61,7 @@ const FlightServicePage = () => {
       <SeatDrawler
         isOpen={drawler === DRAWLER.SEAT}
         onClose={() => setOpenDrawler(undefined)}
+        selectedSeats={selectedServices[FLIGHT_SERVICES.SEATS]}
       />
     </React.Fragment>
   );

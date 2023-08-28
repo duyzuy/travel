@@ -1,5 +1,6 @@
 import { ReactiveVar, useReactiveVar } from "@apollo/client";
 import {
+  FLIGHT_SERVICES,
   IBookingServices,
   ILuggageSelectedItem,
   ISeatSeledtedItem,
@@ -50,12 +51,19 @@ const useSelectServices = (
     });
   };
 
+  const onInitialServices = (
+    serVice: FLIGHT_SERVICES,
+    selectedItems: IBookingServices[FLIGHT_SERVICES]
+  ) => {
+    selectedServiceVar({ ...selectedServices, [serVice]: selectedItems });
+  };
   return {
     onAddLuggageItemsToFlightDeparture,
     onAddLuggageItemsToFlightReturn,
     onAddSeatToFlightReturn,
     onAddSeatToFlightDeparture,
     onInitLuggages,
+    onInitialServices,
     selectedServices: useReactiveVar(selectedServiceVar),
   };
 };

@@ -85,7 +85,7 @@ const LuggageSegment = (props: ILugggagesSegment) => {
             </p>
           </div>
         </div>
-        {passengers.map((passenger) => (
+        {passengers.map((passenger, _pIndex) => (
           <div className="pax-luggage-add-ons px-6">
             <div className="pax-luggage-item">
               <div className="pax-full-name py-2">
@@ -94,9 +94,9 @@ const LuggageSegment = (props: ILugggagesSegment) => {
                 </p>
               </div>
               <div className="luggage-packages flex items-center flex-wrap flex-1">
-                {items.map((item) => (
+                {items.map((item, _index) => (
                   <LuggageItem
-                    key={`dep-a-${item.id}`}
+                    key={`passenger-${_pIndex}-${item.id}`}
                     price={moneyFormatVND(item.baseAmount)}
                     name={item.name}
                     isSelected={isSelectedItem(item.id, passenger.index)}

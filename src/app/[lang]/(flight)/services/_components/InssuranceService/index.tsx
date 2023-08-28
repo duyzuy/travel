@@ -1,6 +1,5 @@
 "use client";
-import React, { memo, useState } from "react";
-import Image from "next/image";
+import React, { memo } from "react";
 
 import IconSafty from "@/assets/icons/ico-safety.svg";
 

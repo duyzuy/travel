@@ -70,8 +70,6 @@ export const useBookingFlightInfo = (
     serviceName: FLIGHT_SERVICES,
     serviceItems: IBookingServices[FLIGHT_SERVICES]
   ) => {
-    const { services } = flightBookingInfo;
-
     bookingInformationVar({
       ...flightBookingInfo,
       services: {

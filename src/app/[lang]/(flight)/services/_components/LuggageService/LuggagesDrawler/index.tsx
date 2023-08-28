@@ -100,7 +100,7 @@ const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
     { item, passengerIndex }: { item: ILuggageOption; passengerIndex: number }
   ) => {
     let luggageItems: ILuggageSelectedItem[] = [];
-    console.log(direction);
+
     if (direction === FLIGHT_DIRECTION.DEPARTURE) {
       if (!luggagesSelectedDepart || !luggagesSelectedDepart.length) {
         luggageItems = [{ item: item, passenger: { index: passengerIndex } }];

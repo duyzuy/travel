@@ -32,6 +32,7 @@ interface IFlightSectorItem<T> {
   status: SECTOR_STATUS;
   labelText: string;
   flightSelectedInfo?: T;
+  onClick?: () => void;
 }
 const FlightSector = ({
   depart,
@@ -41,6 +42,7 @@ const FlightSector = ({
   status = SECTOR_STATUS.IN_PROCESS,
   labelText = "Chuyến đi",
   flightSelectedInfo,
+  onClick,
 }: IFlightSectorItem<FlightInformationType>) => {
   return (
     <div
@@ -55,6 +57,7 @@ const FlightSector = ({
           flightDirection === FLIGHT_DIRECTION.RETURN,
         "opacity-60": status === SECTOR_STATUS.WAITING,
       })}
+      onClick={onClick}
     >
       <span
         className={classNames({

@@ -2,8 +2,6 @@
 
 import React, { memo } from "react";
 import classNames from "classnames";
-import { IFlightBookingInformation } from "@/modules/bookingTicket/bookingInformation.interface";
-import { ISeatOption } from "@/Models/seatMap";
 import { FLIGHT_SERVICES } from "@/modules/bookingServices/bookingServices.interface";
 export enum PASSENGER_STATUS {
   PROCESS = "process",

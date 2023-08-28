@@ -2,18 +2,21 @@
 
 import React, { useState } from "react";
 import { PassengerBookingInformationType } from "@/modules/bookingTicket/bookingInformation.interface";
-import SeatMapA330 from "./SeatMapA330";
-import AirCraftSeatNotes from "@/components/Flights/AirCraftModel/AirCraftSeatNotes";
-import PassengerBoxItem from "@/components/PassengerBoxList/PassengerBoxItem";
 import {
   FLIGHT_SERVICES,
   ISeatSeledtedItem,
 } from "@/modules/bookingServices/bookingServices.interface";
-import { PASSENGER_STATUS } from "@/components/PassengerBoxList/PassengerBoxItem";
+import { ISeatOption } from "@/Models/seatMap";
+import AirCraftSeatNotes from "@/components/Flights/AirCraftModel/AirCraftSeatNotes";
+
+import PassengerBoxItem, {
+  PASSENGER_STATUS,
+} from "@/components/PassengerBoxList/PassengerBoxItem";
 import classNames from "classnames";
 import { FLIGHT_DIRECTION } from "@/constants/enum";
-import { ISeatOption } from "@/Models/seatMap";
-import SeatMapA320 from "./SeatMapA320";
+
+import SeatMapA320 from "../SeatMapA320";
+import SeatMapA330 from "../SeatMapA330";
 interface ISeatSegment {
   passengers: PassengerBookingInformationType[];
   onSelectSeat: (
@@ -36,6 +39,41 @@ const SeatSegment = ({
   const onSelectPassengerSeat = (seatOpt: ISeatOption) => {
     const passenger = passengers[passengerIndex];
     onSelectSeat(passenger, seatOpt);
+  };
+
+  const passengerGetItemSelect = (
+    passenger: PassengerBookingInformationType,
+    itemList: ISeatSeledtedItem[]
+  ) => {
+    const service = itemList.find(
+      (seatItem) => seatItem.passenger.index === passenger.index
+    );
+    if (service) {
+      return `${service.item.seatMapCell.rowIdentifier}-${service.item.seatMapCell.seatIdentifier}`;
+    }
+  };
+  const getSelectedItemSeat = (
+    selectedItems: ISeatSeledtedItem[],
+    passengers: PassengerBookingInformationType[]
+  ) => {
+    return selectedItems.reduce(
+      (
+        sum: {
+          item: ISeatOption;
+          passenger: PassengerBookingInformationType;
+        }[],
+        item
+      ) => {
+        const passenger = passengers.find(
+          (passenger) => passenger.index === item.passenger.index
+        );
+        if (passenger) {
+          sum = [...sum, { item: item.item, passenger: passenger }];
+        }
+        return sum;
+      },
+      []
+    );
   };
   return (
     <div
@@ -115,35 +153,3 @@ const SeatSegment = ({
   );
 };
 export default SeatSegment;
-
-const passengerGetItemSelect = (
-  passenger: PassengerBookingInformationType,
-  itemList: ISeatSeledtedItem[]
-) => {
-  const service = itemList.find(
-    (seatItem) => seatItem.passenger.index === passenger.index
-  );
-  if (service) {
-    return `${service.item.seatMapCell.rowIdentifier}-${service.item.seatMapCell.seatIdentifier}`;
-  }
-};
-const getSelectedItemSeat = (
-  selectedItems: ISeatSeledtedItem[],
-  passengers: PassengerBookingInformationType[]
-) => {
-  return selectedItems.reduce(
-    (
-      sum: { item: ISeatOption; passenger: PassengerBookingInformationType }[],
-      item
-    ) => {
-      const passenger = passengers.find(
-        (passenger) => passenger.index === item.passenger.index
-      );
-      if (passenger) {
-        sum = [...sum, { item: item.item, passenger: passenger }];
-      }
-      return sum;
-    },
-    []
-  );
-};

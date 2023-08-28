@@ -1,11 +1,12 @@
 "use client";
 import Drawler from "@/components/base/Drawler";
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import { selectingServicesVar } from "@/cache/vars";
 import { useReactiveVar } from "@apollo/client";
 import { bookingInformationVar } from "@/cache/vars";
 import {
   FLIGHT_SERVICES,
+  IBookingServices,
   ISeatSeledtedItem,
 } from "@/modules/bookingServices/bookingServices.interface";
 import useSelectServices from "@/modules/bookingServices/useSelectServices";
@@ -20,18 +21,25 @@ import { useBookingFlightInfo } from "@/modules/bookingTicket/useBookingFlightIn
 interface ISeatDrawler {
   isOpen: boolean;
   onClose: () => void;
+  selectedSeats?: IBookingServices["seats"];
 }
 
-const SeatDrawler: React.FC<ISeatDrawler> = ({ isOpen, onClose }) => {
+const SeatDrawler: React.FC<ISeatDrawler> = ({
+  isOpen,
+  onClose,
+  selectedSeats,
+}) => {
   const { flightBookingInfo, onAddBookingFlightService } = useBookingFlightInfo(
     bookingInformationVar
   );
   const [flightDirection, setFlightDirection] = useState<FLIGHT_DIRECTION>(
     FLIGHT_DIRECTION.DEPARTURE
   );
+
   const {
     onAddSeatToFlightDeparture,
     onAddSeatToFlightReturn,
+    onInitialServices,
     selectedServices,
   } = useSelectServices(selectingServicesVar);
 
@@ -48,7 +56,6 @@ const SeatDrawler: React.FC<ISeatDrawler> = ({ isOpen, onClose }) => {
     );
   }, [flightBookingInfo]);
 
-  console.log(flightBookingInfo);
   const handleSelectSeat = (
     direction: FLIGHT_DIRECTION,
     {
@@ -168,6 +175,7 @@ const SeatDrawler: React.FC<ISeatDrawler> = ({ isOpen, onClose }) => {
   };
 
   const onNext = () => {
+    console.log(seatSelected);
     onAddBookingFlightService(FLIGHT_SERVICES.SEATS, seatSelected);
   };
   const onCancel = () => {
@@ -224,6 +232,9 @@ const SeatDrawler: React.FC<ISeatDrawler> = ({ isOpen, onClose }) => {
       </div>
     );
   };
+  useEffect(() => {
+    onInitialServices(FLIGHT_SERVICES.SEATS, selectedSeats);
+  }, [onClose]);
   return (
     <Drawler isOpen={isOpen} onClose={onCancel} width="xl">
       <div className="head bg-gray-100 sticky top-0">{renderTabSegment()}</div>
@@ -250,7 +261,6 @@ const SeatDrawler: React.FC<ISeatDrawler> = ({ isOpen, onClose }) => {
           airCraftModel="A320"
         />
       ) : null}
-
       <SeatNavigationBar onFinish={onNext} />
     </Drawler>
   );

@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import { useApolloClient } from "@apollo/client";
@@ -42,6 +42,9 @@ const SearchFlightPage = () => {
     useBookingFlightInfo(bookingInformationVar);
   const { data, loading } = doSearchFlight();
 
+  const [flightSegment, setFlightSegment] = useState(
+    FLIGHT_DIRECTION.DEPARTURE
+  );
   const flightOptions = useMemo(() => {
     return data?.flightOptions;
   }, [data]);
@@ -58,16 +61,7 @@ const SearchFlightPage = () => {
     return flightBookingInfo.flightReturn;
   }, [flightBookingInfo]);
 
-  const [showDrawlerConfirm, setShowDrawler] = useState(
-    (bookingInformation.tripType === TRIP_TYPE.ONEWAY &&
-      flightDepartSelected &&
-      true) ||
-      (flightBookingInfo.bookingInfo.tripType === TRIP_TYPE.ROUND_TRIP &&
-        flightDepartSelected &&
-        flightReturnSelected &&
-        true) ||
-      false
-  );
+  const [showDrawlerConfirm, setShowDrawler] = useState(false);
 
   const handleSelectFlight = useCallback(
     (
@@ -87,25 +81,22 @@ const SearchFlightPage = () => {
       }
 
       onSelectFlight(direction, { ticket, otherTickets });
+
+      if (
+        bookingInformation.tripType === TRIP_TYPE.ONEWAY ||
+        (bookingInformation.tripType === TRIP_TYPE.ROUND_TRIP &&
+          flightDepartSelected)
+      ) {
+        setShowDrawler(true);
+      }
     },
     [flightBookingInfo]
   );
 
   const handleNext = () => {
+    setShowDrawler(false);
     router.push("./passenger");
   };
-
-  useEffect(() => {
-    if (
-      (bookingInformation.tripType === TRIP_TYPE.ONEWAY &&
-        flightDepartSelected) ||
-      (bookingInformation.tripType === TRIP_TYPE.ROUND_TRIP &&
-        flightBookingInfo.flightDepart &&
-        flightBookingInfo.flightReturn)
-    ) {
-      setShowDrawler(true);
-    }
-  }, [bookingInformation, flightDepartSelected, flightReturnSelected]);
 
   const departFlightSelectedInfo = (flightDirection: FLIGHT_DIRECTION) => {
     const flightSelectedData =
@@ -166,8 +157,11 @@ const SearchFlightPage = () => {
             }
             flightDirection={FLIGHT_DIRECTION.DEPARTURE}
             status={
-              (!flightBookingInfo.flightDepart && SECTOR_STATUS.IN_PROCESS) ||
-              (flightBookingInfo.flightDepart && SECTOR_STATUS.SELECTED) ||
+              (!flightDepartSelected && SECTOR_STATUS.IN_PROCESS) ||
+              (flightDepartSelected && SECTOR_STATUS.SELECTED) ||
+              (flightDepartSelected &&
+                flightReturnSelected &&
+                SECTOR_STATUS.IN_PROCESS) ||
               SECTOR_STATUS.WAITING
             }
             flightSelectedInfo={departFlightSelectedInfo(
@@ -189,10 +183,10 @@ const SearchFlightPage = () => {
               }
               flightDirection={FLIGHT_DIRECTION.RETURN}
               status={
-                (flightBookingInfo.flightDepart &&
-                  !flightBookingInfo.flightReturn &&
+                (flightDepartSelected &&
+                  !flightReturnSelected &&
                   SECTOR_STATUS.IN_PROCESS) ||
-                (flightBookingInfo.flightReturn && SECTOR_STATUS.SELECTED) ||
+                (flightReturnSelected && SECTOR_STATUS.SELECTED) ||
                 SECTOR_STATUS.WAITING
               }
               flightSelectedInfo={departFlightSelectedInfo(

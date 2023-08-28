@@ -6,10 +6,7 @@ import { useModal } from "@/hooks/useModal";
 import { useReactiveVar } from "@apollo/client";
 import MealNavigationBar from "./MealNavigationBar";
 import { bookingInformationVar } from "@/cache/vars";
-import {
-  ILuggageOption,
-  ILuggageSelectedItem,
-} from "@/modules/bookingServices/bookingServices.interface";
+import { ILuggageOption } from "@/modules/bookingServices/bookingServices.interface";
 import useSelectServices from "@/modules/bookingServices/useSelectServices";
 
 import {
@@ -65,17 +62,9 @@ const LUGGAGE_ITEMS: ILuggageOption[] = [
 ];
 
 const MealDrawler: React.FC<IMealDrawler> = ({ isOpen, onClose }) => {
-  const isShowLuggage = useReactiveVar(showModalLuggageVar);
-  const { onCloseModal } = useModal(showModalLuggageVar);
-
   const bookingInformation = useReactiveVar(bookingInformationVar);
 
-  const {
-    onAddLuggageItemsToFlightDeparture,
-    onAddLuggageItemsToFlightReturn,
-    onInitLuggages,
-    selectedServices,
-  } = useSelectServices(selectingServicesVar);
+  const { selectedServices } = useSelectServices(selectingServicesVar);
   const { passengerInformation, flightDepart, flightReturn, bookingInfo } =
     bookingInformation;
 
@@ -92,7 +81,6 @@ const MealDrawler: React.FC<IMealDrawler> = ({ isOpen, onClose }) => {
 
   const onNext = () => {};
   const onCancel = () => {
-    onInitLuggages({});
     onClose();
   };
   return (

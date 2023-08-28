@@ -70,11 +70,11 @@ const SeatService: React.FC<ISeatService> = ({
 
   const seatsDepart = useMemo(() => {
     return seatSelected.flightDepart;
-  }, []);
+  }, [seatSelected]);
 
   const seatsReturn = useMemo(() => {
     return seatSelected.flightReturn;
-  }, []);
+  }, [seatSelected]);
   return (
     <ServiceItem
       thumbnail={SeatIcon}

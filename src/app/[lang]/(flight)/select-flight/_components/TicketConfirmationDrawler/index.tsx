@@ -28,10 +28,10 @@ const TicketConfirmationModal: React.FC<IFlightConfirmationModal> = ({
 }) => {
   const [isShowModal, setShowModal] = useState(isOpen);
 
+  console.log(isOpen);
   useEffect(() => {
     setShowModal(isOpen);
   }, [isOpen]);
-  console.log("render", isShowModal);
   if (!isShowModal) {
     return null;
   }
