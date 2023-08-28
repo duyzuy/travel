@@ -8,7 +8,15 @@ const AirCraftSeatNotes: React.FC<{
   isSticky?: boolean;
   type?: "vertical" | "horizon";
   className?: string;
-}> = ({ isSticky = false, type = "horizon", className = "" }) => {
+  isFull?: boolean;
+  spacing: "sm" | "md" | "lg";
+}> = ({
+  isSticky = false,
+  type = "horizon",
+  className = "",
+  isFull = true,
+  spacing = "md",
+}) => {
   const SEAT_TYPES = [
     {
       id: "seat-1",
@@ -50,11 +58,10 @@ const AirCraftSeatNotes: React.FC<{
   return (
     <div
       className={classNames({
-        "seat-note relative": true,
         [className]: className,
       })}
     >
-      <div className="seat-note-inner bg-white shadow-sm border">
+      <div className="seat-note-inner">
         <div
           className={classNames({
             "px-3 lg:px-6 transition-all": true,
@@ -68,7 +75,7 @@ const AirCraftSeatNotes: React.FC<{
 
         <ul
           className={classNames({
-            "px-2 relative z-10": true,
+            "relative z-10": true,
             "flex flex-wrap": type === "horizon",
           })}
         >
@@ -76,9 +83,12 @@ const AirCraftSeatNotes: React.FC<{
             <li
               key={seat.id}
               className={classNames({
-                "flex items-center px-2 py-1 lg:px-4 lg:py-3": true,
-                "w-1/3 lg:w-1/5": type === "horizon",
+                "flex items-center": true,
+                "w-1/3 lg:w-1/5": type === "horizon" && isFull,
+                "w-1/3": !isFull,
                 "w-full": type === "vertical",
+                "px-2 py-1 lg:px-4 lg:py-3": spacing === "md",
+                "px-2 py-1 lg:px-3 lg:py-2": spacing === "sm",
               })}
             >
               <span className="w-6 h-6 block mr-2">

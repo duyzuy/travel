@@ -2,15 +2,17 @@
 import React, { memo, ChangeEvent, useId } from "react";
 import styles from "./checkbox.module.scss";
 import classNames from "classnames";
+
 type PropsType = {
   className?: string;
   label?: string;
   onChange?: (
-    e?: React.MouseEvent<HTMLSpanElement> | React.ChangeEvent
+    e?: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLSpanElement>
   ) => void;
   type?: "checkbox" | "radio";
   name?: string;
   isChecked?: boolean;
+  value?: string;
 };
 const Checkbox: React.FC<PropsType> = ({
   className = "",
@@ -18,7 +20,8 @@ const Checkbox: React.FC<PropsType> = ({
   label,
   type = "checkbox",
   name = "name",
-  isChecked = true,
+  isChecked = false,
+  value = "",
 }) => {
   const checkboxId = useId();
 
@@ -37,6 +40,7 @@ const Checkbox: React.FC<PropsType> = ({
             type={type}
             name={name}
             readOnly
+            value={value}
             checked={isChecked}
             className={`${
               type === "checkbox" ? "rounded " : " "

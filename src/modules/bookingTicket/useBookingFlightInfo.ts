@@ -6,11 +6,14 @@ import { FlightTicket } from "@/Models/flight/ticket";
 import { useQuery } from "@apollo/client";
 import { FlightOptions } from "@/Models/flight/flightOptions";
 import { GET_FLIGHT_OPTIONS } from "@/operations/queries/flightOptions";
+import {
+  FLIGHT_SERVICES,
+  IBookingServices,
+} from "../bookingServices/bookingServices.interface";
 export const useBookingFlightInfo = (
   bookingInformationVar: ReactiveVar<IFlightBookingInformation>
 ) => {
   const flightBookingInfo = bookingInformationVar();
-  const bookingInfo = useReactiveVar(bookingInformationVar);
 
   const onSubmitFlightSearchForm = (
     searchData: IFlightBookingInformation["bookingInfo"]
@@ -62,10 +65,26 @@ export const useBookingFlightInfo = (
 
     return { data, loading };
   };
+
+  const onAddBookingFlightService = (
+    serviceName: FLIGHT_SERVICES,
+    serviceItems: IBookingServices[FLIGHT_SERVICES]
+  ) => {
+    const { services } = flightBookingInfo;
+
+    bookingInformationVar({
+      ...flightBookingInfo,
+      services: {
+        ...flightBookingInfo.services,
+        [serviceName]: serviceItems,
+      },
+    });
+  };
   return {
     onSubmitFlightSearchForm,
     onSelectFlight,
     doSearchFlight,
-    flightBookingInfo: bookingInfo,
+    onAddBookingFlightService,
+    flightBookingInfo: useReactiveVar(bookingInformationVar),
   };
 };

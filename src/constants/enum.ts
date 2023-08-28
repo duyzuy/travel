@@ -45,4 +45,6 @@ export enum PASSENGER_TITLE {
   MR = "Mr",
   MS = "Ms",
   MRS = "Mrs",
+  CHILDREN = "Children",
+  INFANT = "Infant",
 }

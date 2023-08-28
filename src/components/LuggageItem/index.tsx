@@ -7,14 +7,15 @@ const LuggageItem: React.FC<{
   isSelected: boolean;
   price: string;
   name: string;
-  onSelectLuggage?: () => void;
-}> = ({ price, name, isSelected, onSelectLuggage }) => {
+  onClick?: () => void;
+}> = ({ price, name, isSelected, onClick }) => {
   return (
     <div
       className={classNames({
         [styles.wrapper]: styles.wrapper,
         "luggage-item w-28 mb-4 mr-4": true,
       })}
+      onClick={onClick}
     >
       <div
         className={classNames({

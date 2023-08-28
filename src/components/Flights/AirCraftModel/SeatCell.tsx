@@ -2,14 +2,26 @@
 
 import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 import classNames from "classnames";
-import { SeatOptionType } from "@/Models/seatMap";
+import { ISeatOption } from "@/Models/seatMap";
 import { moneyFormatVND } from "@/utils/helper";
 import IconSeat from "@/components/Icons/IconSeat";
-const SeatCell: React.FC<{
-  data: SeatOptionType | null;
-  onSelectSeat?: (seat: SeatOptionType) => void;
+import { PassengerBookingInformationType } from "@/modules/bookingTicket/bookingInformation.interface";
+
+interface ISeatCell {
+  data: ISeatOption | null;
+  onSelect?: (seat: ISeatOption) => void;
   seatSpacing?: "sm" | "md" | "lg";
-}> = ({ data, seatSpacing = "sm", onSelectSeat }) => {
+  selectedInfo?: {
+    item: ISeatOption;
+    passenger: PassengerBookingInformationType;
+  };
+}
+const SeatCell = ({
+  data,
+  seatSpacing = "sm",
+  onSelect,
+  selectedInfo,
+}: ISeatCell) => {
   const [isHover, setHover] = useState(false);
   if (data === null) {
     return (
@@ -33,7 +45,7 @@ const SeatCell: React.FC<{
     setHover(false);
   };
 
-  const getSeatType = useCallback((data: SeatOptionType) => {
+  const getSeatType = useCallback((data: ISeatOption) => {
     let seat = { seatName: "", seatType: "" };
 
     if (
@@ -77,7 +89,7 @@ const SeatCell: React.FC<{
   return (
     <span
       className={classNames({
-        "seat-option w-9 h-9 flex items-center justify-center rounded-md text-xs shadow-sm relative cursor-pointer":
+        "seat-option w-9 h-9 flex items-center justify-center text-xs cursor-pointer":
           true,
         "mx-1 my-2": seatSpacing === "sm",
         "mx-2 my-3": seatSpacing === "md",
@@ -85,34 +97,42 @@ const SeatCell: React.FC<{
       })}
       onMouseOver={handleMouseOver}
       onMouseLeave={handleMouseLeave}
-      onClick={() => {
-        onSelectSeat && onSelectSeat(data);
-      }}
+      onClick={() => onSelect?.(data)}
     >
-      <IconSeat
-        width={36}
-        height={36}
-        fill={
-          (getSeatType(data).seatType === "hotSeat" && "#FFE7E7") ||
-          (getSeatType(data).seatType === "wideSeat" && "#E5F3FF") ||
-          (getSeatType(data).seatType === "frontSeat" && "#E3CCFA") ||
-          (getSeatType(data).seatType === "normalSeat" && "#D6FFF0") ||
-          (getSeatType(data).seatType === "unAvailable" && "#ECECEC") ||
-          (getSeatType(data).seatType === "selectings" && "#FFF2DA") ||
-          ""
-        }
-        fillLine={
-          (getSeatType(data).seatType === "hotSeat" && "#DA0000") ||
-          (getSeatType(data).seatType === "wideSeat" && "#0071DA") ||
-          (getSeatType(data).seatType === "frontSeat" && "#7700D4") ||
-          (getSeatType(data).seatType === "normalSeat" && "#1DB47D") ||
-          (getSeatType(data).seatType === "unAvailable" && "#484848") ||
-          (getSeatType(data).seatType === "selectings" && "#FF8A00") ||
-          ""
-        }
-      />
-      {(isHover && (
-        <SeatToolTip
+      {selectedInfo ? (
+        <SeatCell.Selected
+          passengerInfo={`${selectedInfo.passenger.firstName.charAt(
+            0
+          )}${selectedInfo.passenger.lastName.charAt(0)}`}
+        />
+      ) : (
+        <span className="seat-option">
+          <IconSeat
+            width={36}
+            height={36}
+            fill={
+              (getSeatType(data).seatType === "hotSeat" && "#FFE7E7") ||
+              (getSeatType(data).seatType === "wideSeat" && "#E5F3FF") ||
+              (getSeatType(data).seatType === "frontSeat" && "#E3CCFA") ||
+              (getSeatType(data).seatType === "normalSeat" && "#D6FFF0") ||
+              (getSeatType(data).seatType === "unAvailable" && "#ECECEC") ||
+              (getSeatType(data).seatType === "selectings" && "#FFF2DA") ||
+              ""
+            }
+            fillLine={
+              (getSeatType(data).seatType === "hotSeat" && "#DA0000") ||
+              (getSeatType(data).seatType === "wideSeat" && "#0071DA") ||
+              (getSeatType(data).seatType === "frontSeat" && "#7700D4") ||
+              (getSeatType(data).seatType === "normalSeat" && "#1DB47D") ||
+              (getSeatType(data).seatType === "unAvailable" && "#484848") ||
+              (getSeatType(data).seatType === "selectings" && "#FF8A00") ||
+              ""
+            }
+          />
+        </span>
+      )}
+      {isHover ? (
+        <SeatCell.Tooltip
           row={data.seatMapCell.rowIdentifier}
           seat={data.seatMapCell.seatIdentifier}
           price={moneyFormatVND(
@@ -120,7 +140,7 @@ const SeatCell: React.FC<{
           )}
           seatName={getSeatType(data).seatName}
         />
-      )) || <></>}
+      ) : null}
       <span
         className={classNames({
           "seat invisible hidden": true,
@@ -138,12 +158,18 @@ const SeatCell: React.FC<{
 };
 export default memo(SeatCell);
 
-const SeatToolTip: React.FC<{
+interface ISeatTooltip {
   seatName: string;
   row: string;
   seat: string;
   price: string;
-}> = ({ seatName, row, seat, price }) => {
+}
+SeatCell.Tooltip = function SeatCellToolTip({
+  seatName,
+  row,
+  seat,
+  price,
+}: ISeatTooltip) {
   return (
     <div className="seat-info bg-white absolute -top-20 px-3 py-3 w-48 drop-shadow-sm z-10 rounded-md flex items-center border-gray-100 border-b-2 border pointer-events-none">
       <div className="flex items-center justify-center rounded-lg mr-2">
@@ -168,5 +194,32 @@ const SeatToolTip: React.FC<{
         }}
       ></span>
     </div>
+  );
+};
+
+interface ISeatCellSelected {
+  onClick?: () => void;
+  onMouseOver?: () => void;
+  onMouseLeave?: () => void;
+  passengerInfo?: string;
+}
+SeatCell.Selected = function SeatCellSelected({
+  onClick,
+  onMouseOver,
+  onMouseLeave,
+  passengerInfo = "",
+}: ISeatCellSelected) {
+  return (
+    <span
+      className={classNames({
+        "seat-option w-9 h-9 flex items-center justify-center rounded-full text-xs drop-shadow-md relative cursor-pointer bg-emerald-200 border-2 border-emerald-400 ":
+          true,
+      })}
+      onClick={onClick}
+      onMouseOver={onMouseOver}
+      onMouseLeave={onMouseLeave}
+    >
+      <span className=" font-bold uppercase">{passengerInfo}</span>
+    </span>
   );
 };

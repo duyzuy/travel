@@ -19,6 +19,7 @@ interface IInputBirthOfDay {
   name?: string;
   required: boolean;
   textSize?: "sm" | "md" | "lg";
+  className?: string;
 }
 const InputBirthOfDay: React.FC<IInputBirthOfDay> = ({
   label,
@@ -29,6 +30,7 @@ const InputBirthOfDay: React.FC<IInputBirthOfDay> = ({
   name = "birthDate",
   required,
   textSize,
+  className,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputData, setInputData] = useState<{
@@ -58,7 +60,7 @@ const InputBirthOfDay: React.FC<IInputBirthOfDay> = ({
     const year = value.slice(6, 10);
 
     const valueWithNoMask = day.concat(month).concat(year);
-    console.log(valueWithNoMask);
+
     if (value.length === 2) {
       mask = isDelete ? day.slice(0, 1) : mask.concat(day, "-");
     } else if (value.length === 5) {
@@ -76,10 +78,10 @@ const InputBirthOfDay: React.FC<IInputBirthOfDay> = ({
       day,
       month,
       year,
-      value: valueWithNoMask,
+      value: mask,
       mask: mask,
     }));
-    onChange && onChange({ value: valueWithNoMask, mask, day, month, year });
+    onChange && onChange({ value: mask, mask, day, month, year });
   };
 
   return (
@@ -93,6 +95,7 @@ const InputBirthOfDay: React.FC<IInputBirthOfDay> = ({
       floating={false}
       textSize={textSize}
       onChange={onChangeBirthDay}
+      className={className}
     />
   );
 };

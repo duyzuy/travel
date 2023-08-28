@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, memo } from "react";
+import React, { Fragment, memo, useCallback, useMemo } from "react";
 
 import AirCraftHead from "@/components/Flights/AirCraftModel/AirCraftHead";
 import AirCraftBottom from "@/components/Flights/AirCraftModel/AirCraftBottom";
@@ -8,7 +8,8 @@ import AirCraftWings from "@/components/Flights/AirCraftWings";
 import AirCraftDoor from "./AirCraftDoor";
 import classNames from "classnames";
 import SeatCell from "./SeatCell";
-import { SeatOptionType } from "@/Models/seatMap";
+import { ISeatOption } from "@/Models/seatMap";
+import { PassengerBookingInformationType } from "@/modules/bookingTicket/bookingInformation.interface";
 const AirCraftModel: React.FC<{
   modelName?: string;
   rowsHead?: string[];
@@ -16,9 +17,13 @@ const AirCraftModel: React.FC<{
   rowsSpacing?: number[];
   rowsWings?: number;
   children?: React.ReactNode;
-  rowsSeats?: { rowNumber: number; rowSeats: (SeatOptionType | null)[] }[];
-  onSelectSeat?: (data: SeatOptionType) => void;
+  rowsSeats?: { rowNumber: number; rowSeats: (ISeatOption | null)[] }[];
+  onSelect?: (seat: ISeatOption) => void;
   className?: string;
+  selectedItems?: {
+    item: ISeatOption;
+    passenger: PassengerBookingInformationType;
+  }[];
 }> = ({
   rowsSpacing,
   rowsWings,
@@ -26,9 +31,21 @@ const AirCraftModel: React.FC<{
   rowsHead = ["A", "B", "C", "D", "E", "F"],
   rowsEmergency,
   rowsSeats,
-  onSelectSeat,
+  onSelect,
   className = "",
+  selectedItems = [],
 }) => {
+  const getSeatSelectItemPassengerInfo = useCallback(
+    (seatOpt: ISeatOption | null) => {
+      if (seatOpt !== null) {
+        return selectedItems.find(
+          (seat) => seat.item.selectionKey === seatOpt.selectionKey
+        );
+      }
+      return undefined;
+    },
+    [selectedItems]
+  );
   return (
     <div
       className={classNames({
@@ -74,7 +91,13 @@ const AirCraftModel: React.FC<{
                           </span>
                         </div>
                       )}
-                      <SeatCell data={seatOption} onSelectSeat={onSelectSeat} />
+                      <SeatCell
+                        data={seatOption}
+                        onSelect={onSelect}
+                        selectedInfo={getSeatSelectItemPassengerInfo(
+                          seatOption
+                        )}
+                      />
                     </Fragment>
                   ))}
                 </div>

@@ -2,7 +2,7 @@ import { Police } from "./police";
 import { TicketDetail } from "./ticketDetail";
 import { FareType } from "./fareType";
 
-import { TransitTiket } from "./transitTicket";
+import { TransitTicket } from "./transitTicket";
 export interface IFlightTicket {
   tid: string;
   outbound: {
@@ -27,7 +27,7 @@ export interface IFlightTicket {
     };
     seatRemaining: number;
     ticketdetail: TicketDetail;
-    transitTickets?: TransitTiket[];
+    transitTickets?: TransitTicket[];
   };
 }
 
@@ -55,7 +55,7 @@ export class FlightTicket implements IFlightTicket {
     };
     seatRemaining: number;
     ticketdetail: TicketDetail;
-    transitTickets?: TransitTiket[];
+    transitTickets?: TransitTicket[];
   };
 
   constructor(
@@ -82,7 +82,7 @@ export class FlightTicket implements IFlightTicket {
       };
       seatRemaining: number;
       ticketdetail: TicketDetail;
-      transitTickets?: TransitTiket[];
+      transitTickets?: TransitTicket[];
     }
   ) {
     this.tid = tid;

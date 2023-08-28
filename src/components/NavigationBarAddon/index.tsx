@@ -7,14 +7,14 @@ import styles from "./navigation-addon.module.scss";
 const NavigationBarAddOn: React.FC<{
   addOn?: "meal" | "luggage" | "seats";
   buttonText?: string;
-  onNavigationBarSubmit?: () => void;
+  onClick?: () => void;
   subTotal?: string;
   subText?: string;
   className?: string;
 }> = ({
   addOn = "meal",
   buttonText = "Xác nhận",
-  onNavigationBarSubmit,
+  onClick,
   subText = "Tổng tiền",
   subTotal = "0 VND",
   className = "",
@@ -24,7 +24,7 @@ const NavigationBarAddOn: React.FC<{
       className={classNames({
         [styles.wrapper]: styles.wrapper,
         [addOn]: addOn,
-        "z-10bg-white": true,
+        "z-10 bg-white": true,
         [className]: className,
       })}
     >
@@ -37,7 +37,7 @@ const NavigationBarAddOn: React.FC<{
           <Button
             className="w-40 shadow-md"
             color="secondary"
-            onClick={onNavigationBarSubmit}
+            onClick={onClick}
           >
             {buttonText}
           </Button>

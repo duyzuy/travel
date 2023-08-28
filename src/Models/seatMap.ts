@@ -1,15 +1,15 @@
-export type SelectionValidity = {
+export interface ISelectionValidity {
   available: boolean;
   reserved: boolean;
   reservedWithInfant: boolean;
   saleBlock: boolean;
   serviceBlock: boolean;
   invalidAllLegs: boolean;
-};
+}
 
-export type SeatOptionType = {
+export interface ISeatOption {
   selectionKey: string;
-  selectionValidity: SelectionValidity;
+  selectionValidity: ISelectionValidity;
   seatMapCell: {
     key: string;
     rowIdentifier: string;
@@ -60,7 +60,7 @@ export type SeatOptionType = {
       };
     }[];
   }[];
-};
+}
 
 export interface ISeatMapModel {
   href: string;
@@ -124,5 +124,5 @@ export interface ISeatMapModel {
     };
     openSeating: false;
   };
-  seatOptions: SeatOptionType[];
+  seatOptions: ISeatOption[];
 }

@@ -1,18 +1,17 @@
 "use client";
 
-import PassengerInformation from "./_components/PassengerInformation";
-
 import Button from "@/components/base/Button";
 
 import OrderSummary from "@/components/OrderSummary";
-import Luggages from "../addons/luggages";
-import Inssurance from "../addons/Inssurance";
+
 import { useBookingFlightInfo } from "@/modules/bookingTicket/useBookingFlightInfo";
 import { bookingInformationVar } from "@/cache/vars";
 import { useEffect, useMemo } from "react";
 import ContactInformation from "./_components/ContactInformation";
+import PassengerInformation from "./_components/PassengerInformation";
 import usePassengerInformation from "@/modules/passengerInformation/usePassengerInformation";
 import { passengerInformationVar } from "@/modules/passengerInformation/passengerInformation.var";
+import { useRouter } from "next/navigation";
 const PassengerPage = ({
   children,
   params,
@@ -22,20 +21,26 @@ const PassengerPage = ({
 }) => {
   const { flightBookingInfo } = useBookingFlightInfo(bookingInformationVar);
 
+  const router = useRouter();
   const bookingInformation = useMemo(() => {
     return flightBookingInfo.bookingInfo;
+  }, [flightBookingInfo]);
+
+  const passengerBooking = useMemo(() => {
+    return flightBookingInfo.passengerInformation;
   }, [flightBookingInfo]);
 
   const {
     onAddContactInformation,
     onAddPassengersInformation,
     onInitPassengers,
+    onFinish,
     passengerInformation,
   } = usePassengerInformation(passengerInformationVar);
-  console.log({ flightBookingInfo, passengerInformation });
 
   const handleNext = () => {
-    console.log(bookingInformation);
+    onFinish();
+    router.push("./services");
   };
   useEffect(() => {
     onInitPassengers();
@@ -43,9 +48,9 @@ const PassengerPage = ({
   return (
     <div className="container flex items-start mx-auto py-12">
       <div className="passenger-wrapper w-4/6 mr-6">
-        {bookingInformation.passengers && (
+        {passengerBooking.passengers && (
           <PassengerInformation
-            person={bookingInformation.passengers}
+            // person={bookingInformation.passengers}
             onAddPassengers={onAddPassengersInformation}
             passengers={passengerInformation.passengers}
           />
@@ -61,11 +66,6 @@ const PassengerPage = ({
             contactPhone: passengerInformation.contactPhone,
           }}
         />
-        {/* <div className="add-on-services py-6">
-          <Luggages />
-          <div className="space py-3"></div>
-          <Inssurance />
-        </div> */}
         <div className="bottom-box py-6 text-right">
           <Button
             color="secondary"

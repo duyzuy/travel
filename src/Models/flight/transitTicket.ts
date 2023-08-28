@@ -22,7 +22,7 @@ export interface ITransitTicket {
   transitDuration: number;
 }
 
-export class TransitTiket implements ITransitTicket {
+export class TransitTicket implements ITransitTicket {
   aid: number;
   arrivalAirport: string;
   arrivalAirportName: string;

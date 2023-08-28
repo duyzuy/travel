@@ -6,9 +6,9 @@ import { SEAT_MAP_A320, SEAT_MAP_A321, SEAT_MAP_A330 } from "./datavj";
 import { WRITE_SEAT_MAP } from "@/cache/wtire";
 import FlightSectors from "@/components/Flights/FlightSectors";
 import SeatBookingNavigation from "./_components/SeatBookingNavigation";
-import PassengerList from "@/components/PassengerList";
+import PassengerBoxList from "@/components/PassengerBoxList";
 import SeatMapA320 from "./_components/SeatMapModel/SeatMapA320";
-import SeatsNote from "@/components/Flights/AirCraftModel/SeatsNote";
+import SeatsNote from "@/components/Flights/AirCraftModel/AirCraftSeatNotes";
 import classNames from "classnames";
 const SeatSelectionPage = ({
   children,
@@ -108,7 +108,7 @@ const SeatSelectionPage = ({
             })}
             ref={paxSeatNoteRef}
           >
-            <PassengerList className="mb-4" />
+            <PassengerBoxList className="mb-4" passengers={[]} />
             <SeatsNote isSticky={isShort} />
           </div>
           <div className="flex top-0 z-50 -mt-52 justify-center bg-white">

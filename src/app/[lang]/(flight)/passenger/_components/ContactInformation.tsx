@@ -11,11 +11,13 @@ type ContactInformationType = Omit<
   "passengers"
 >;
 interface IContactInformation {
-  onChangeForm?: () => void;
+  onAddContact?: (
+    contactData: Omit<IPassengerInformationFormValue, "passengers">
+  ) => void;
   contactInformation?: ContactInformationType;
 }
 const ContactInformation: React.FC<IContactInformation> = ({
-  onChangeForm,
+  onAddContact,
   contactInformation,
 }) => {
   const [formData, setFormData] = useState<ContactInformationType>({

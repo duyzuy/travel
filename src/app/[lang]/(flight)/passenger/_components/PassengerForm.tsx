@@ -4,12 +4,14 @@ import IconAdult from "@/components/Icons/IconAdult";
 import IconChildren from "@/components/Icons/IconChildren";
 import IconInfant from "@/components/Icons/IconInfant";
 import Input from "@/components/base/Input";
-import { PASSENGER_TITLE, PASSENGER_TYPE } from "@/constants/enum";
+import { GENDER, PASSENGER_TITLE, PASSENGER_TYPE } from "@/constants/enum";
 import { PassengerInformationStore } from "@/modules/passengerInformation/passengerInformation.interface";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { PASSENGER_TITLE_OPTIONS } from "@/constants/flight";
 import InputBirthOfDay, { IValueBirthOfDay } from "./InputBirthOfDay";
 import { startOfToday } from "date-fns";
+import Checkbox from "@/components/base/Checkbox";
+import classNames from "classnames";
 type PassengerInfoType = PassengerInformationStore["passengers"][0];
 type PassengerFormKey = keyof PassengerInfoType;
 const BIRTH_DAY_FM = "DD-MM-YYYY";
@@ -17,7 +19,7 @@ const BIRTH_DAY_FM = "DD-MM-YYYY";
 interface IPassengerForm {
   paxType: PASSENGER_TYPE;
   passengerInfo: PassengerInfoType;
-  onChangeForm?: (formValue: PassengerInfoType) => void;
+  onChangeForm: (formValue: PassengerInfoType) => void;
   index?: number;
 }
 const PassengerForm = ({
@@ -26,39 +28,33 @@ const PassengerForm = ({
   onChangeForm,
   index = 0,
 }: IPassengerForm) => {
-  const { firstName, lastName, type, gender, birthDate, dependent } =
-    passengerInfo;
-
-  const [formData, setFormData] = useState(passengerInfo);
+  const { firstName, lastName } = passengerInfo;
 
   const onChange = (key: PassengerFormKey, value: string) => {
-    let newFormData = { ...formData };
-
-    newFormData = {
-      ...newFormData,
-      [key]: value,
-    };
-
-    setFormData(newFormData);
-    onChangeForm && onChangeForm(newFormData);
+    onChangeForm({
+      ...passengerInfo,
+      [key]: value.toLocaleLowerCase(),
+    });
   };
 
   const onChangeBirthDay = (date: IValueBirthOfDay) => {
     const today = startOfToday();
 
-    setFormData((prev) => ({
-      ...prev,
+    onChangeForm({
+      ...passengerInfo,
       birthDate: {
         dateStr: date.value,
         date: new Date(Number(date.year), Number(date.month), Number(date.day)),
       },
-    }));
+    });
   };
 
   const onSelectPassengerTitle = (value: string) => {
-    setFormData((prev) => ({ ...prev, title: value as PASSENGER_TITLE }));
+    onChangeForm({ ...passengerInfo, title: value as PASSENGER_TITLE });
   };
-
+  const onChangePassengerTitle = (gender: GENDER) => {
+    onChangeForm({ ...passengerInfo, gender: gender });
+  };
   const getOptionFromValue = (
     value: PASSENGER_TITLE,
     options: typeof PASSENGER_TITLE_OPTIONS
@@ -77,15 +73,13 @@ const PassengerForm = ({
 
   const renderFullName = useMemo(() => {
     let fullName: string = "";
-    if (formData.firstName.length || formData.lastName.length) {
-      fullName = formData.firstName
-        .toUpperCase()
-        .concat(", ", formData.lastName.toUpperCase());
+    if (firstName.length || lastName.length) {
+      fullName = firstName.toUpperCase().concat(", ", lastName.toUpperCase());
     } else {
       fullName = ` Hành khách ${index + 1}`;
     }
     return fullName;
-  }, [formData]);
+  }, [passengerInfo]);
   return (
     <div className="pax-infor mb-6">
       <div className="pax-head mb-4 flex items-center">
@@ -99,54 +93,66 @@ const PassengerForm = ({
         </span>
         <p className="flex items-center">
           <span className="text-lg">{renderFullName}</span>
-          <span className="text-sm text-gray-500 ml-1">
+          <span className="text-xs text-emerald-500 ml-1">
             {(paxType === PASSENGER_TYPE.ADULT && "(Người lớn)") ||
               (paxType === PASSENGER_TYPE.CHILDREN && "(Trẻ em)") ||
               "Em bé"}
           </span>
         </p>
       </div>
-      <div className="flex items-center mb-4">
-        <div className="pax-select-title w-28">
-          <Select
-            name="title"
-            label="Danh xưng"
-            required
-            options={PASSENGER_TITLE_OPTIONS.map((item) => ({
-              id: item.id,
-              name: item.nameVi,
-              value: item.value,
-            }))}
-            value={getOptionFromValue(formData.title, PASSENGER_TITLE_OPTIONS)}
-            onSelect={(opt) => onSelectPassengerTitle(opt.value)}
-            textSize="sm"
-          />
-        </div>
-        <div className="flex items-center flex-1 ml-4">
+      <div className="flex items-center">
+        {passengerInfo.type === PASSENGER_TYPE.ADULT ? (
+          <div className="pax-select-title w-28 mb-4">
+            <Select
+              name="title"
+              label="Danh xưng"
+              required
+              options={PASSENGER_TITLE_OPTIONS.map((item) => ({
+                id: item.id,
+                name: item.nameVi,
+                value: item.value,
+              }))}
+              value={getOptionFromValue(
+                passengerInfo.title,
+                PASSENGER_TITLE_OPTIONS
+              )}
+              onSelect={(opt) => onSelectPassengerTitle(opt.value)}
+              textSize="sm"
+            />
+          </div>
+        ) : null}
+
+        <div
+          className={classNames({
+            "flex items-center flex-1": true,
+            "ml-4": passengerInfo.type === PASSENGER_TYPE.ADULT,
+          })}
+        >
           <Input
             name="firstName"
             label="Họ"
             required
             textSize="sm"
             placeholder="NGUYEN"
-            value={formData.firstName.toUpperCase()}
+            value={firstName.toUpperCase()}
             onChange={(evt) => onChange("firstName", evt.target.value)}
+            className="w-1/2 mb-4"
             floating={false}
           />
           <Input
             name="lastName"
             label="Tên đệm và tên"
-            value={formData.lastName.toUpperCase()}
+            value={lastName.toUpperCase()}
             required
             textSize="sm"
             placeholder="VAN A"
             floating={false}
             onChange={(evt) => onChange("lastName", evt.target.value)}
-            className="ml-4"
+            className="ml-4 w-1/2 mb-4"
           />
         </div>
       </div>
-      <div className="w-72">
+      <div className="flex items-center">
         <InputBirthOfDay
           name="birthDate"
           label="Ngày sinh"
@@ -155,18 +161,42 @@ const PassengerForm = ({
           textSize="sm"
           placeholder={BIRTH_DAY_FM}
           onChange={onChangeBirthDay}
+          className="w-1/2 mr-4"
         />
-        {paxType === PASSENGER_TYPE.CHILDREN ? (
-          <p className="text-xs text-gray-800 mt-2">
-            Hành khách trẻ em (từ 2 - 11 tuổi)
-          </p>
-        ) : null}
-        {paxType === PASSENGER_TYPE.INFANT ? (
-          <p className="text-xs text-gray-800 mt-2">
-            Hành khách trẻ sơ sinh (dưới 2 tuổi)
-          </p>
-        ) : null}
+        {passengerInfo.type !== PASSENGER_TYPE.ADULT ? (
+          <div className="gender w-1/2">
+            <p className="text-sm mb-4 block">Giới tính</p>
+            <div className="flex items-center text-sm">
+              <Checkbox
+                value={GENDER.FEMALE}
+                isChecked={passengerInfo.gender === GENDER.FEMALE}
+                label="Nam"
+                className="mr-4"
+                onChange={() => onChangePassengerTitle(GENDER.FEMALE)}
+              />
+              <Checkbox
+                value={GENDER.MALE}
+                isChecked={passengerInfo.gender === GENDER.MALE}
+                label="Nữ"
+                onChange={() => onChangePassengerTitle(GENDER.MALE)}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="empty w-1/2"></div>
+        )}
       </div>
+
+      {paxType === PASSENGER_TYPE.CHILDREN ? (
+        <p className="text-xs text-gray-800 mt-2">
+          Hành khách trẻ em (từ 2 - 11 tuổi)
+        </p>
+      ) : null}
+      {paxType === PASSENGER_TYPE.INFANT ? (
+        <p className="text-xs text-gray-800 mt-2">
+          Hành khách trẻ sơ sinh (dưới 2 tuổi)
+        </p>
+      ) : null}
     </div>
   );
 };

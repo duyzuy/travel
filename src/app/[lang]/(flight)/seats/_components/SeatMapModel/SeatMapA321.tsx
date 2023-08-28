@@ -4,7 +4,7 @@ import React, { Fragment, memo, useMemo } from "react";
 
 import { useQuery } from "@apollo/client";
 import { QUERY_SEAT_MAP_BY_MODEL } from "@/operations/queries/seatMap";
-import { ISeatMapModel, SeatOptionType } from "@/Models/seatMap";
+import { ISeatMapModel, ISeatOption } from "@/Models/seatMap";
 
 import AirCraftModel from "@/components/Flights/AirCraftModel";
 const SeatMapA321: React.FC = () => {
@@ -26,7 +26,7 @@ const SeatMapA321: React.FC = () => {
   const seatMapRows = useMemo(() => {
     const initialRows: {
       rowNumber: number;
-      rowSeats: (SeatOptionType | null)[];
+      rowSeats: (ISeatOption | null)[];
     }[] = [];
     let lastCellOfRow = "1";
     let cellOfRow = 0;
@@ -152,7 +152,7 @@ const SeatMapA321: React.FC = () => {
       rowsSpacing={[10, 26]}
       rowsHead={alphabetCellOfRow}
       rowsSeats={seatMapRows}
-      onSelectSeat={handleSelectSeat}
+      onSelect={handleSelectSeat}
     />
   );
 };

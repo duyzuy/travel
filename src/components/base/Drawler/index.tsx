@@ -42,14 +42,14 @@ const Drawler: React.FC<{
       >
         <div
           className={classNames({
-            "bg-white h-full transition-all pointer-events-auto w-full": true,
+            "bg-white h-full transition-all pointer-events-auto": true,
             "translate-x-0": stage,
             "translate-x-144": !stage && width === "md",
-            "max-w-144": width === "md",
+            "w-144": width === "md",
             "translate-x-[650px]": !stage && width === "lg",
-            "max-w-[650]": width === "lg",
+            "w-[650px]": width === "lg",
             "translate-x-[850px]": !stage && width === "xl",
-            "max-w-[850px]": width === "xl",
+            "w-[850px]": width === "xl",
           })}
         >
           {!hideCloseButton ? (

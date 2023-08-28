@@ -1,10 +1,10 @@
 "use client";
 
-import { TicketInforType } from "@/Models/ticket";
+import { ITransitTicket } from "@/Models/flight/transitTicket";
 import React, { memo } from "react";
 
 const FlightType: React.FC<{
-  transitTickets?: TicketInforType[];
+  transitTickets?: ITransitTicket[];
   durationStr: string;
 }> = ({ transitTickets, durationStr }) => {
   return (

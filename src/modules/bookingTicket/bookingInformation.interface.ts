@@ -1,10 +1,14 @@
 import { ISearchBookingFormValue } from "./searchBookingForm.interface";
 import { FlightTicket } from "@/Models/flight/ticket";
 import { IPassengerInformationFormValue } from "../passengerInformation/passengerInformation.interface";
-
-export type PassengerInformationBookingType =
+import { IBookingServices } from "../bookingServices/bookingServices.interface";
+export type PassengerBookingInformationType =
   IPassengerInformationFormValue["passengers"][0] & { index: number };
 
+export type ContactBookingInformationType = Omit<
+  IPassengerInformationFormValue,
+  "passengers"
+>;
 export interface IFlightBookingInformation {
   bookingInfo: Partial<ISearchBookingFormValue>;
   flightDepart?: {
@@ -15,7 +19,10 @@ export interface IFlightBookingInformation {
     ticket: FlightTicket;
     others: FlightTicket[];
   };
-  passengers: PassengerInformationBookingType[];
+  passengerInformation: ContactBookingInformationType & {
+    passengers: PassengerBookingInformationType[];
+  };
+  services: IBookingServices;
 }
 
 export class FlightBookingInformation implements IFlightBookingInformation {
@@ -28,7 +35,10 @@ export class FlightBookingInformation implements IFlightBookingInformation {
     ticket: FlightTicket;
     others: FlightTicket[];
   };
-  passengers: PassengerInformationBookingType[];
+  passengerInformation: ContactBookingInformationType & {
+    passengers: PassengerBookingInformationType[];
+  };
+  services: IBookingServices;
 
   constructor(
     bookingInfo: Partial<ISearchBookingFormValue>,
@@ -44,11 +54,15 @@ export class FlightBookingInformation implements IFlightBookingInformation {
           others: FlightTicket[];
         }
       | undefined,
-    passengers: []
+    passengerInformation: ContactBookingInformationType & {
+      passengers: PassengerBookingInformationType[];
+    },
+    services: IBookingServices
   ) {
     this.bookingInfo = bookingInfo;
     this.flightDepart = flightDepart;
     this.flightReturn = flightReturn;
-    this.passengers = passengers;
+    this.passengerInformation = passengerInformation;
+    this.services = services;
   }
 }
