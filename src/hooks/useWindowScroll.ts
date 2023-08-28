@@ -50,7 +50,7 @@ const useWindowScroll = (
     window.addEventListener("scroll", handleScrollEvent);
 
     return () => window.removeEventListener("scroll", handleScrollEvent);
-  }, []);
+  }, [elementRef]);
 
   return {
     scrollLing,

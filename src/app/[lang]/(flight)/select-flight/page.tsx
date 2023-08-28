@@ -20,7 +20,9 @@ import FlightTicketListing from "./_components/FlightTicketListing";
 import TicketConfirmationDrawler from "./_components/TicketConfirmationDrawler";
 import { useRouter } from "next/navigation";
 import { FlightTicket } from "@/Models/flight/ticket";
-
+import { useQuery } from "@apollo/client";
+import { IFlightOptions } from "@/Models/flight/flightOptions";
+import { GET_FLIGHT_OPTIONS } from "@/operations/queries/flightOptions";
 import {
   durationToString,
   getProvinceName,
@@ -28,7 +30,7 @@ import {
 } from "@/helpers/flightItem";
 import styles from "./selectFlight.module.scss";
 
-const SearchFlightPage = () => {
+const SearchFlightPage = ({ params }: { params: { lang: string } }) => {
   const client = useApolloClient();
   client.writeQuery({
     query: WRITE_FLIGHT_OPTIONS,
@@ -38,13 +40,13 @@ const SearchFlightPage = () => {
   });
 
   const router = useRouter();
-  const { flightBookingInfo, onSelectFlight, doSearchFlight } =
-    useBookingFlightInfo(bookingInformationVar);
-  const { data, loading } = doSearchFlight();
-
-  const [flightSegment, setFlightSegment] = useState(
-    FLIGHT_DIRECTION.DEPARTURE
+  const { flightBookingInfo, onSelectFlight } = useBookingFlightInfo(
+    bookingInformationVar
   );
+  const { data, loading } = useQuery<{
+    flightOptions: IFlightOptions;
+  }>(GET_FLIGHT_OPTIONS);
+  const [segment, setSegment] = useState(FLIGHT_DIRECTION.DEPARTURE);
   const flightOptions = useMemo(() => {
     return data?.flightOptions;
   }, [data]);
@@ -82,23 +84,31 @@ const SearchFlightPage = () => {
 
       onSelectFlight(direction, { ticket, otherTickets });
 
-      if (
-        bookingInformation.tripType === TRIP_TYPE.ONEWAY ||
-        (bookingInformation.tripType === TRIP_TYPE.ROUND_TRIP &&
-          flightDepartSelected)
-      ) {
+      if (bookingInformation.tripType === TRIP_TYPE.ROUND_TRIP) {
+        if (!flightDepartSelected) {
+          setSegment(FLIGHT_DIRECTION.RETURN);
+        } else {
+          setShowDrawler(true);
+        }
+      } else {
         setShowDrawler(true);
       }
     },
-    [flightBookingInfo]
+    [flightDepartSelected, bookingInformation, flightReturnSelected]
   );
 
   const handleNext = () => {
-    setShowDrawler(false);
     router.push("./passenger");
+    setShowDrawler(false);
   };
 
-  const departFlightSelectedInfo = (flightDirection: FLIGHT_DIRECTION) => {
+  const onChangeSegment = (flightSegment: FLIGHT_DIRECTION) => {
+    if (!flightDepartSelected) {
+      return;
+    }
+    setSegment(flightSegment);
+  };
+  const flightSelectedInformation = (flightDirection: FLIGHT_DIRECTION) => {
     const flightSelectedData =
       flightDirection === FLIGHT_DIRECTION.DEPARTURE
         ? flightDepartSelected
@@ -139,6 +149,9 @@ const SearchFlightPage = () => {
     };
   };
 
+  if (loading) {
+    return <>loading.....</>;
+  }
   return (
     <div className={styles.wrapper}>
       <div className="container mx-auto">
@@ -157,16 +170,14 @@ const SearchFlightPage = () => {
             }
             flightDirection={FLIGHT_DIRECTION.DEPARTURE}
             status={
-              (!flightDepartSelected && SECTOR_STATUS.IN_PROCESS) ||
-              (flightDepartSelected && SECTOR_STATUS.SELECTED) ||
-              (flightDepartSelected &&
-                flightReturnSelected &&
+              (segment === FLIGHT_DIRECTION.DEPARTURE &&
                 SECTOR_STATUS.IN_PROCESS) ||
               SECTOR_STATUS.WAITING
             }
-            flightSelectedInfo={departFlightSelectedInfo(
+            flightSelectedInfo={flightSelectedInformation(
               FLIGHT_DIRECTION.DEPARTURE
             )}
+            onClick={() => onChangeSegment(FLIGHT_DIRECTION.DEPARTURE)}
           />
           {bookingInformation.tripType === TRIP_TYPE.ROUND_TRIP ? (
             <FlightSectorItem
@@ -183,15 +194,14 @@ const SearchFlightPage = () => {
               }
               flightDirection={FLIGHT_DIRECTION.RETURN}
               status={
-                (flightDepartSelected &&
-                  !flightReturnSelected &&
+                (segment === FLIGHT_DIRECTION.RETURN &&
                   SECTOR_STATUS.IN_PROCESS) ||
-                (flightReturnSelected && SECTOR_STATUS.SELECTED) ||
                 SECTOR_STATUS.WAITING
               }
-              flightSelectedInfo={departFlightSelectedInfo(
+              flightSelectedInfo={flightSelectedInformation(
                 FLIGHT_DIRECTION.RETURN
               )}
+              onClick={() => onChangeSegment(FLIGHT_DIRECTION.RETURN)}
             />
           ) : null}
         </div>
@@ -205,8 +215,9 @@ const SearchFlightPage = () => {
               <FlightTicketListing
                 onSelectFlight={handleSelectFlight}
                 direction={
-                  (flightDepartSelected && DIRECTION.IN_BOUND) ||
-                  DIRECTION.OUT_BOUND
+                  (segment === FLIGHT_DIRECTION.DEPARTURE &&
+                    DIRECTION.OUT_BOUND) ||
+                  DIRECTION.IN_BOUND
                 }
                 flightOptions={flightOptions}
               />
@@ -222,6 +233,7 @@ const SearchFlightPage = () => {
           isOpen={showDrawlerConfirm}
           onNext={handleNext}
           onChangeTicket={() => {}}
+          onCancel={() => setShowDrawler(false)}
         />
       </div>
     </div>

@@ -1,21 +1,21 @@
 "use client";
 
-import { Direction, TripType } from "@/constants/enum";
+import { DIRECTION, TRIP_TYPE } from "@/constants/enum";
 import React, { CSSProperties, memo } from "react";
 import classNames from "classnames";
 import styles from "./flight-sector.module.scss";
 const FlightSectors: React.FC<{
   type?: "tab" | "slide";
-  tripType?: TripType;
+  tripType?: TRIP_TYPE;
   size?: "sm" | "md" | "lg";
   style?: CSSProperties;
-  direction?: Direction;
+  direction?: DIRECTION;
 }> = ({
   style,
   type = "tab",
-  tripType = TripType.ROUND_TRIP,
+  tripType = TRIP_TYPE.ROUND_TRIP,
   size = "md",
-  direction = Direction.OUT_BOUND,
+  direction = DIRECTION.OUT_BOUND,
 }) => {
   return (
     <div
@@ -34,8 +34,8 @@ const FlightSectors: React.FC<{
           "px-3 py-3 lg:px-6 lg:py-4": size === "md",
           "px-8 py-4": size === "lg",
           "border-emerald-500 active-right z-10":
-            direction === Direction.OUT_BOUND,
-          "border-b-2": direction !== Direction.OUT_BOUND,
+            direction === DIRECTION.OUT_BOUND,
+          "border-b-2": direction !== DIRECTION.OUT_BOUND,
         })}
       >
         <div className="inner-sector">
@@ -69,8 +69,8 @@ const FlightSectors: React.FC<{
           "px-3 py-3 lg:px-6 lg:py-4": size === "md",
           "px-8 py-4": size === "lg",
           "border-emerald-500 active-left z-10":
-            direction === Direction.IN_BOUND,
-          "border-b-2": direction !== Direction.IN_BOUND,
+            direction === DIRECTION.IN_BOUND,
+          "border-b-2": direction !== DIRECTION.IN_BOUND,
         })}
       >
         <div className="inner-sector">

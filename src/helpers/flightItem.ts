@@ -1,4 +1,5 @@
-import { Airlines, IAirPort } from "@/Models";
+import { IAirPort } from "@/Models/airport";
+import { Airline } from "@/Models/flight/airline";
 export const durationToString = (durationTime: number) => {
   const hour = Math.floor(durationTime / (60 * 60 * 1000));
 
@@ -15,7 +16,7 @@ export const getProvinceName = (airtport?: IAirPort) => {
 };
 
 export const getOperationFromFlightNumber = (
-  airlines: Airlines,
+  airlines: Airline[],
   flightNumber: string
 ) => {
   return airlines.find((airline) => flightNumber.includes(airline.code));

@@ -17,6 +17,7 @@ interface IFlightConfirmationModal {
   };
   isOpen?: boolean;
   onNext: () => void;
+  onCancel: () => void;
   onChangeTicket: (direction: FLIGHT_DIRECTION, ticket: FlightTicket) => void;
 }
 const TicketConfirmationModal: React.FC<IFlightConfirmationModal> = ({
@@ -25,17 +26,8 @@ const TicketConfirmationModal: React.FC<IFlightConfirmationModal> = ({
   isOpen = false,
   onNext,
   onChangeTicket,
+  onCancel,
 }) => {
-  const [isShowModal, setShowModal] = useState(isOpen);
-
-  console.log(isOpen);
-  useEffect(() => {
-    setShowModal(isOpen);
-  }, [isOpen]);
-  if (!isShowModal) {
-    return null;
-  }
-
   const ContentsModal = () => {
     return (
       <div className="flight-items-modal">
@@ -93,10 +85,10 @@ const TicketConfirmationModal: React.FC<IFlightConfirmationModal> = ({
     <Drawler
       // modalTitle="Đăng ký tài khoản"
       width="xl"
-      isOpen={isShowModal}
+      isOpen={isOpen}
       // onCancel={() => {}}
       // onSubmit={() => {}}
-      onClose={() => setShowModal(false)}
+      onClose={onCancel}
       hideCloseButton
     >
       <ContentsModal />

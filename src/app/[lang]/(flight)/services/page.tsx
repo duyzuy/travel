@@ -1,22 +1,22 @@
 "use client";
-import React from "react";
-import LuggageService from "./_components/LuggageService";
-import Inssurance from "./_components/InssuranceService";
+import React, { useState } from "react";
 import LuggagesDrawler from "./_components/LuggageService/LuggagesDrawler";
 import MealDrawler from "./_components/MealService/MealDrawler";
+import SeatDrawler from "./_components/SeatService/SeatDrawler";
 import MealService from "./_components/MealService";
 import SeatService from "./_components/SeatService";
+import LuggageService from "./_components/LuggageService";
+import Inssurance from "./_components/InssuranceService";
 import { bookingInformationVar } from "@/cache/vars";
 import { useReactiveVar } from "@apollo/client";
-import { useState } from "react";
-import SeatDrawler from "./_components/SeatService/SeatDrawler/index.tsx";
+
 import { FLIGHT_SERVICES } from "@/modules/bookingServices/bookingServices.interface";
 enum DRAWLER {
   LUGGAGE = "luggage",
   MEAL = "meal",
   SEAT = "seat",
 }
-const FlightServicePage = () => {
+const FlightServicePage = ({ params }: { params: { lang: string } }) => {
   const bookingInformation = useReactiveVar(bookingInformationVar);
 
   const {

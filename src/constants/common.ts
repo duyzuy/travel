@@ -1,5 +1,4 @@
-import { PASSENGER_TITLE } from "@/constants/flight";
-import { GENDER, PAX_TYPE } from "./enum";
+import { GENDER, PASSENGER_TYPE, PASSENGER_TITLE } from "./enum";
 export const recurringValues = {
   MONDAY: "monday",
   TUESDAY: "tuesday",
@@ -56,10 +55,10 @@ export const getGenderConfig = (gender: GENDER) => {
 
 export const getPassengerTitleByGender = (
   gender: GENDER,
-  passengerType: PAX_TYPE
+  passengerType: PASSENGER_TYPE
 ) => {
-  if (passengerType === PAX_TYPE.INFANT) return PASSENGER_TITLE.Infant;
-  if (gender === GENDER.MALE) return PASSENGER_TITLE.Mr;
-  if (gender === GENDER.FEMALE) return PASSENGER_TITLE.Ms;
+  if (passengerType === PASSENGER_TYPE.INFANT) return PASSENGER_TITLE.INFANT;
+  if (gender === GENDER.MALE) return PASSENGER_TITLE.MR;
+  if (gender === GENDER.FEMALE) return PASSENGER_TITLE.MS;
   return "";
 };

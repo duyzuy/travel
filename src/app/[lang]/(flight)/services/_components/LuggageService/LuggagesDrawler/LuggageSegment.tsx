@@ -44,7 +44,7 @@ const LuggageSegment = (props: ILugggagesSegment) => {
         )
       );
     },
-    [direction, selectedItems]
+    [selectedItems]
   );
   return (
     <div className="luggages-add-in bg-white">
@@ -86,7 +86,10 @@ const LuggageSegment = (props: ILugggagesSegment) => {
           </div>
         </div>
         {passengers.map((passenger, _pIndex) => (
-          <div className="pax-luggage-add-ons px-6">
+          <div
+            className="pax-luggage-add-ons px-6"
+            key={`passenger-${_pIndex}`}
+          >
             <div className="pax-luggage-item">
               <div className="pax-full-name py-2">
                 <p className="flex items-center uppercase text-sm">

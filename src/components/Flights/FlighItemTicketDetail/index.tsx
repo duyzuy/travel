@@ -8,10 +8,10 @@ import IconTicket2 from "../../Icons/IconTicket2";
 import IconInsurance from "../../Icons/IconInsurance";
 import IconPlaneSeat from "../../Icons/IconPlaneSeat";
 import IconBilling from "../../Icons/IconBilling";
-import { FlightDetailItemType } from "@/Models/ticket";
+import { IFlightTicket } from "@/Models/flight/ticket";
 const FlighItemTicketDetail: React.FC<{
   isOpen: boolean;
-  data: FlightDetailItemType;
+  data: IFlightTicket;
 }> = ({ isOpen, data }) => {
   console.log(data);
   if (!isOpen) {

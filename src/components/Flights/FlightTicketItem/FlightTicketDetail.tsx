@@ -11,7 +11,7 @@ import {
   getOperationFromFlightNumber,
 } from "@/helpers/flightItem";
 import Image from "next/image";
-import { TransitTiket } from "@/Models/flight/transitTicket";
+import { ITransitTicket } from "@/Models/flight/transitTicket";
 
 interface IFlightTicketDetail {
   isOpen: boolean;
@@ -169,7 +169,7 @@ FlightTicketDetail.BaseInformation = function FlightTicketDetailBaseInformation(
 };
 
 FlightTicketDetail.Transits = function FlightTicketDetailTransits(props: {
-  flightTicketsTransits: TransitTiket[];
+  flightTicketsTransits: ITransitTicket[];
   airlines: Airline[];
 }) {
   const { flightTicketsTransits, airlines } = props;

@@ -1,8 +1,9 @@
-import { ISearchFlightForm, IAirPort } from "@/Models";
+import { IAirPort } from "@/Models/airport";
+import { ISearchBookingFormValue } from "./searchBookingForm.interface";
 import { ReactiveVar, useReactiveVar } from "@apollo/client";
 import { TRIP_DATE, TRIP_DESTINATION, TRIP_TYPE } from "@/constants/enum";
 export const useSearchFormFlight = (
-  searchFlightVar: ReactiveVar<ISearchFlightForm>
+  searchFlightVar: ReactiveVar<ISearchBookingFormValue>
 ) => {
   const searchInformation = searchFlightVar();
   const onChangeTripType = (tripType: TRIP_TYPE) => {
@@ -81,7 +82,9 @@ export const useSearchFormFlight = (
     searchFlightVar(newSearchInfo);
   };
 
-  const onSelectPassenger = (passengers: ISearchFlightForm["passengers"]) => {
+  const onSelectPassenger = (
+    passengers: ISearchBookingFormValue["passengers"]
+  ) => {
     const searchInform = searchFlightVar();
     searchFlightVar({
       ...searchInform,

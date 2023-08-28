@@ -16,11 +16,7 @@ const SeatMapA330: React.FC = () => {
     },
   });
 
-  if (loading) return <>...loading</>;
-  if (error) return `Error! ${error.message}`;
-  if (!data) return <>undefined</>;
-
-  const { seatMapModel } = data;
+  const { seatMapModel } = data || {};
   const alphabetCellOfRow = ["A", "B", "C", "D", "F", "G", "H", "J", "K"];
 
   const seatMapRows = useMemo(() => {
@@ -32,6 +28,9 @@ const SeatMapA330: React.FC = () => {
     let cellOfRow = 0;
     let startOfRow = 0;
 
+    if (!seatMapModel) {
+      return [];
+    }
     return seatMapModel.seatOptions.reduce((acc, curentSeat) => {
       if (acc.length === 0) {
         acc[startOfRow] = {
@@ -142,9 +141,9 @@ const SeatMapA330: React.FC = () => {
     }, initialRows);
   }, [seatMapModel]);
 
-  const handleSelectSeat = (data: any) => {
-    console.log(data);
-  };
+  if (loading) return <>...loading</>;
+  if (error) return `Error! ${error.message}`;
+  if (!data) return <>undefined</>;
   return (
     <AirCraftModel
       modelName="A330"
@@ -153,7 +152,7 @@ const SeatMapA330: React.FC = () => {
       rowsEmergency={[14, 33]}
       rowsWings={10}
       rowsSpacing={[2, 8, 14, 33]}
-      onSelect={handleSelectSeat}
+      onSelect={() => {}}
     />
   );
 };

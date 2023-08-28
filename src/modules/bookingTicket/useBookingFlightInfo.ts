@@ -3,9 +3,7 @@ import { IFlightBookingInformation } from "./bookingInformation.interface";
 import { ReactiveVar, useReactiveVar } from "@apollo/client";
 import { DIRECTION, TRIP_TYPE } from "@/constants/enum";
 import { FlightTicket } from "@/Models/flight/ticket";
-import { useQuery } from "@apollo/client";
-import { FlightOptions } from "@/Models/flight/flightOptions";
-import { GET_FLIGHT_OPTIONS } from "@/operations/queries/flightOptions";
+
 import {
   FLIGHT_SERVICES,
   IBookingServices,
@@ -58,14 +56,6 @@ export const useBookingFlightInfo = (
     bookingInformationVar(newData);
   };
 
-  const doSearchFlight = () => {
-    const { data, loading } = useQuery<{
-      flightOptions: FlightOptions;
-    }>(GET_FLIGHT_OPTIONS);
-
-    return { data, loading };
-  };
-
   const onAddBookingFlightService = (
     serviceName: FLIGHT_SERVICES,
     serviceItems: IBookingServices[FLIGHT_SERVICES]
@@ -81,7 +71,7 @@ export const useBookingFlightInfo = (
   return {
     onSubmitFlightSearchForm,
     onSelectFlight,
-    doSearchFlight,
+    // doSearchFlight,
     onAddBookingFlightService,
     flightBookingInfo: useReactiveVar(bookingInformationVar),
   };

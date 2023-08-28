@@ -22,7 +22,7 @@ const useDetectWidth = (
     setWidth(containerWidth);
     return () =>
       window.removeEventListener("resize", () => handleResizeScreen(element));
-  }, []);
+  }, [elementRef]);
 
   return width;
 };

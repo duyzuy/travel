@@ -29,11 +29,7 @@ const SeatMapA320: React.FC<IAircraftSeatMapModel> = ({
     },
   });
 
-  if (loading) return <>...loading</>;
-  if (error) return `Error! ${error.message}`;
-  if (!data) return <>undefined</>;
-
-  const { seatMapModel } = data;
+  const { seatMapModel } = data || {};
   const alphabetCellOfRow = ["A", "B", "C", "D", "E", "F"];
 
   const seatMapRows = useMemo(() => {
@@ -44,7 +40,9 @@ const SeatMapA320: React.FC<IAircraftSeatMapModel> = ({
     let lastCellOfRow = "1";
     let cellOfRow = 0;
     let startOfRow = 0;
-
+    if (!seatMapModel) {
+      return [];
+    }
     return seatMapModel.seatOptions.reduce((acc, curentSeat) => {
       if (acc.length === 0) {
         acc[startOfRow] = {
@@ -154,6 +152,8 @@ const SeatMapA320: React.FC<IAircraftSeatMapModel> = ({
       return acc;
     }, initialRows);
   }, [seatMapModel]);
+  if (loading) return <>...loading</>;
+  if (error) return `Error! ${error.message}`;
 
   return (
     <AirCraftModel

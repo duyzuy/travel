@@ -79,7 +79,7 @@ const PassengerForm = ({
       fullName = ` Hành khách ${index + 1}`;
     }
     return fullName;
-  }, [passengerInfo]);
+  }, [firstName, lastName, index]);
   return (
     <div className="pax-infor mb-6">
       <div className="pax-head mb-4 flex items-center">

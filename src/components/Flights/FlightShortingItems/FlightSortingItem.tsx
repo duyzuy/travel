@@ -1,12 +1,12 @@
 "use client";
 import React, { memo } from "react";
 import classNames from "classnames";
-import { SORTINGS } from "@/cache/vars";
+import { SORTS_ENUM } from "@/cache/vars";
 const FlightSortingItem: React.FC<{
   name: string;
   isActive: boolean;
-  onClick: (sort: SORTINGS) => void;
-  code: SORTINGS;
+  onClick: (sort: SORTS_ENUM) => void;
+  code: SORTS_ENUM;
 }> = ({ name, isActive, onClick, code }) => {
   return (
     <li

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { memo } from "react";
-import PassengerBoxItem from "./PassengerBoxItem";
+import PassengerBoxItem, { PASSENGER_STATUS } from "./PassengerBoxItem";
 import styles from "./passenger-list.module.scss";
 import classNames from "classnames";
 import { IFlightBookingInformation } from "@/modules/bookingTicket/bookingInformation.interface";
@@ -29,7 +29,7 @@ const PassengerBoxList: React.FC<{
             key={`${passenger.firstName}-${passenger.lastName}`}
             firstName={passenger.firstName}
             lastName={passenger.lastName}
-            isSelecting={false}
+            status={PASSENGER_STATUS.WAITING}
           />
         ))}
       </ul>

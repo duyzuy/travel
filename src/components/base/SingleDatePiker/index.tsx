@@ -23,19 +23,19 @@ import useDetectWidth from "@/hooks/useDetectWidth";
 import styles from "./date-single.module.scss";
 import vi from "date-fns/locale/vi";
 import DateSkeleton from "./DateSkeleton";
-import { ButtonNext, ButtonPrev } from "./ButtonAction";
 import SingleDateItem from "./SingleDateItem";
 import classNames from "classnames";
 import useDeviceDetect from "@/hooks/useDeviceDetect";
-enum ButtonAction {
+enum BUTTON_ACTION {
   NEXT = "next",
   PREV = "prev",
 }
+
 const DATE_VIEWS = 7;
 const DATE_VIEWS_TABLET = 5;
 const DATE_VIEWS_MOBILE = 3;
 
-type PropsType = {
+interface Props {
   isSingle?: boolean;
   maxDate?: Date | null;
   minDate?: Date | null;
@@ -47,8 +47,8 @@ type PropsType = {
     tablet: number;
     mobile: number;
   };
-};
-const SingleDatePiker: React.FC<PropsType> = ({
+}
+const SingleDatePiker = ({
   isSingle,
   maxDate = add(new Date(), { days: 12 }),
   minDate = sub(new Date(), { days: 12 }),
@@ -60,7 +60,7 @@ const SingleDatePiker: React.FC<PropsType> = ({
     tablet: 5,
     mobile: 3,
   },
-}) => {
+}: Props) => {
   const [dateSingleData, setSingleDateData] = useState<{
     maxDate: Date | null;
     minDate: Date | null;
@@ -89,7 +89,7 @@ const SingleDatePiker: React.FC<PropsType> = ({
   });
   const [transitionX, setTransitionX] = useState<{
     width: number;
-    action: ButtonAction | null;
+    action: BUTTON_ACTION | null;
   }>({ width: 0, action: null });
 
   const [isSliding, setSliding] = useState(false);
@@ -98,7 +98,7 @@ const SingleDatePiker: React.FC<PropsType> = ({
   const containerWidth = useDetectWidth(singleDateRef);
   const device = useDeviceDetect();
   const handlePrevAndNextDate = useCallback(
-    (action: ButtonAction) => {
+    (action: BUTTON_ACTION) => {
       //get last of item in array
 
       if (isSliding) return;
@@ -114,10 +114,10 @@ const SingleDatePiker: React.FC<PropsType> = ({
 
       if (
         (minDate !== null &&
-          action === ButtonAction.PREV &&
+          action === BUTTON_ACTION.PREV &&
           isBefore(firstItemDate, minDate)) ||
         (minDate !== null &&
-          action === ButtonAction.PREV &&
+          action === BUTTON_ACTION.PREV &&
           isSameDay(firstItemDate, minDate))
       ) {
         return;
@@ -125,7 +125,7 @@ const SingleDatePiker: React.FC<PropsType> = ({
 
       if (
         (maxDate !== null &&
-          action === ButtonAction.NEXT &&
+          action === BUTTON_ACTION.NEXT &&
           isAfter(lastItemDate, maxDate)) ||
         (maxDate !== null &&
           action === "next" &&
@@ -135,7 +135,7 @@ const SingleDatePiker: React.FC<PropsType> = ({
       }
 
       let widthTransitionX = 0;
-      if (action === ButtonAction.NEXT) {
+      if (action === BUTTON_ACTION.NEXT) {
         Array.from({ length: dateSingleData.numberViews }, (_, indx) => {
           const date = add(lastItemDate, { days: indx + 1 });
 
@@ -155,7 +155,7 @@ const SingleDatePiker: React.FC<PropsType> = ({
         }
       }
 
-      if (action === ButtonAction.PREV) {
+      if (action === BUTTON_ACTION.PREV) {
         Array.from({ length: dateSingleData.numberViews }, (_, indx) => {
           const date = sub(firstItemDate, { days: indx + 1 });
 
@@ -189,7 +189,7 @@ const SingleDatePiker: React.FC<PropsType> = ({
         };
       });
 
-      action === ButtonAction.PREV &&
+      action === BUTTON_ACTION.PREV &&
         setTimeout(() => {
           setTransitionX({
             width: 0,
@@ -249,16 +249,16 @@ const SingleDatePiker: React.FC<PropsType> = ({
     <div className={`${styles.wrapper} date-single`} ref={singleDateRef}>
       {(containerWidth === 0 && <DateSkeleton />) || (
         <div className="date-container relative shadow-sm bg-white rounded-sm flex items-center">
-          <ButtonPrev onClick={handlePrevAndNextDate} />
+          <SingleDatePiker.ButtonPrev onClick={handlePrevAndNextDate} />
           <div className="date-single-wrapper py-2 overflow-hidden flex-1">
             <ul
               className={classNames({
                 "date-items flex flex-nowrap whitespace-nowrap w-full": true,
                 "transition-transform duration-700":
                   (transitionX.width !== 0 &&
-                    transitionX.action === ButtonAction.NEXT) ||
+                    transitionX.action === BUTTON_ACTION.NEXT) ||
                   (transitionX.width === 0 &&
-                    transitionX.action === ButtonAction.PREV),
+                    transitionX.action === BUTTON_ACTION.PREV),
               })}
               style={{
                 transform: `translateX(${-transitionX.width}px)`,
@@ -277,10 +277,68 @@ const SingleDatePiker: React.FC<PropsType> = ({
               ))}
             </ul>
           </div>
-          <ButtonNext onClick={handlePrevAndNextDate} />
+          <SingleDatePiker.ButtonNext onClick={handlePrevAndNextDate} />
         </div>
       )}
     </div>
   );
 };
 export default memo(SingleDatePiker);
+
+interface IButtonAction {
+  onClick: (action: BUTTON_ACTION) => void;
+}
+
+SingleDatePiker.ButtonNext = function SingleDatePikerButtonNext({
+  onClick,
+}: IButtonAction) {
+  return (
+    <button
+      type="button"
+      className="next single-date-btn cursor-pointer hover:bg-emerald-500 rounded-tl-full rounded-bl-full hover:text-white transition-colors bg-slate-100"
+      onClick={() => onClick(BUTTON_ACTION.NEXT)}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="w-4 h-4"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M8.25 4.5l7.5 7.5-7.5 7.5"
+        />
+      </svg>
+    </button>
+  );
+};
+
+SingleDatePiker.ButtonPrev = function SingleDatePikerButtonPrev({
+  onClick,
+}: IButtonAction) {
+  return (
+    <button
+      type="button"
+      className="prev single-date-btn cursor-pointer hover:bg-emerald-500 rounded-tr-full rounded-br-full hover:text-white transition-colors bg-slate-100"
+      onClick={() => onClick(BUTTON_ACTION.PREV)}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="w-4 h-4"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M15.75 19.5L8.25 12l7.5-7.5"
+        />
+      </svg>
+    </button>
+  );
+};

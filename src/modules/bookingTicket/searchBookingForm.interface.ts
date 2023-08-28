@@ -1,5 +1,5 @@
 import { TRIP_TYPE, PASSENGER_TYPE } from "@/constants/enum";
-import { IAirPort } from "@/Models";
+import { IAirPort } from "@/Models/airport";
 
 export interface ISearchDate {
   value: string;

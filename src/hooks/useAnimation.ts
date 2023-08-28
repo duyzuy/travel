@@ -11,7 +11,7 @@ const useAnimation = (isShow: boolean, timeout = 100) => {
       isShow === true ? setStage(isShow) : setMounted(isShow);
       clearTimeout(timeOutId);
     }, timeout);
-  }, [isShow]);
+  }, [isShow, timeout]);
 
   return {
     stage,

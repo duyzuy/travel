@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useCallback, useMemo, useRef, useState } from "react";
+import React, { memo, useState } from "react";
 import classNames from "classnames";
 import { ISeatOption } from "@/Models/seatMap";
 import { moneyFormatVND } from "@/utils/helper";
@@ -45,7 +45,7 @@ const SeatCell = ({
     setHover(false);
   };
 
-  const getSeatType = useCallback((data: ISeatOption) => {
+  const getSeatType = (data: ISeatOption) => {
     let seat = { seatName: "", seatType: "" };
 
     if (
@@ -85,7 +85,7 @@ const SeatCell = ({
       };
     }
     return seat;
-  }, []);
+  };
   return (
     <span
       className={classNames({

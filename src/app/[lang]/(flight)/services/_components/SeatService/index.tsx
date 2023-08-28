@@ -1,7 +1,5 @@
 "use client";
 import React, { memo, useMemo } from "react";
-import ServiceItem from "@/components/Flights/ServiceItem";
-import SeatIcon from "@/assets/icons/ico-seats.svg";
 import { useApolloClient } from "@apollo/client";
 import {
   SEAT_MAP_A320,
@@ -11,6 +9,8 @@ import {
 import { WRITE_SEAT_MAP } from "@/cache/wtire";
 import { IFlightBookingInformation } from "@/modules/bookingTicket/bookingInformation.interface";
 import SegmentType from "@/components/Flights/SegmentType";
+import ServiceItem from "@/components/Flights/ServiceItem";
+import SeatIcon from "@/assets/icons/ico-seats.svg";
 import classNames from "classnames";
 interface ISeatService {
   onShowSeatDrawler: () => void;

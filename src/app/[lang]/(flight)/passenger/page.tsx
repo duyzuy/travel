@@ -12,13 +12,7 @@ import PassengerInformation from "./_components/PassengerInformation";
 import usePassengerInformation from "@/modules/passengerInformation/usePassengerInformation";
 import { passengerInformationVar } from "@/modules/passengerInformation/passengerInformation.var";
 import { useRouter } from "next/navigation";
-const PassengerPage = ({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { lang: string };
-}) => {
+const PassengerPage = ({ params }: { params: { lang: string } }) => {
   const { flightBookingInfo } = useBookingFlightInfo(bookingInformationVar);
 
   const router = useRouter();

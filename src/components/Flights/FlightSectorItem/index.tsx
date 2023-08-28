@@ -55,9 +55,8 @@ const FlightSector = ({
         "border-orange-500":
           status === SECTOR_STATUS.IN_PROCESS &&
           flightDirection === FLIGHT_DIRECTION.RETURN,
-        "opacity-60": status === SECTOR_STATUS.WAITING,
+        "opacity-60": status === SECTOR_STATUS.WAITING && !flightSelectedInfo,
       })}
-      onClick={onClick}
     >
       <span
         className={classNames({
@@ -90,12 +89,17 @@ const FlightSector = ({
       </div>
       <p className="text-xs text-gray-600 py-1 flex justify-between">
         <span>{departDate}</span>
-        {status === SECTOR_STATUS.SELECTED ? (
-          <span className="text-xs text-emerald-500">Thay đổi</span>
+        {flightSelectedInfo ? (
+          <span
+            className="text-xs text-emerald-500 cursor-pointer"
+            onClick={onClick}
+          >
+            Thay đổi
+          </span>
         ) : null}
       </p>
       <div className="line border-b my-2"></div>
-      {(status === SECTOR_STATUS.SELECTED && flightSelectedInfo && (
+      {(flightSelectedInfo && (
         <FlightSector.FlightInfo {...flightSelectedInfo} />
       )) ||
         (status === SECTOR_STATUS.IN_PROCESS && (

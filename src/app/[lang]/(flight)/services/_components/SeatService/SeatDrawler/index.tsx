@@ -1,23 +1,22 @@
 "use client";
-import Drawler from "@/components/base/Drawler";
 import React, { memo, useEffect, useMemo, useState } from "react";
-import { selectingServicesVar } from "@/cache/vars";
-import { useReactiveVar } from "@apollo/client";
-import { bookingInformationVar } from "@/cache/vars";
+import classNames from "classnames";
+import { selectingServicesVar, bookingInformationVar } from "@/cache/vars";
+import { FLIGHT_DIRECTION, PASSENGER_TYPE } from "@/constants/enum";
+import { ISeatOption } from "@/Models/seatMap";
+import SegmentType from "@/components/Flights/SegmentType";
+import Drawler from "@/components/base/Drawler";
+import SeatSegment from "./SeatSegment";
+import SeatNavigationBar from "./SeatNavigationBar";
+import { useBookingFlightInfo } from "@/modules/bookingTicket/useBookingFlightInfo";
+import { PassengerBookingInformationType } from "@/modules/bookingTicket/bookingInformation.interface";
+import useSelectServices from "@/modules/bookingServices/useSelectServices";
 import {
   FLIGHT_SERVICES,
   IBookingServices,
   ISeatSeledtedItem,
 } from "@/modules/bookingServices/bookingServices.interface";
-import useSelectServices from "@/modules/bookingServices/useSelectServices";
-import SeatNavigationBar from "./SeatNavigationBar";
-import { FLIGHT_DIRECTION, PASSENGER_TYPE } from "@/constants/enum";
-import { ISeatOption } from "@/Models/seatMap";
-import classNames from "classnames";
-import SegmentType from "@/components/Flights/SegmentType";
-import { PassengerBookingInformationType } from "@/modules/bookingTicket/bookingInformation.interface";
-import SeatSegment from "./SeatSegment";
-import { useBookingFlightInfo } from "@/modules/bookingTicket/useBookingFlightInfo";
+
 interface ISeatDrawler {
   isOpen: boolean;
   onClose: () => void;

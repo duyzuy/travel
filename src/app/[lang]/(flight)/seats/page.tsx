@@ -8,15 +8,9 @@ import FlightSectors from "@/components/Flights/FlightSectors";
 import SeatBookingNavigation from "./_components/SeatBookingNavigation";
 import PassengerBoxList from "@/components/PassengerBoxList";
 import SeatMapA320 from "./_components/SeatMapModel/SeatMapA320";
-import SeatsNote from "@/components/Flights/AirCraftModel/AirCraftSeatNotes";
+import AirCraftSeatNotes from "@/components/Flights/AirCraftModel/AirCraftSeatNotes";
 import classNames from "classnames";
-const SeatSelectionPage = ({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { lang: string };
-}) => {
+const SeatSelectionPage = ({ params }: { params: { lang: string } }) => {
   const client = useApolloClient();
   const paxSeatNoteRef = useRef<HTMLDivElement>(null);
 
@@ -109,7 +103,7 @@ const SeatSelectionPage = ({
             ref={paxSeatNoteRef}
           >
             <PassengerBoxList className="mb-4" passengers={[]} />
-            <SeatsNote isSticky={isShort} />
+            <AirCraftSeatNotes isSticky={isShort} spacing="md" />
           </div>
           <div className="flex top-0 z-50 -mt-52 justify-center bg-white">
             <SeatMapA320 />
