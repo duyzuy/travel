@@ -9,62 +9,26 @@ import { bookingInformationVar } from "@/cache/vars";
 import {
   FLIGHT_SERVICES,
   IBookingServices,
-  ILuggageOption,
   ILuggageSelectedItem,
 } from "@/modules/bookingServices/bookingServices.interface";
 import useSelectServices from "@/modules/bookingServices/useSelectServices";
 import { useBookingFlightInfo } from "@/modules/bookingTicket/useBookingFlightInfo";
+import { useQuery } from "@apollo/client";
+import { QUERY_ANCILLARY } from "@/operations/queries/ancillary";
 import {
   DIRECTION,
   FLIGHT_DIRECTION,
   PASSENGER_TYPE,
   TRIP_TYPE,
 } from "@/constants/enum";
+import { IMealOption } from "@/Models/flight/meal";
+import { ILuggage } from "@/Models/flight/luggage";
+import { moneyFormatVND } from "@/utils/helper";
 interface ILuggagesDrawler {
   isOpen: boolean;
   onClose: () => void;
   selectedLuggages: IBookingServices["luggages"];
 }
-const LUGGAGE_ITEMS: ILuggageOption[] = [
-  {
-    id: "luggage-1",
-    name: "30kg",
-    baseAmount: 150000,
-    discountAmount: 120000,
-    taxAmount: 15000,
-  },
-  {
-    id: "luggage-2",
-    name: "40kg",
-    baseAmount: 250000,
-    discountAmount: 220000,
-    taxAmount: 25000,
-  },
-
-  {
-    id: "luggage-3",
-    name: "50kg",
-    baseAmount: 350000,
-    discountAmount: 320000,
-    taxAmount: 35000,
-  },
-
-  {
-    id: "luggage-4",
-    name: "60kg",
-    baseAmount: 450000,
-    discountAmount: 420000,
-    taxAmount: 45000,
-  },
-
-  {
-    id: "luggage-5",
-    name: "70kg",
-    baseAmount: 550000,
-    discountAmount: 520000,
-    taxAmount: 55000,
-  },
-];
 
 const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
   isOpen,
@@ -95,9 +59,19 @@ const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
     return selectedServices.luggages.flightReturn;
   }, [selectedServices]);
 
+  const { data, loading } = useQuery<{
+    ancillaries: {
+      cityPare: string;
+      meals: IMealOption[];
+      luggages: ILuggage[];
+    };
+  }>(QUERY_ANCILLARY, {
+    variables: { cityPare: "SGN-HAN" },
+  });
+
   const handleSelectLuggage = (
     direction: FLIGHT_DIRECTION,
-    { item, passengerIndex }: { item: ILuggageOption; passengerIndex: number }
+    { item, passengerIndex }: { item: ILuggage; passengerIndex: number }
   ) => {
     let luggageItems: ILuggageSelectedItem[] = [];
 
@@ -118,7 +92,7 @@ const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
         } else {
           const itemSelected = luggagesSelectedDepart.find(
             (luggage) =>
-              luggage.item.id === item.id &&
+              luggage.item.key === item.key &&
               luggage.passenger.index === passengerSelected.passenger.index
           );
 
@@ -126,7 +100,7 @@ const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
             //remove item
             const indexItem = luggagesSelectedDepart.findIndex(
               (item) =>
-                item.item.id === itemSelected.item.id &&
+                item.item.key === itemSelected.item.key &&
                 item.passenger.index === itemSelected.passenger.index
             );
             luggageItems = [...luggagesSelectedDepart];
@@ -166,7 +140,7 @@ const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
         } else {
           const itemSelected = luggagesSelectedReturn.find(
             (luggage) =>
-              luggage.item.id === item.id &&
+              luggage.item.key === item.key &&
               luggage.passenger.index === passengerSelected.passenger.index
           );
 
@@ -174,7 +148,7 @@ const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
             //remove item
             const indexItem = luggagesSelectedReturn.findIndex(
               (item) =>
-                item.item.id === itemSelected.item.id &&
+                item.item.key === itemSelected.item.key &&
                 item.passenger.index === itemSelected.passenger.index
             );
             luggageItems = [...luggagesSelectedReturn];
@@ -209,9 +183,34 @@ const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
     onInitLuggages(selectedLuggages);
     onClose();
   };
+
+  const subTotal = useMemo(() => {
+    let total = 0;
+    if (luggagesSelectedDepart) {
+      total = luggagesSelectedDepart.reduce((sum, item) => {
+        return (
+          sum + item.item.ancillaryCharges[0].currencyAmounts[0].baseAmount
+        );
+      }, 0);
+    }
+
+    if (luggagesSelectedReturn) {
+      total =
+        total +
+        luggagesSelectedReturn.reduce((sum, item) => {
+          return (
+            sum + item.item.ancillaryCharges[0].currencyAmounts[0].baseAmount
+          );
+        }, 0);
+    }
+
+    return total;
+  }, [luggagesSelectedReturn, luggagesSelectedDepart]);
+
   useEffect(() => {
     onInitLuggages(selectedLuggages);
   }, []);
+
   return (
     <Drawler isOpen={isOpen} onClose={onCancel} width="xl">
       <div
@@ -219,7 +218,7 @@ const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
         style={{ minHeight: "calc(100vh - 80px)" }}
       >
         <div className="luggage-items relative z-10 bg-white">
-          {flightDepart ? (
+          {flightDepart && data ? (
             <LuggageSegment
               label="Chuyến đi"
               direction={FLIGHT_DIRECTION.DEPARTURE}
@@ -227,10 +226,10 @@ const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
               departureCode={flightDepart.ticket.outbound.departureAirport}
               arrival={flightDepart.ticket.outbound.arrivalCity}
               arrivalCode={flightDepart.ticket.outbound.arrivalAirport}
-              items={LUGGAGE_ITEMS}
+              items={data.ancillaries.luggages}
               selectedItems={luggagesSelectedDepart || []}
               passengers={passengers}
-              onSelectItem={(item: ILuggageOption, passengerIndex: number) =>
+              onSelectItem={(item: ILuggage, passengerIndex: number) =>
                 handleSelectLuggage(FLIGHT_DIRECTION.DEPARTURE, {
                   item,
                   passengerIndex,
@@ -239,7 +238,9 @@ const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
             />
           ) : null}
 
-          {flightReturn && bookingInfo.tripType === TRIP_TYPE.ROUND_TRIP ? (
+          {flightReturn &&
+          data &&
+          bookingInfo.tripType === TRIP_TYPE.ROUND_TRIP ? (
             <LuggageSegment
               label="Chuyến về"
               direction={FLIGHT_DIRECTION.RETURN}
@@ -247,10 +248,10 @@ const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
               departureCode={flightReturn.ticket.outbound.departureAirport}
               arrival={flightReturn.ticket.outbound.arrivalCity}
               arrivalCode={flightReturn.ticket.outbound.arrivalAirport}
-              items={LUGGAGE_ITEMS}
+              items={data.ancillaries.luggages}
               passengers={passengers}
               selectedItems={luggagesSelectedReturn || []}
-              onSelectItem={(item: ILuggageOption, passengerIndex: number) =>
+              onSelectItem={(item: ILuggage, passengerIndex: number) =>
                 handleSelectLuggage(FLIGHT_DIRECTION.RETURN, {
                   item,
                   passengerIndex,
@@ -260,7 +261,10 @@ const LuggagesDrawler: React.FC<ILuggagesDrawler> = ({
           ) : null}
         </div>
       </div>
-      <LuggageNavigationBar onFinish={onConfirmSelection} />
+      <LuggageNavigationBar
+        subTotal={moneyFormatVND(subTotal)}
+        onFinish={onConfirmSelection}
+      />
     </Drawler>
   );
 };

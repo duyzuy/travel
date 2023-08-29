@@ -10,12 +10,15 @@ const PassengerInformation: React.FC<{
   onAddPassengers: (data: IPassengerInformationFormValue["passengers"]) => void;
 }> = ({ onAddPassengers, passengers }) => {
   const onChangeInformation = (
-    index: number,
     formData: IPassengerInformationFormValue["passengers"][0]
   ) => {
     let newPassengers = [...passengers];
-    newPassengers.splice(index, 1, { ...formData });
-    onAddPassengers(newPassengers);
+    const _pIndex = passengers.findIndex((pax) => pax.index === formData.index);
+
+    if (_pIndex !== -1) {
+      newPassengers.splice(_pIndex, 1, { ...formData });
+      onAddPassengers(newPassengers);
+    }
   };
 
   return (
@@ -32,13 +35,13 @@ const PassengerInformation: React.FC<{
       <div className="line border-t py-2"></div>
       <div className="body-passenger">
         <div className="form">
-          {passengers.map((pax, _index) => (
+          {passengers.map((pax) => (
             <PassengerForm
-              key={_index}
+              key={pax.index}
+              passengers={passengers}
               passengerInfo={pax}
               paxType={pax.type}
-              index={_index}
-              onChangeForm={(formData) => onChangeInformation(_index, formData)}
+              onChangeForm={(formData) => onChangeInformation(formData)}
             />
           ))}
         </div>

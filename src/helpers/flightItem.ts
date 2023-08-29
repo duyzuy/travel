@@ -10,7 +10,7 @@ export const durationToString = (durationTime: number) => {
 
 export const getProvinceName = (airtport?: IAirPort) => {
   if (airtport) {
-    return `${airtport.province.provinceName} - ${airtport.code}`;
+    return `${airtport.province.provinceName} (${airtport.code})`;
   }
   return "--";
 };

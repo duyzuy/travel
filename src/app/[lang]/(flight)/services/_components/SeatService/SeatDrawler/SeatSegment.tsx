@@ -21,7 +21,8 @@ interface ISeatSegment {
   passengers: PassengerBookingInformationType[];
   onSelectSeat: (
     passenger: PassengerBookingInformationType,
-    seatOpt: ISeatOption
+    seatOpt: ISeatOption,
+    callback?: () => void
   ) => void;
   flightDirection: FLIGHT_DIRECTION;
   selectedSeatItems: ISeatSeledtedItem[];
@@ -38,7 +39,11 @@ const SeatSegment = ({
 
   const onSelectPassengerSeat = (seatOpt: ISeatOption) => {
     const passenger = passengers[passengerIndex];
-    onSelectSeat(passenger, seatOpt);
+    onSelectSeat(passenger, seatOpt, () =>
+      setPassengerIndex((prev) =>
+        prev >= passengers.length - 1 ? prev : prev + 1
+      )
+    );
   };
 
   const passengerGetItemSelect = (

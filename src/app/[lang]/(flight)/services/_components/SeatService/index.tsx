@@ -12,6 +12,7 @@ import SegmentType from "@/components/Flights/SegmentType";
 import ServiceItem from "@/components/Flights/ServiceItem";
 import SeatIcon from "@/assets/icons/ico-seats.svg";
 import classNames from "classnames";
+import { moneyFormatVND } from "@/utils/helper";
 interface ISeatService {
   onShowSeatDrawler: () => void;
   seatSelected: IFlightBookingInformation["services"]["seats"];
@@ -75,12 +76,32 @@ const SeatService: React.FC<ISeatService> = ({
   const seatsReturn = useMemo(() => {
     return seatSelected.flightReturn;
   }, [seatSelected]);
+
+  const subTotal = useMemo(() => {
+    let total = 0;
+    if (seatsDepart) {
+      total = seatsDepart.reduce((sum, item) => {
+        return sum + item.item.seatCharges[0].currencyAmounts[0].baseAmount;
+      }, 0);
+    }
+
+    if (seatsReturn) {
+      total =
+        total +
+        seatsReturn.reduce((sum, item) => {
+          return sum + item.item.seatCharges[0].currencyAmounts[0].baseAmount;
+        }, 0);
+    }
+
+    return total;
+  }, [seatsReturn, seatsDepart]);
   return (
     <ServiceItem
       thumbnail={SeatIcon}
       label="Lựa chọn ghế ngồi"
       description="Chọn ghế ngồi thoải mái"
       onClick={onShowSeatDrawler}
+      subtotalStr={subTotal !== 0 ? moneyFormatVND(subTotal) : undefined}
       selectedItems={
         <div className="flex border-t border-gray-100 pt-4 mt-4">
           {flightDeparture ? (

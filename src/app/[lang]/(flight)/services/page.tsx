@@ -9,8 +9,12 @@ import LuggageService from "./_components/LuggageService";
 import Inssurance from "./_components/InssuranceService";
 import { bookingInformationVar } from "@/cache/vars";
 import { useReactiveVar } from "@apollo/client";
-
+import { QUERY_ANCILLARY } from "@/operations/queries/ancillary";
+import { WRITE_ANCILLARIES } from "@/cache/wtire/ancillary";
+import { useApolloClient } from "@apollo/client";
 import { FLIGHT_SERVICES } from "@/modules/bookingServices/bookingServices.interface";
+import { LUGGAGES } from "./data-luggage";
+import { MEALS } from "./data-meal";
 enum DRAWLER {
   LUGGAGE = "luggage",
   MEAL = "meal",
@@ -18,7 +22,33 @@ enum DRAWLER {
 }
 const FlightServicePage = ({ params }: { params: { lang: string } }) => {
   const bookingInformation = useReactiveVar(bookingInformationVar);
-
+  const client = useApolloClient();
+  client.writeQuery({
+    query: WRITE_ANCILLARIES,
+    data: {
+      ancillaries: {
+        cityPare: "SGN-HAN",
+        luggages: LUGGAGES,
+        meals: MEALS,
+      },
+    },
+    variables: {
+      cityPare: "SGN-HAN",
+    },
+  });
+  client.writeQuery({
+    query: WRITE_ANCILLARIES,
+    data: {
+      ancillaries: {
+        cityPare: "HAN-SGN",
+        luggages: LUGGAGES,
+        meals: MEALS,
+      },
+    },
+    variables: {
+      cityPare: "HAN-SGN",
+    },
+  });
   const {
     services: selectedServices,
     flightDepart,

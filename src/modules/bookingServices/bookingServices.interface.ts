@@ -1,20 +1,19 @@
 import { ISeatOption } from "@/Models/seatMap";
-
-export interface ILuggageOption {
-  id: string;
-  name: string;
-  baseAmount: number;
-  discountAmount: number;
-  taxAmount: number;
-}
-
+import { ILuggage } from "@/Models/flight/luggage";
+import { IMealOption } from "@/Models/flight/meal";
 export interface ILuggageSelectedItem {
-  item: ILuggageOption;
+  item: ILuggage;
   passenger: { index: number };
 }
 export interface ISeatSeledtedItem {
   passenger: { index: number };
   item: ISeatOption;
+}
+
+type MealSelectedOptionType = IMealOption & { quantity: number };
+export interface IMealSelectedItem {
+  passenger: { index: number };
+  items: MealSelectedOptionType[];
 }
 
 export enum FLIGHT_SERVICES {
@@ -33,5 +32,8 @@ export interface IBookingServices {
     flightDepart?: ILuggageSelectedItem[];
     flightReturn?: ILuggageSelectedItem[];
   };
-  [FLIGHT_SERVICES.MEALS]: { flightDepart?: []; flightReturn?: [] };
+  [FLIGHT_SERVICES.MEALS]: {
+    flightDepart?: IMealSelectedItem[];
+    flightReturn?: IMealSelectedItem[];
+  };
 }

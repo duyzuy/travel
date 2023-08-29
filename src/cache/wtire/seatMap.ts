@@ -21,7 +21,6 @@ export const WRITE_SEAT_MAP = gql`
           name
         }
         openSeating
-        false
       }
       seatOptions
     }

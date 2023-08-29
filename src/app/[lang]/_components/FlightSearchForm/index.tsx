@@ -21,9 +21,11 @@ import { useBookingFlightInfo } from "@/modules/bookingTicket/useBookingFlightIn
 import { useSearchFormFlight } from "@/modules/bookingTicket/useSearchFlight";
 import Checkbox from "@/components/base/Checkbox";
 import FlightSearchRecent from "@/components/Flights/FlightSearchRecent";
-const BookingFlightSearchForm: React.FC<{ showRecent?: boolean }> = ({
-  showRecent = true,
-}) => {
+import { ISearchBookingFormValue } from "@/modules/bookingTicket/searchBookingForm.interface";
+const BookingFlightSearchForm: React.FC<{
+  showRecent?: boolean;
+  onSubmit?: (data: ISearchBookingFormValue) => void;
+}> = ({ showRecent = true, onSubmit }) => {
   const client = useApolloClient();
 
   client.writeQuery({
@@ -93,6 +95,7 @@ const BookingFlightSearchForm: React.FC<{ showRecent?: boolean }> = ({
     onSubmitFlightSearchForm({
       ...searchInfo,
     });
+    onSubmit?.(searchInfo);
     if (
       !pathName.includes("seats") &&
       !pathName.includes("passenger") &&
@@ -102,7 +105,6 @@ const BookingFlightSearchForm: React.FC<{ showRecent?: boolean }> = ({
     }
   };
 
-  useEffect(() => {}, []);
   return (
     <div className="bg-white relative z-20">
       <form onSubmit={handleSubmitFlightBookingForm} method="POST">

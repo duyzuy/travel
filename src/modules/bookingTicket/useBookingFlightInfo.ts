@@ -18,7 +18,18 @@ export const useBookingFlightInfo = (
   ) => {
     bookingInformationVar({
       ...flightBookingInfo,
-      bookingInfo: { ...searchData },
+      bookingInfo: {
+        departDate: searchData.departDate,
+        returnDate: searchData.returnDate,
+        tripFrom: searchData.tripFrom,
+        tripTo: searchData.tripTo,
+        tripType: searchData.tripType,
+        passengers: {
+          adult: { amount: searchData.passengers?.adult.amount || 1 },
+          children: { amount: searchData.passengers?.children.amount || 0 },
+          infant: { amount: searchData.passengers?.infant.amount || 0 },
+        },
+      },
     });
   };
 

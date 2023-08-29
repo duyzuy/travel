@@ -3,7 +3,7 @@
 import Button from "@/components/base/Button";
 
 import OrderSummary from "@/components/OrderSummary";
-
+import FlightBookingSummary from "../_components/FlightBookingSummary";
 import { useBookingFlightInfo } from "@/modules/bookingTicket/useBookingFlightInfo";
 import { bookingInformationVar } from "@/cache/vars";
 import { useEffect, useMemo } from "react";
@@ -27,7 +27,7 @@ const PassengerPage = ({ params }: { params: { lang: string } }) => {
   const {
     onAddContactInformation,
     onAddPassengersInformation,
-    onInitPassengers,
+    onInitPassengerInformation,
     onFinish,
     passengerInformation,
   } = usePassengerInformation(passengerInformationVar);
@@ -37,14 +37,13 @@ const PassengerPage = ({ params }: { params: { lang: string } }) => {
     router.push("./services");
   };
   useEffect(() => {
-    onInitPassengers();
+    onInitPassengerInformation();
   }, []);
   return (
     <div className="container flex items-start mx-auto py-12">
       <div className="passenger-wrapper w-4/6 mr-6">
         {passengerBooking.passengers && (
           <PassengerInformation
-            // person={bookingInformation.passengers}
             onAddPassengers={onAddPassengersInformation}
             passengers={passengerInformation.passengers}
           />
@@ -71,7 +70,7 @@ const PassengerPage = ({ params }: { params: { lang: string } }) => {
           </Button>
         </div>
       </div>
-      <OrderSummary />
+      <FlightBookingSummary />
     </div>
   );
 };

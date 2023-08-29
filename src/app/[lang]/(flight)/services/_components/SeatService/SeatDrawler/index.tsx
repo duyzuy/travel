@@ -16,6 +16,7 @@ import {
   IBookingServices,
   ISeatSeledtedItem,
 } from "@/modules/bookingServices/bookingServices.interface";
+import { moneyFormatVND } from "@/utils/helper";
 
 interface ISeatDrawler {
   isOpen: boolean;
@@ -60,24 +61,23 @@ const SeatDrawler: React.FC<ISeatDrawler> = ({
     {
       passenger,
       seatOpt,
-    }: { passenger: PassengerBookingInformationType; seatOpt: ISeatOption }
+    }: { passenger: PassengerBookingInformationType; seatOpt: ISeatOption },
+    onNextPassenger?: () => void
   ) => {
     let seatsSelected: ISeatSeledtedItem[] = [];
     if (direction === FLIGHT_DIRECTION.DEPARTURE) {
       const seatsSelectedDeparture = seatSelected.flightDepart || [];
-
+      const seatSelect = seatsSelectedDeparture.find(
+        (_seat) => _seat.item.selectionKey === seatOpt.selectionKey
+      );
+      const passengerSelected = seatsSelectedDeparture.find(
+        (_pax) => _pax.passenger.index === passenger.index
+      );
       if (!seatsSelectedDeparture.length) {
         seatsSelected = [
           { item: seatOpt, passenger: { index: passenger.index } },
         ];
       } else {
-        const seatSelect = seatsSelectedDeparture.find(
-          (_seat) => _seat.item.selectionKey === seatOpt.selectionKey
-        );
-        const passengerSelected = seatsSelectedDeparture.find(
-          (_pax) => _pax.passenger.index === passenger.index
-        );
-
         if (!passengerSelected && !seatSelect) {
           seatsSelected = [
             ...seatsSelectedDeparture,
@@ -110,29 +110,31 @@ const SeatDrawler: React.FC<ISeatDrawler> = ({
             seatsSelected = [...seatsSelectedDeparture];
           }
         }
+
         if (!passengerSelected && seatSelect) {
           seatsSelected = [...seatsSelectedDeparture];
         }
       }
-
+      if (!passengerSelected || !seatSelect) {
+        onNextPassenger?.();
+      }
       onAddSeatToFlightDeparture(seatsSelected);
     }
 
     if (direction === FLIGHT_DIRECTION.RETURN) {
       const seatsSelectedReturnFlight = seatSelected.flightReturn || [];
+      const seatSelect = seatsSelectedReturnFlight.find(
+        (_seat) => _seat.item.selectionKey === seatOpt.selectionKey
+      );
+      const passengerSelected = seatsSelectedReturnFlight.find(
+        (_pax) => _pax.passenger.index === passenger.index
+      );
 
       if (!seatsSelectedReturnFlight.length) {
         seatsSelected = [
           { item: seatOpt, passenger: { index: passenger.index } },
         ];
       } else {
-        const seatSelect = seatsSelectedReturnFlight.find(
-          (_seat) => _seat.item.selectionKey === seatOpt.selectionKey
-        );
-        const passengerSelected = seatsSelectedReturnFlight.find(
-          (_pax) => _pax.passenger.index === passenger.index
-        );
-
         if (!passengerSelected && !seatSelect) {
           seatsSelected = [
             ...seatsSelectedReturnFlight,
@@ -169,16 +171,25 @@ const SeatDrawler: React.FC<ISeatDrawler> = ({
           seatsSelected = [...seatsSelectedReturnFlight];
         }
       }
+      if (!passengerSelected || !seatSelect) {
+        onNextPassenger?.();
+      }
       onAddSeatToFlightReturn(seatsSelected);
     }
   };
 
   const onNext = () => {
-    console.log(seatSelected);
     onAddBookingFlightService(FLIGHT_SERVICES.SEATS, seatSelected);
+    if (flightDirection === FLIGHT_DIRECTION.DEPARTURE) {
+      setFlightDirection(FLIGHT_DIRECTION.RETURN);
+    } else {
+      onClose();
+      setFlightDirection(FLIGHT_DIRECTION.DEPARTURE);
+    }
   };
   const onCancel = () => {
     onClose();
+    setFlightDirection(FLIGHT_DIRECTION.DEPARTURE);
   };
   const renderTabSegment = () => {
     if (!flightDepart) {
@@ -231,16 +242,44 @@ const SeatDrawler: React.FC<ISeatDrawler> = ({
       </div>
     );
   };
+
+  const subTotal = useMemo(() => {
+    let total = 0;
+    if (
+      flightDirection === FLIGHT_DIRECTION.DEPARTURE &&
+      selectedSeats?.flightDepart
+    ) {
+      total = selectedSeats.flightDepart.reduce((sum, item) => {
+        return sum + item.item.seatCharges[0].currencyAmounts[0].baseAmount;
+      }, 0);
+    }
+
+    if (
+      flightDirection === FLIGHT_DIRECTION.RETURN &&
+      selectedSeats?.flightReturn
+    ) {
+      total = selectedSeats.flightReturn.reduce((sum, item) => {
+        return sum + item.item.seatCharges[0].currencyAmounts[0].baseAmount;
+      }, 0);
+    }
+
+    return total;
+  }, [flightDirection, seatSelected]);
   useEffect(() => {
     onInitialServices(FLIGHT_SERVICES.SEATS, selectedSeats);
   }, [onClose]);
+
   return (
     <Drawler isOpen={isOpen} onClose={onCancel} width="xl">
       <div className="head bg-gray-100 sticky top-0">{renderTabSegment()}</div>
       {flightDirection === FLIGHT_DIRECTION.DEPARTURE ? (
         <SeatSegment
-          onSelectSeat={(passenger, seatOpt) =>
-            handleSelectSeat(FLIGHT_DIRECTION.DEPARTURE, { passenger, seatOpt })
+          onSelectSeat={(passenger, seatOpt, callback) =>
+            handleSelectSeat(
+              FLIGHT_DIRECTION.DEPARTURE,
+              { passenger, seatOpt },
+              callback
+            )
           }
           selectedSeatItems={seatSelected[FLIGHT_DIRECTION.DEPARTURE] || []}
           flightDirection={FLIGHT_DIRECTION.DEPARTURE}
@@ -251,8 +290,12 @@ const SeatDrawler: React.FC<ISeatDrawler> = ({
 
       {flightDirection === FLIGHT_DIRECTION.RETURN ? (
         <SeatSegment
-          onSelectSeat={(passenger, seatOpt) =>
-            handleSelectSeat(FLIGHT_DIRECTION.RETURN, { passenger, seatOpt })
+          onSelectSeat={(passenger, seatOpt, callback) =>
+            handleSelectSeat(
+              FLIGHT_DIRECTION.RETURN,
+              { passenger, seatOpt },
+              callback
+            )
           }
           selectedSeatItems={seatSelected[FLIGHT_DIRECTION.RETURN] || []}
           flightDirection={FLIGHT_DIRECTION.RETURN}
@@ -260,7 +303,10 @@ const SeatDrawler: React.FC<ISeatDrawler> = ({
           airCraftModel="A320"
         />
       ) : null}
-      <SeatNavigationBar onFinish={onNext} />
+      <SeatNavigationBar
+        subTotal={moneyFormatVND(subTotal)}
+        onFinish={onNext}
+      />
     </Drawler>
   );
 };

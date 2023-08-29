@@ -1,10 +1,11 @@
 "use client";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import { useApolloClient } from "@apollo/client";
 import { WRITE_FLIGHT_OPTIONS } from "@/cache/wtire/flightOptions";
 import { bookingInformationVar } from "@/cache/vars";
+import { airlinesVar } from "@/cache/vars/flight/airline";
 import { FLIGHT_OPTIONS_2 } from "../../flightOptionsData2";
 
 import { FORMAT_DATE_LONG } from "@/constants/config";
@@ -149,6 +150,9 @@ const SearchFlightPage = ({ params }: { params: { lang: string } }) => {
     };
   };
 
+  useEffect(() => {
+    airlinesVar(flightOptions?.airlines || []);
+  }, [flightOptions]);
   if (loading) {
     return <>loading.....</>;
   }

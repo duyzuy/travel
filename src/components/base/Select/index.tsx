@@ -41,16 +41,22 @@ const Selection = ({
     setShowDropdown(false);
   };
   return (
-    <div className={`custom-selection relative ${className}`}>
+    <div
+      className={classNames({
+        "custom-selection relative": true,
+        [className]: className,
+      })}
+    >
       <div
         className={classNames({
+          "input-selection": true,
           "text-sm": textSize === "sm",
           "text-md": textSize === "md",
           "text-lg": textSize === "lg",
         })}
         onClick={() => setShowDropdown((prev) => !prev)}
       >
-        <label htmlFor={`${selectId}-${name}`} className="mb-2 block">
+        <label htmlFor={`${selectId}-${name}`} className="mb-2 block leading-6">
           {label}
           {required ? <span className="text-red-400 ml-1">*</span> : null}
         </label>

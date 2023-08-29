@@ -38,79 +38,66 @@ const usePassengerInformation = (
     };
     passengerInformationVar(newContactUpdate);
   };
-  const onInitPassengers = () => {
-    let passengerBookingInfo = bookingInformation.passengerInformation;
-    const person = bookingInformation.bookingInfo.passengers;
+  const onInitPassengerInformation = () => {
+    const { passengerInformation, bookingInfo } = bookingInformation;
+    const { passengers: person } = bookingInfo;
 
     if (!person) {
       return;
     }
-    let passengersStore: PassengerInformationStore["passengers"] = [];
+    let initialPassengers: IPassengerInformationFormValue["passengers"] = [];
 
     //init passengers
-    Object.keys(person).forEach((passengerType, _index) => {
-      const currPassenger = passengerBookingInfo.passengers?.find(
-        (pax) => pax.type === passengerType && pax.index === _index
-      );
 
+    let _pIndex = 0;
+    Object.keys(person).forEach((passengerType, _index) => {
       Array.from({
         length: person[passengerType as PASSENGER_TYPE].amount,
-      }).map((_pIndex) => {
-        const passenger: PassengerInformationStore["passengers"][0] =
-          currPassenger || {
-            title:
-              (passengerType === PASSENGER_TYPE.CHILDREN &&
-                PASSENGER_TITLE.CHILDREN) ||
-              (passengerType === PASSENGER_TYPE.INFANT &&
-                PASSENGER_TITLE.INFANT) ||
-              PASSENGER_TITLE.MR,
-            firstName: "",
-            lastName: "",
-            gender: GENDER.FEMALE,
-            birthDate: undefined,
-            isContact: _pIndex === 0 && _index === 0,
-            dependent: "",
-            type: passengerType as PASSENGER_TYPE,
-          };
+      }).map((__index) => {
+        const currPassenger = passengerInformation.passengers.find(
+          (pax) => pax.type === passengerType && pax.index === _pIndex
+        );
 
-        passengersStore.push(passenger);
+        const passenger: IPassengerInformationFormValue["passengers"][0] =
+          currPassenger
+            ? currPassenger
+            : {
+                index: _pIndex,
+                title:
+                  (passengerType === PASSENGER_TYPE.CHILDREN &&
+                    PASSENGER_TITLE.CHILDREN) ||
+                  (passengerType === PASSENGER_TYPE.INFANT &&
+                    PASSENGER_TITLE.INFANT) ||
+                  PASSENGER_TITLE.MR,
+                firstName: "",
+                lastName: "",
+                gender: GENDER.FEMALE,
+                birthDate: undefined,
+                isContact: __index === 0 && _index === 0,
+                dependent: null,
+                type: passengerType as PASSENGER_TYPE,
+              };
+        _pIndex = _pIndex + 1;
+        initialPassengers.push(passenger);
       });
     });
 
-    passengerBookingInfo = {
-      ...passengerBookingInfo,
-      contactEmail: passengerBookingInfo.contactEmail || "",
-      contactFirstName: passengerBookingInfo.contactFirstName || "",
-      contactGender: passengerBookingInfo.contactGender || "",
-      contactPhone: passengerBookingInfo.contactPhone || "",
-      contactLastName: passengerBookingInfo.contactLastName || "",
-      passengers: passengersStore.reduce(
-        (
-          sum: IFlightBookingInformation["passengerInformation"]["passengers"],
-          passenger: PassengerInformationStore["passengers"][0],
-          index
-        ) => {
-          sum = [...sum, { ...passenger, index: index }];
-          return sum;
-        },
-        []
-      ),
-    };
+    initialPassengers.sort((a, b) => a.index - b.index);
 
-    const passengerFormValue = new PassengerInformationStore(
-      passengersStore,
-      PASSENGER_TITLE.MR,
-      "",
-      "",
-      "",
-      ""
+    const passengerInformationInitial = new PassengerInformationStore(
+      initialPassengers,
+      passengerInformation.title,
+      passengerInformation.contactFirstName,
+      passengerInformation.contactLastName,
+      passengerInformation.contactPhone,
+      passengerInformation.contactEmail
     );
     bookingInformationVar({
       ...bookingInformation,
-      passengerInformation: passengerBookingInfo,
+      passengerInformation: passengerInformationInitial,
     });
 
-    passengerInformationVar(passengerFormValue);
+    passengerInformationVar(passengerInformationInitial);
   };
 
   const onFinish = () => {
@@ -145,7 +132,7 @@ const usePassengerInformation = (
   return {
     onFinish,
     onAddPassengersInformation,
-    onInitPassengers,
+    onInitPassengerInformation,
     onAddContactInformation,
     passengerInformation: useReactiveVar(passengerInformationVar),
   };

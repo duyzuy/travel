@@ -4,13 +4,15 @@ import NavigationBarAddon from "@/components/NavigationBarAddon";
 
 interface ISeatNavigationBar {
   onFinish: () => void;
+  subTotal?: string;
 }
 const SeatNavigationBar: React.FC<ISeatNavigationBar> = (props) => {
-  const { onFinish } = props;
+  const { onFinish, subTotal } = props;
   return (
     <NavigationBarAddon
       className="sticky bottom-0 bg-white z-20 h-20"
       onClick={onFinish}
+      subTotal={subTotal}
       addOn="seats"
     />
   );

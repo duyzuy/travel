@@ -53,7 +53,10 @@ const FlightBookingHeaderBar = () => {
         </div>
         {isShowBooking ? (
           <div className="select-flight-form bg-white pb-6 -mx-4 rounded-sm">
-            <FlightSearchForm showRecent={false} />
+            <FlightSearchForm
+              showRecent={false}
+              onSubmit={() => setIsShowBooking(false)}
+            />
           </div>
         ) : null}
       </div>

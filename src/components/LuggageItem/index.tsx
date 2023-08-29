@@ -13,7 +13,7 @@ const LuggageItem: React.FC<{
     <div
       className={classNames({
         [styles.wrapper]: styles.wrapper,
-        "luggage-item w-28 mb-4 mr-4": true,
+        "luggage-item w-30 mb-4 mr-4": true,
       })}
       onClick={onClick}
     >

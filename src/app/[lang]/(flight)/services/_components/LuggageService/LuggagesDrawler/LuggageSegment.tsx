@@ -3,12 +3,10 @@
 import React, { memo, useCallback, useMemo } from "react";
 import LuggageItem from "@/components/LuggageItem";
 import { moneyFormatVND } from "@/utils/helper";
-import {
-  ILuggageOption,
-  ILuggageSelectedItem,
-} from "@/modules/bookingServices/bookingServices.interface";
+import { ILuggageSelectedItem } from "@/modules/bookingServices/bookingServices.interface";
 import { IFlightBookingInformation } from "@/modules/bookingTicket/bookingInformation.interface";
 import { FLIGHT_DIRECTION } from "@/constants/enum";
+import { ILuggage } from "@/Models/flight/luggage";
 interface ILugggagesSegment {
   label: string;
   departure: string;
@@ -16,10 +14,10 @@ interface ILugggagesSegment {
   arrivalCode: string;
   arrival: string;
   direction: FLIGHT_DIRECTION;
-  items: ILuggageOption[];
+  items: ILuggage[];
   passengers: IFlightBookingInformation["passengerInformation"]["passengers"];
   selectedItems: ILuggageSelectedItem[];
-  onSelectItem: (item: ILuggageOption, passengerIndex: number) => void;
+  onSelectItem: (item: ILuggage, passengerIndex: number) => void;
 }
 
 const LuggageSegment = (props: ILugggagesSegment) => {
@@ -37,10 +35,11 @@ const LuggageSegment = (props: ILugggagesSegment) => {
   } = props;
 
   const isSelectedItem = useCallback(
-    (itemId: string, paxIndex: number) => {
+    (itemKey: string, paxIndex: number) => {
       return Boolean(
         selectedItems.find(
-          (item) => item.item.id === itemId && item.passenger.index === paxIndex
+          (item) =>
+            item.item.key === itemKey && item.passenger.index === paxIndex
         )
       );
     },
@@ -99,10 +98,12 @@ const LuggageSegment = (props: ILugggagesSegment) => {
               <div className="luggage-packages flex items-center flex-wrap flex-1">
                 {items.map((item, _index) => (
                   <LuggageItem
-                    key={`passenger-${_pIndex}-${item.id}`}
-                    price={moneyFormatVND(item.baseAmount)}
-                    name={item.name}
-                    isSelected={isSelectedItem(item.id, passenger.index)}
+                    key={`passenger-${_pIndex}-${item.key}`}
+                    price={moneyFormatVND(
+                      item.ancillaryCharges[0].currencyAmounts[0].baseAmount
+                    )}
+                    name={item.ancillaryItem.name}
+                    isSelected={isSelectedItem(item.key, passenger.index)}
                     onClick={() => onSelectItem(item, passenger.index)}
                   />
                 ))}

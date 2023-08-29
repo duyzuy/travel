@@ -9,10 +9,18 @@ interface IServiceItem {
   thumbnail?: string | StaticImageData;
   children?: React.ReactNode;
   selectedItems?: React.ReactNode;
+  subtotalStr?: string;
 }
 const ServiceItem = (props: IServiceItem) => {
-  const { label, description, onClick, thumbnail, children, selectedItems } =
-    props;
+  const {
+    label,
+    description,
+    onClick,
+    thumbnail,
+    children,
+    selectedItems,
+    subtotalStr,
+  } = props;
   return (
     <div className="service-item bg-white rounded-sm shadow-sm">
       <div className="box-head flex items-center px-6 py-4">
@@ -27,7 +35,12 @@ const ServiceItem = (props: IServiceItem) => {
               <p className="text-lg">{label}</p>
               <p className="text-sm text-gray-600">{description}</p>
             </div>
-            {onClick ? <ServiceItem.ButtonAdd onClick={onClick} /> : null}
+            <div className="right flex items-center">
+              <p className="mr-2 text-orange-500 font-bold text-lg">
+                {subtotalStr}
+              </p>
+              {onClick ? <ServiceItem.ButtonAdd onClick={onClick} /> : null}
+            </div>
           </div>
           {selectedItems}
         </div>

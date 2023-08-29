@@ -8,6 +8,7 @@ import { IBookingServices } from "@/modules/bookingServices/bookingServices.inte
 import { IFlightBookingInformation } from "@/modules/bookingTicket/bookingInformation.interface";
 import SegmentType from "@/components/Flights/SegmentType";
 import classNames from "classnames";
+import { moneyFormatVND } from "@/utils/helper";
 
 interface ILuggageService {
   onShowLuggageDrawler: () => void;
@@ -28,6 +29,29 @@ const LuggageService: React.FC<ILuggageService> = ({
   const luggageReturn = useMemo(() => {
     return selectedService?.flightReturn;
   }, [selectedService]);
+
+  const totalPrice = useMemo(() => {
+    let total = 0;
+    if (luggageDepart) {
+      total = luggageDepart.reduce((sum, item) => {
+        return (
+          sum + item.item.ancillaryCharges[0].currencyAmounts[0].baseAmount
+        );
+      }, 0);
+    }
+
+    if (luggageReturn) {
+      total =
+        total +
+        luggageReturn.reduce((sum, item) => {
+          return (
+            sum + item.item.ancillaryCharges[0].currencyAmounts[0].baseAmount
+          );
+        }, 0);
+    }
+
+    return total;
+  }, [luggageDepart, luggageReturn]);
   return (
     <ServiceItem
       thumbnail={LuggageIcon}
@@ -35,6 +59,7 @@ const LuggageService: React.FC<ILuggageService> = ({
       description=" Thêm hành lý để thuận tiện hơn cho chuyến đi. Mua bây giờ rẻ hơn
   tại quầy"
       onClick={onShowLuggageDrawler}
+      subtotalStr={totalPrice !== 0 ? moneyFormatVND(totalPrice) : undefined}
       selectedItems={
         <div className="flex border-t border-gray-100 pt-4 mt-4">
           {flightDeparture ? (
@@ -49,14 +74,14 @@ const LuggageService: React.FC<ILuggageService> = ({
                 {luggageDepart ? (
                   <div className="flex items-center">
                     {luggageDepart.map((item, _index) => (
-                      <div key={`${item.item.id}-${item.passenger.index}`}>
+                      <div key={`${item.item.key}-${item.passenger.index}`}>
                         <span
                           className={classNames({
-                            "text-emerald-400 font-bold": true,
+                            "text-sm text-gray-600": true,
                           })}
                         >
                           {_index !== 0 ? ", " : null}
-                          {item.item.name}
+                          {item.item.ancillaryItem.name}
                         </span>
                       </div>
                     ))}
@@ -77,14 +102,14 @@ const LuggageService: React.FC<ILuggageService> = ({
                 {luggageReturn ? (
                   <div className="flex items-center">
                     {luggageReturn.map((item, _index) => (
-                      <div key={`${item.item.id}-${item.passenger.index}`}>
+                      <div key={`${item.item.key}-${item.passenger.index}`}>
                         <span
                           className={classNames({
-                            "text-emerald-400 font-bold": true,
+                            "text-sm text-gray-600": true,
                           })}
                         >
                           {_index !== 0 ? ", " : null}
-                          {item.item.name}
+                          {item.item.ancillaryItem.name}
                         </span>
                       </div>
                     ))}

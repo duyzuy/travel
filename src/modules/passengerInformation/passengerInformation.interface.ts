@@ -2,6 +2,7 @@ import { GENDER, PASSENGER_TITLE, PASSENGER_TYPE } from "@/constants/enum";
 
 export interface IPassengerInformationFormValue {
   passengers: {
+    index: number;
     title: PASSENGER_TITLE;
     firstName: string;
     lastName: string;
@@ -12,12 +13,11 @@ export interface IPassengerInformationFormValue {
     gender: GENDER;
     isContact: boolean;
     type: PASSENGER_TYPE;
-    dependent: string | null;
+    dependent: { passenger: { index: number } } | null;
   }[];
   title: PASSENGER_TITLE;
   contactFirstName: string;
   contactLastName: string;
-
   contactPhone: string;
   contactGender: GENDER;
   contactEmail: string;
@@ -27,6 +27,7 @@ export class PassengerInformationStore
   implements IPassengerInformationFormValue
 {
   passengers: {
+    index: number;
     title: PASSENGER_TITLE;
     firstName: string;
     lastName: string;
@@ -37,7 +38,7 @@ export class PassengerInformationStore
     gender: GENDER;
     isContact: boolean;
     type: PASSENGER_TYPE;
-    dependent: string | null;
+    dependent: { passenger: { index: number } } | null;
   }[];
   title: PASSENGER_TITLE;
   contactFirstName: string;
@@ -48,6 +49,7 @@ export class PassengerInformationStore
 
   constructor(
     passengers: {
+      index: number;
       title: PASSENGER_TITLE;
       firstName: string;
       lastName: string;
@@ -58,7 +60,7 @@ export class PassengerInformationStore
       gender: GENDER;
       isContact: boolean;
       type: PASSENGER_TYPE;
-      dependent: string | null;
+      dependent: { passenger: { index: number } } | null;
     }[],
     title: PASSENGER_TITLE,
     contactFirstName: string,
