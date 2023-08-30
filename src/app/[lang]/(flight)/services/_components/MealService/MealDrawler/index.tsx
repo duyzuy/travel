@@ -1,6 +1,6 @@
 "use client";
 import Drawler from "@/components/base/Drawler";
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import { selectingServicesVar } from "@/cache/vars";
 import { useReactiveVar } from "@apollo/client";
 import MealNavigationBar from "./MealNavigationBar";
@@ -60,16 +60,19 @@ const MealDrawler: React.FC<IMealDrawler> = ({ isOpen, onClose }) => {
   const onCancel = () => {
     onClose();
   };
-  const handleSelectMeal = (
-    direction: FLIGHT_DIRECTION,
-    {
-      item,
-      passenger,
-      quantity,
-    }: { item: IMealOption; passenger: { index: number }; quantity: number }
-  ) => {
-    console.log(direction, item, quantity);
-  };
+  const handleSelectMeal = useCallback(
+    (
+      direction: FLIGHT_DIRECTION,
+      {
+        item,
+        passenger,
+        quantity,
+      }: { item: IMealOption; passenger: { index: number }; quantity: number }
+    ) => {
+      console.log(direction, item, quantity);
+    },
+    []
+  );
   const renderTabSegment = () => {
     if (!flightDepart) {
       return null;
@@ -124,8 +127,9 @@ const MealDrawler: React.FC<IMealDrawler> = ({ isOpen, onClose }) => {
   if (loading) {
     return <>....loading</>;
   }
+  console.log("re");
   return (
-    <Drawler isOpen={isOpen} onClose={onCancel} width="sm">
+    <Drawler isOpen={isOpen} onClose={onCancel} width="xl">
       <div className="head bg-gray-100 sticky top-0">{renderTabSegment()}</div>
       <div className="meal-container min-h-screen">
         {flightDirection === FLIGHT_DIRECTION.DEPARTURE && data ? (

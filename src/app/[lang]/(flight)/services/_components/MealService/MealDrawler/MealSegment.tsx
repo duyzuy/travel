@@ -51,7 +51,7 @@ const MealSegment = ({
   };
   return (
     <>
-      <div className="passengers px-6 py-4 bg-white sticky top-20 drop-shadow-md">
+      <div className="passengers px-6 py-4 bg-white sticky top-20 drop-shadow-md flex items-center">
         {passengers.map((pax, _index) => (
           <PassengerBoxItem
             key={pax.index}
@@ -82,11 +82,12 @@ const MealSegment = ({
                   alt={mealItem.ancillaryItem.name}
                   width={200}
                   height={124}
+                  className="rounded-sm"
                 />
                 <div className="box-content ml-8">
-                  <h4>{mealItem.ancillaryItem.name}</h4>
+                  <h4 className="text-md">{mealItem.ancillaryItem.name}</h4>
                   <div className="py-2">
-                    <p className="text-lg text-emerald-500">
+                    <p className="text-lg text-emerald-500 font-bold">
                       {moneyFormatVND(
                         mealItem.ancillaryCharges[0].currencyAmounts[0]
                           .baseAmount

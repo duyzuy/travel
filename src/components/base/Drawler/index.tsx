@@ -1,8 +1,9 @@
 "use client";
 
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import classNames from "classnames";
 import useAnimation from "@/hooks/useAnimation";
+
 const Drawler: React.FC<{
   direction?: "left" | "right" | "bottom" | "top";
   width?: "xl" | "lg" | "md" | "sm";
@@ -19,6 +20,16 @@ const Drawler: React.FC<{
   hideCloseButton,
 }) => {
   const { stage, isMounted } = useAnimation(isOpen, 300);
+  useEffect(() => {
+    const body = document.getElementsByTagName("body");
+    if (isOpen) {
+      body[0].classList.add("should-fixed");
+    } else {
+      if (body[0].classList.contains("should-fixed")) {
+        body[0].classList.remove("should-fixed");
+      }
+    }
+  }, [isOpen]);
 
   if (!isMounted) {
     return null;
@@ -50,6 +61,8 @@ const Drawler: React.FC<{
             "w-[650px]": width === "lg",
             "translate-x-[850px]": !stage && width === "xl",
             "w-[850px]": width === "xl",
+            "w-128": width === "sm",
+            "translate-x-[450px]": !stage && width === "sm",
           })}
         >
           {!hideCloseButton ? (
